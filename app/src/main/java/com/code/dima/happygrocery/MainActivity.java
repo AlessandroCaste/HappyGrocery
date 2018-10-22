@@ -28,7 +28,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     @Override
     public void onClick(View v) {
-        startActivityForResult(new Intent(MainActivity.this, ScannedBarcodeActivity.class),REQUEST_CODE);
+        Intent i = new Intent(this,LivePreviewActivity.class);
+        startActivity(i);
         overridePendingTransition(R.transition.slide_in_right,R.transition.slide_out_left);
 
     }
