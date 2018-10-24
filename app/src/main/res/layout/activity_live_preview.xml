@@ -1,69 +1,42 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<RelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/fireTopLayout"
-    android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#000"
     android:keepScreenOn="true">
 
-    <LinearLayout
+
+    <com.code.dima.common.CameraSourcePreview
+        android:id="@+id/firePreview"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical">
+        app:layout_constraintBottom_toTopOf="parent"
+        app:layout_constraintEnd_toStartOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
 
-        <TextView
-            android:id="@+id/frameText"
+        <com.code.dima.common.GraphicOverlay
+            android:id="@+id/fireFaceOverlay"
             android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_marginStart="0dp"
-            android:layout_marginTop="0dp"
-            android:layout_weight="0.1"
-            android:autoSizeTextType="uniform"
-            android:background="@android:color/white"
-            android:gravity="center"
-            android:padding="10dp"
-            android:text="Frame and click!" />
+            android:layout_height="wrap_content" />
 
-
-
-
-        <com.code.dima.common.CameraSourcePreview
-            android:id="@+id/firePreview"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1">
-
-            <com.code.dima.common.GraphicOverlay
-                android:id="@+id/fireFaceOverlay"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent" />
-
-        </com.code.dima.common.CameraSourcePreview>
-
-
-    </LinearLayout>
-
+    </com.code.dima.common.CameraSourcePreview>
 
     <android.support.design.widget.FloatingActionButton
-        android:layout_width="match_parent"
-        android:layout_height="120dp"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentBottom="true"
-        android:layout_gravity="bottom"
-        android:layout_marginEnd="20dp"
-        android:layout_marginBottom="20dp"
-        android:background="@color/common_google_signin_btn_text_dark_focused"
-        android:clickable="true"
-        android:elevation="200dp"
-        android:shadowColor="@android:color/black"
-        android:src="@drawable/barcode4"
-        app:backgroundTint="@color/common_google_signin_btn_text_dark_default"
-        app:elevation="20dp"
-        app:fabSize="normal" />
+        android:id="@+id/floatingActionButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="17dp"
+        android:onClick="explodeTransition"
+        android:src="@drawable/barcodelogo"
+        app:backgroundTint="@android:color/white"
+        app:fabSize="normal"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
 
 
-</RelativeLayout>
+</android.support.constraint.ConstraintLayout>

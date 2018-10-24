@@ -1,9 +1,12 @@
 package com.code.dima.happygrocery;
 
+import android.app.ActivityOptions;
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.ActivityCompat.OnRequestPermissionsResultCallback;
 import android.support.v4.content.ContextCompat;
@@ -13,6 +16,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.CompoundButton;
+import android.widget.Toast;
 
 import com.code.dima.common.CameraSource;
 import com.code.dima.common.CameraSourcePreview;
@@ -29,21 +33,17 @@ import java.util.List;
  * set up continuous frame processing on frames from a camera source. */
 @KeepName
 public final class LivePreviewActivity extends AppCompatActivity
-        implements OnRequestPermissionsResultCallback,
-        OnItemSelectedListener,
-        CompoundButton.OnCheckedChangeListener {
-    private static final String FACE_DETECTION = "Face Detection";
-    private static final String TEXT_DETECTION = "Text Detection";
-    private static final String BARCODE_DETECTION = "Barcode Detection";
-    private static final String IMAGE_LABEL_DETECTION = "Label Detection";
-    private static final String CLASSIFICATION = "Classification";
+        implements OnRequestPermissionsResultCallback      {
+
+
     private static final String TAG = "LivePreviewActivity";
     private static final int PERMISSION_REQUESTS = 1;
+    private BarcodeScanningProcessor scanner;
 
     private CameraSource cameraSource = null;
     private CameraSourcePreview preview;
     private GraphicOverlay graphicOverlay;
-    private String selectedModel = FACE_DETECTION;
+    private String selectedModel = "Barcode Detection";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -68,39 +68,6 @@ public final class LivePreviewActivity extends AppCompatActivity
         }
     }
 
-    @Override
-    public synchronized void onItemSelected(AdapterView<?> parent, View view, int pos, long id) {
-        // An item was selected. You can retrieve the selected item using
-        // parent.getItemAtPosition(pos)
-        selectedModel = parent.getItemAtPosition(pos).toString();
-        Log.d(TAG, "Selected model: " + selectedModel);
-        preview.stop();
-        if (allPermissionsGranted()) {
-            createCameraSource(selectedModel);
-            startCameraSource();
-        } else {
-            getRuntimePermissions();
-        }
-    }
-
-    @Override
-    public void onNothingSelected(AdapterView<?> parent) {
-        // Do nothing.
-    }
-
-    @Override
-    public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-        Log.d(TAG, "Set facing");
-        if (cameraSource != null) {
-            if (isChecked) {
-                cameraSource.setFacing(CameraSource.CAMERA_FACING_FRONT);
-            } else {
-                cameraSource.setFacing(CameraSource.CAMERA_FACING_BACK);
-            }
-        }
-        preview.stop();
-        startCameraSource();
-    }
 
     private void createCameraSource(String model) {
         // If there's no existing cameraSource, create one.
@@ -109,7 +76,8 @@ public final class LivePreviewActivity extends AppCompatActivity
         }
 
         Log.i(TAG, "Using Barcode Detector Processor");
-        cameraSource.setMachineLearningFrameProcessor(new BarcodeScanningProcessor());
+        scanner = new BarcodeScanningProcessor();
+        cameraSource.setMachineLearningFrameProcessor(scanner);
     }
 
     /**
@@ -215,4 +183,17 @@ public final class LivePreviewActivity extends AppCompatActivity
         Log.i(TAG, "Permission NOT granted: " + permission);
         return false;
     }
+
+    public void explodeTransition(View view) {
+        if(scanner.isValid()) {
+            ActivityOptions options = ActivityOptions.makeSceneTransitionAnimation(this);
+            Intent i = new Intent(this, TransitionActivity.class);
+            String ciao = scanner.retrieveBarcodeData().getDisplayValue();
+            i.putExtra("barcode", ciao);
+            startActivity(i,options.toBundle());
+        } else {
+        }
+    }
+
+
 }

@@ -3,7 +3,7 @@
     package="com.example.alessandro.barcodeyeah">
 
     <uses-permission android:name="android.permission.CAMERA" />
-    <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
     <uses-feature android:name="android.hardware.camera" />
@@ -27,9 +27,11 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name="com.code.dima.happygrocery.LivePreviewActivity" android:exported="true"/>
-
-
+        <activity
+            android:name="com.code.dima.happygrocery.LivePreviewActivity"
+            android:exported="true" />
+        <activity android:name="com.code.dima.happygrocery.Main2Activity" />
+        <activity android:name="com.code.dima.happygrocery.TransitionActivity"></activity>
     </application>
 
 </manifest>
