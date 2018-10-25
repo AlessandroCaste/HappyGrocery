@@ -30,8 +30,7 @@
         <activity
             android:name="com.code.dima.happygrocery.LivePreviewActivity"
             android:exported="true" />
-        <activity android:name="com.code.dima.happygrocery.Main2Activity" />
-        <activity android:name="com.code.dima.happygrocery.TransitionActivity"></activity>
+        <activity android:name="com.code.dima.happygrocery.ProductActivity"></activity>
     </application>
 
 </manifest>

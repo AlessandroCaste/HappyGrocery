@@ -6,17 +6,12 @@ import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
-import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.ActivityCompat.OnRequestPermissionsResultCallback;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
-import android.widget.AdapterView;
-import android.widget.AdapterView.OnItemSelectedListener;
-import android.widget.CompoundButton;
-import android.widget.Toast;
 
 import com.code.dima.common.CameraSource;
 import com.code.dima.common.CameraSourcePreview;
@@ -29,8 +24,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-/** Demo app showing the various features of ML Kit for Firebase. This class is used to
- * set up continuous frame processing on frames from a camera source. */
+
 @KeepName
 public final class LivePreviewActivity extends AppCompatActivity
         implements OnRequestPermissionsResultCallback      {
@@ -68,7 +62,7 @@ public final class LivePreviewActivity extends AppCompatActivity
         }
     }
 
-
+    /**Crea l'oggetto cameraSource e ci associa un barcodeScanner */
     private void createCameraSource(String model) {
         // If there's no existing cameraSource, create one.
         if (cameraSource == null) {
@@ -117,6 +111,7 @@ public final class LivePreviewActivity extends AppCompatActivity
         preview.stop();
     }
 
+    /**Rilascia le risorse associate alla cameraSource */
     @Override
     public void onDestroy() {
         super.onDestroy();
@@ -125,6 +120,7 @@ public final class LivePreviewActivity extends AppCompatActivity
         }
     }
 
+    /**Recupera la lista di permessi necessari per il corretto funzionamento dello scanner */
     private String[] getRequiredPermissions() {
         try {
             PackageInfo info =
@@ -141,6 +137,7 @@ public final class LivePreviewActivity extends AppCompatActivity
         }
     }
 
+    /**Verifica che tutti i permessi necessari siano garantiti */
     private boolean allPermissionsGranted() {
         for (String permission : getRequiredPermissions()) {
             if (!isPermissionGranted(this, permission)) {
@@ -150,6 +147,7 @@ public final class LivePreviewActivity extends AppCompatActivity
         return true;
     }
 
+    /**Aggiunge i permessi necessari durante l'esecuzione dell'app */
     private void getRuntimePermissions() {
         List<String> allNeededPermissions = new ArrayList<>();
         for (String permission : getRequiredPermissions()) {
@@ -164,6 +162,7 @@ public final class LivePreviewActivity extends AppCompatActivity
         }
     }
 
+    /**Istanzia cameraSource se i permessi sono stati accordati */
     @Override
     public void onRequestPermissionsResult(
             int requestCode, String[] permissions, int[] grantResults) {
@@ -174,6 +173,7 @@ public final class LivePreviewActivity extends AppCompatActivity
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
     }
 
+    /**Verifica che un permesso sia stato accordato */
     private static boolean isPermissionGranted(Context context, String permission) {
         if (ContextCompat.checkSelfPermission(context, permission)
                 == PackageManager.PERMISSION_GRANTED) {
@@ -184,14 +184,14 @@ public final class LivePreviewActivity extends AppCompatActivity
         return false;
     }
 
+    /**Avvia la productActivity passandole i dati ottenuti dallo scanner */
     public void explodeTransition(View view) {
         if(scanner.isValid()) {
             ActivityOptions options = ActivityOptions.makeSceneTransitionAnimation(this);
-            Intent i = new Intent(this, TransitionActivity.class);
-            String ciao = scanner.retrieveBarcodeData().getDisplayValue();
-            i.putExtra("barcode", ciao);
+            Intent i = new Intent(this, ProductActivity.class);
+            String retrievedCode = scanner.retrieveBarcodeData().getDisplayValue();
+            i.putExtra("barcode", retrievedCode);
             startActivity(i,options.toBundle());
-        } else {
         }
     }
 

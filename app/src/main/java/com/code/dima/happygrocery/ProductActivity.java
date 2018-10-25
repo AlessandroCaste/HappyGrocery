@@ -17,47 +17,36 @@ import com.google.zxing.WriterException;
 import com.google.zxing.common.BitMatrix;
 import com.journeyapps.barcodescanner.BarcodeEncoder;
 
-import org.w3c.dom.Text;
-
-public class TransitionActivity extends AppCompatActivity {
+public class ProductActivity extends AppCompatActivity {
 
     private String code;
-
-    public enum TransitionType {
-        ExplodeJava, ExplodeXML, SlideJava, SlideXML, FadeJava, FadeXML
-    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         getWindow().requestFeature(Window.FEATURE_CONTENT_TRANSITIONS);
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_transition_activity);
+        setContentView(R.layout.product_page);
         initPage();
         initEAN();
         initAnimation();
     }
 
+    /**Configura l'aspetto della pagina**/
     private void initPage() {
         TextView text = findViewById(R.id.textView2);
         text.setText(getIntent().getStringExtra("barcode"));
         code = getIntent().getStringExtra("barcode");
-        Button btnExit = (Button) findViewById(R.id.exit_button);
-        btnExit.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                finishAfterTransition();
-            }
-        });
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setTitle("yipee");
     }
 
-
+    /**Copre lo spostamento in alto nella gerarchia d'attività dall'action bar**/
     public boolean onSupportNavigateUp() {
         finishAfterTransition();
         return true;
     }
 
+    /**Garantisce l'explode animation all'avvio dell'activity**/
     private void initAnimation() {
 
         Explode enterTransition = new Explode();
@@ -66,6 +55,7 @@ public class TransitionActivity extends AppCompatActivity {
 
     }
 
+    /**Utilizza la libreria zxing per ricostruire il barcode a partire dal codice**/
     private void initEAN() {
         ImageView imageView = findViewById(R.id.ye);
         MultiFormatWriter multiFormatWriter = new MultiFormatWriter();

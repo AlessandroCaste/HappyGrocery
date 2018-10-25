@@ -8,11 +8,8 @@ import android.graphics.RectF;
 import com.code.dima.common.GraphicOverlay;
 import com.google.firebase.ml.vision.barcode.FirebaseVisionBarcode;
 
-/** Graphic instance for rendering Barcode position and content information in an overlay view. */
 public class BarcodeGraphic extends GraphicOverlay.Graphic {
 
-    private static final int TEXT_COLOR = Color.WHITE;
-    private static final float TEXT_SIZE = 54.0f;
     private static final float STROKE_WIDTH = 8.0f;
 
     private final Paint rectPaint;
@@ -33,16 +30,13 @@ public class BarcodeGraphic extends GraphicOverlay.Graphic {
         postInvalidate();
     }
 
-    /**
-     * Draws the barcode block annotations for position, size, and raw value on the supplied canvas.
-     */
+    /**Crea un frame intorno al barcode trovato */
     @Override
     public void draw(Canvas canvas) {
         if (barcode == null) {
             throw new IllegalStateException("Attempting to draw a null barcode.");
         }
 
-        // Draws the bounding box around the BarcodeBlock.
         RectF rect = new RectF(barcode.getBoundingBox());
         rect.left = translateX(rect.left);
         rect.top = translateY(rect.top);
