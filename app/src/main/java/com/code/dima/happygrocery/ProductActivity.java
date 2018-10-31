@@ -25,20 +25,19 @@ public class ProductActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         getWindow().requestFeature(Window.FEATURE_CONTENT_TRANSITIONS);
         super.onCreate(savedInstanceState);
+        //this.requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.product_page);
-        initPage();
-        initEAN();
+        //initEAN();
         initAnimation();
     }
 
-    /**Configura l'aspetto della pagina**/
+
+    /**Configura l'aspetto della pagina
     private void initPage() {
-        TextView text = findViewById(R.id.textView2);
-        text.setText(getIntent().getStringExtra("barcode"));
         code = getIntent().getStringExtra("barcode");
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setTitle("yipee");
-    }
+        getSupportActionBar().setTitle("yipee")
+    }*/
 
     /**Copre lo spostamento in alto nella gerarchia d'attività dall'action bar**/
     public boolean onSupportNavigateUp() {
@@ -55,7 +54,7 @@ public class ProductActivity extends AppCompatActivity {
 
     }
 
-    /**Utilizza la libreria zxing per ricostruire il barcode a partire dal codice**/
+    /**Utilizza la libreria zxing per ricostruire il barcode a partire dal codice
     private void initEAN() {
         ImageView imageView = findViewById(R.id.ye);
         MultiFormatWriter multiFormatWriter = new MultiFormatWriter();
@@ -68,5 +67,6 @@ public class ProductActivity extends AppCompatActivity {
             e.printStackTrace();
         }
     }
+     */
 }
 
