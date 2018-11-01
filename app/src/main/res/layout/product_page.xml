@@ -4,18 +4,21 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".TransitionActivity">
+    tools:context=".ProductActivity">
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="300dp"
+        android:layout_height="380dp"
         android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="16dp"
         android:layout_marginEnd="8dp"
+        android:elevation="8dp"
         android:orientation="horizontal"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
+
 
         <Space
             android:layout_width="wrap_content"
@@ -27,34 +30,68 @@
         <android.support.v7.widget.CardView xmlns:card_view="http://schemas.android.com/apk/res-auto"
             android:id="@+id/card_view"
             android:layout_width="300dp"
-            android:layout_height="match_parent"
+            android:layout_height="360dp"
             android:layout_gravity="center"
             android:layout_weight="0.8"
-            card_view:cardCornerRadius="4dp">
+            card_view:cardBackgroundColor="@color/lightGrey"
+            card_view:cardCornerRadius="5dp">
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:orientation="vertical">
 
-                <TextView
+                <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="60dp"
-                    android:layout_gravity="top" />
+                    android:layout_height="70dp">
+
+                    <de.hdodenhof.circleimageview.CircleImageView xmlns:app="http://schemas.android.com/apk/res-auto"
+                        android:id="@+id/productType"
+                        android:layout_width="48dp"
+                        android:layout_height="48dp"
+                        android:layout_gravity="center"
+                        android:src="@drawable/fruit"
+                        app:civ_border_color="#311B92"
+                        app:civ_border_width="2dp" />
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="60dp"
+                        android:layout_gravity="top"
+                        android:layout_weight="0.8"
+                        android:fontFamily="@font/open_sans_semibold"
+                        android:gravity="center"
+                        android:text="Fragole di Montagna"
+                        android:textColor="@color/common_google_signin_btn_text_dark_focused"
+                        android:textSize="24dp" />
+
+                </LinearLayout>
 
                 <ImageView
                     android:layout_width="match_parent"
-                    android:layout_height="180dp"
+                    android:layout_height="210dp"
                     android:adjustViewBounds="true"
                     android:scaleType="centerCrop"
                     android:src="@drawable/fragole" />
 
                 <TextView
-                    android:id="@+id/info_text"
+                    android:id="@+id/info_price"
                     android:layout_width="match_parent"
-                    android:layout_height="60dp"
+                    android:layout_height="38dp"
                     android:layout_gravity="bottom"
-                    android:text="Ciao core" />
+                    android:gravity="center_horizontal"
+                    android:text="Price"
+                    android:textColor="@color/common_google_signin_btn_text_dark_focused"
+                    android:textSize="20dp" />
+
+                <TextView
+                    android:id="@+id/info_description"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:text="Descrizione delle Fragole che deve essere possibilmente abbastanza lunga"
+                    android:textAlignment="center"
+                    card_view:autoSizeTextType="uniform" />
 
             </LinearLayout>
         </android.support.v7.widget.CardView>
@@ -69,16 +106,27 @@
     </LinearLayout>
 
     <android.support.design.widget.FloatingActionButton
-        android:id="@+id/floatingActionButton4"
+        android:id="@+id/floatingActionButton2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="20dp"
         android:layout_marginBottom="20dp"
         android:clickable="true"
-        android:src="@drawable/tick"
+        android:src="@drawable/ic_add_white_24dp"
         app:backgroundTint="@android:color/holo_green_light"
-        app:fabSize="normal"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/floatingActionButton3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="20dp"
+        android:layout_marginBottom="20dp"
+        android:clickable="true"
+        android:src="@drawable/ic_clear_white_24dp"
+        app:backgroundTint="@color/colorPrimaryDark"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
 
 </android.support.constraint.ConstraintLayout>

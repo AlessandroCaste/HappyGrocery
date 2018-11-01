@@ -7,14 +7,12 @@
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
         <item name="android:windowContentTransitions">true</item>
-        <item name="android:navigationBarColor">@color/colorPrimary</item>
         <item name="android:textColorPrimary">@android:color/white</item>
+        <item name="android:navigationBarColor">@color/colorPrimary</item>
     </style>
 
     <style name="AppThemeProduct" parent="AppTheme">
-        <item name="android:windowBackground">@color/colorPrimary</item>
-        <item name="android:colorBackground">@color/colorPrimary</item>
-        <item name="android:textColorPrimary">@android:color/white</item>
+        <item name="windowNoTitle">true</item>
     </style>
 
 </resources>
