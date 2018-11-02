@@ -1,5 +1,6 @@
 package com.code.dima.happygrocery;
 
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -17,6 +18,8 @@ import com.google.zxing.WriterException;
 import com.google.zxing.common.BitMatrix;
 import com.journeyapps.barcodescanner.BarcodeEncoder;
 
+import org.w3c.dom.Text;
+
 public class ProductActivity extends AppCompatActivity {
 
     private String code;
@@ -26,9 +29,8 @@ public class ProductActivity extends AppCompatActivity {
         getWindow().requestFeature(Window.FEATURE_CONTENT_TRANSITIONS);
         super.onCreate(savedInstanceState);
         this.requestWindowFeature(Window.FEATURE_NO_TITLE);
-
         setContentView(R.layout.product_page);
-
+        extractData();
         //initEAN();
         initAnimation();
     }
@@ -56,6 +58,21 @@ public class ProductActivity extends AppCompatActivity {
 
     }
 
+    // Classe test per rendere confiugurabile la gestione dei prodotti. Poi verrò naturalmente allargata/rimossa
+    private void extractData() {
+        Product fragola = new Product();
+        TextView nome = findViewById(R.id.info_name);
+        TextView price = findViewById(R.id.info_price);
+        TextView description = findViewById(R.id.info_description);
+        String tipology;
+        nome.setText(fragola.getName());
+        price.setText(fragola.getPrice());
+        description.setText(fragola.getDescription());
+    }
+
+    public void cancel(View view){
+        this.onBackPressed();
+    }
     /**Utilizza la libreria zxing per ricostruire il barcode a partire dal codice
     private void initEAN() {
         ImageView imageView = findViewById(R.id.ye);

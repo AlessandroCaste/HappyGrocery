@@ -32,8 +32,8 @@
         android:layout_marginEnd="16dp"
         android:layout_marginBottom="17dp"
         android:onClick="explodeTransition"
-        android:src="@drawable/barcodelogo"
-        app:backgroundTint="@android:color/white"
+        app:backgroundTint="@android:color/holo_green_light"
+        app:srcCompat="@drawable/barcodelogo"
         app:fabSize="normal"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
