@@ -3,6 +3,10 @@ package com.code.dima.happygrocery;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v7.widget.DividerItemDecoration;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -12,13 +16,16 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
-
-
 import com.example.alessandro.barcodeyeah.R;
+import java.util.ArrayList;
 
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
+
+    private RecyclerView recyclerView;
+    private ProductAdapter adapter;
+    private ArrayList<Product> productArrayList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -26,7 +33,7 @@ public class MainActivity extends AppCompatActivity
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-
+        Log.w("myApp", "Avvio");
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -45,6 +52,18 @@ public class MainActivity extends AppCompatActivity
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+
+        productArrayList = new ArrayList<>();
+        recyclerView = findViewById(R.id.recyclerView);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        adapter = new ProductAdapter(this,productArrayList);
+        DividerItemDecoration decoration = new DividerItemDecoration(getApplicationContext(), DividerItemDecoration.VERTICAL);
+        decoration.setDrawable(getResources().getDrawable(R.drawable.rectangle));
+        recyclerView.addItemDecoration(decoration);
+        recyclerView.setAdapter(adapter);
+
+
+        createDummyData();
     }
 
     @Override
@@ -105,4 +124,21 @@ public class MainActivity extends AppCompatActivity
     }
     // Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
     //   .setAction("Action", null).show()
+
+    private void createDummyData() {
+        productArrayList.add(new Product());
+        productArrayList.add(new Product());
+        productArrayList.add(new Product());
+        productArrayList.add(new Product());
+        productArrayList.add(new Product());
+        productArrayList.add(new Product());
+        productArrayList.add(new Product());
+        adapter.notifyDataSetChanged();
+    }
+
+
+
 }
+
+
+
