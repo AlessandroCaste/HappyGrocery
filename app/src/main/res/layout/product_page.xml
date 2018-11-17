@@ -63,7 +63,7 @@
                         android:fontFamily="sans-serif"
                         android:gravity="center"
                         android:text="Product Name"
-                        android:textColor="@color/common_google_signin_btn_text_dark_focused"
+                        android:textColor="@android:color/darker_gray"
                         android:textSize="24dp" />
 
                 </LinearLayout>
@@ -83,7 +83,7 @@
                     android:fontFamily="sans-serif"
                     android:gravity="center_horizontal"
                     android:text="Price"
-                    android:textColor="@color/common_google_signin_btn_text_dark_focused"
+                    android:textColor="@android:color/darker_gray"
                     android:textSize="20dp" />
 
                 <TextView

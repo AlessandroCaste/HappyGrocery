@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.telecom.Call;
 import android.transition.Explode;
 import android.view.View;
 import android.view.Window;
@@ -32,18 +33,11 @@ public class ProductActivity extends AppCompatActivity {
         setContentView(R.layout.product_page);
         extractData();
         //initEAN();
-        initAnimation();
     }
 
 
-    /**Configura l'aspetto della pagina
-    private void initPage() {
-        code = getIntent().getStringExtra("barcode");
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setTitle("yipee")
-    }*/
 
-    /**Copre lo spostamento in alto nella gerarchia d'attività dall'action bar**/
+    /**Copre la back arrow dell'action bar**/
     public boolean onSupportNavigateUp() {
         finishAfterTransition();
         return true;
@@ -71,21 +65,10 @@ public class ProductActivity extends AppCompatActivity {
     }
 
     public void cancel(View view){
-        this.onBackPressed();
+        finish();
+        overridePendingTransition(R.transition.slide_in_left,R.transition.slide_out_right);
+       // this.onBackPressed();
     }
-    /**Utilizza la libreria zxing per ricostruire il barcode a partire dal codice
-    private void initEAN() {
-        ImageView imageView = findViewById(R.id.ye);
-        MultiFormatWriter multiFormatWriter = new MultiFormatWriter();
-        try {
-            BitMatrix bitMatrix = multiFormatWriter.encode(code, BarcodeFormat.EAN_13,600,250);
-            BarcodeEncoder barcodeEncoder = new BarcodeEncoder();
-            Bitmap bitmap = barcodeEncoder.createBitmap(bitMatrix);
-            imageView.setImageBitmap(bitmap);
-        } catch (WriterException e) {
-            e.printStackTrace();
-        }
-    }
-     */
+
 }
 
