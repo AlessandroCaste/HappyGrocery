@@ -1,6 +1,6 @@
 package com.code.dima.happygrocery;
 
-import android.app.ActivityOptions;
+
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -17,7 +17,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.Toast;
 
 import com.example.alessandro.barcodeyeah.R;
 import com.google.zxing.integration.android.IntentIntegrator;
@@ -41,16 +40,6 @@ public class MainActivity extends AppCompatActivity
         setSupportActionBar(toolbar);
         Log.w("myApp", "Avvio");
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-       /* fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                IntentIntegrator integrator = new IntentIntegrator(this);
-                integrator.setDesiredBarcodeFormats(IntentIntegrator.EAN_13);
-                integrator.setBeepEnabled(false);
-                integrator.initiateScan();
-                overridePendingTransition(R.transition.slide_in_right,R.transition.slide_out_left);
-            }
-        }); */
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -149,13 +138,12 @@ public class MainActivity extends AppCompatActivity
 
 
     public void onClick(View view){
-        new IntentIntegrator(this).initiateScan();
-       /* IntentIntegrator integrator = new IntentIntegrator(this);
+        IntentIntegrator integrator = new IntentIntegrator(this);
         integrator.setDesiredBarcodeFormats(IntentIntegrator.EAN_13);
-        integrator.setBeepEnabled(false);
+        integrator.setBeepEnabled(true);
+        integrator.setPrompt(getResources().getString(R.string.prompt));
         integrator.initiateScan();
-        IntentResult scanResult = IntentIntegrator.parseActivityResult(0, 1, integrator);
-        overridePendingTransition(R.transition.slide_in_right,R.transition.slide_out_left); */
+        overridePendingTransition(R.transition.slide_in_right,R.transition.slide_out_left);
     }
 
     @Override
@@ -164,14 +152,12 @@ public class MainActivity extends AppCompatActivity
         IntentResult result = IntentIntegrator.parseActivityResult(requestCode, resultCode, data);
         if (result != null) {
             if (result.getContents() == null) {
-                Toast.makeText(this, "Cancelled", Toast.LENGTH_LONG).show();
+                overridePendingTransition(R.transition.slide_in_left,R.transition.slide_out_right);
             } else {
                 //Toast.makeText(this, (result.getContents()), Toast.LENGTH_LONG).show();
-
                 Intent i = new Intent(this,ProductActivity.class);
                 startActivity(i);
                 overridePendingTransition(R.transition.slide_in_right,R.transition.slide_out_left);
-
             }
         } else {
             super.onActivityResult(requestCode,resultCode,data);
