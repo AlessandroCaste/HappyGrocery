@@ -1,25 +1,12 @@
 package com.code.dima.happygrocery;
 
-import android.content.Intent;
-import android.graphics.Bitmap;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.telecom.Call;
 import android.transition.Explode;
 import android.view.View;
 import android.view.Window;
-import android.widget.Button;
-import android.widget.ImageView;
 import android.widget.TextView;
-
 import com.example.alessandro.barcodeyeah.R;
-import com.google.zxing.BarcodeFormat;
-import com.google.zxing.MultiFormatWriter;
-import com.google.zxing.WriterException;
-import com.google.zxing.common.BitMatrix;
-import com.journeyapps.barcodescanner.BarcodeEncoder;
-
-import org.w3c.dom.Text;
 
 public class ProductActivity extends AppCompatActivity {
 
@@ -32,7 +19,6 @@ public class ProductActivity extends AppCompatActivity {
         this.requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.product_page);
         extractData();
-        //initEAN();
     }
 
 
@@ -52,16 +38,18 @@ public class ProductActivity extends AppCompatActivity {
 
     }
 
-    // Classe test per rendere confiugurabile la gestione dei prodotti. Poi verrò naturalmente allargata/rimossa
+    // Classe test per rendere configurabile la gestione dei prodotti. Poi verrò naturalmente allargata/rimossa
     private void extractData() {
         Product fragola = new Product();
         TextView nome = findViewById(R.id.info_name);
         TextView price = findViewById(R.id.info_price);
-        TextView description = findViewById(R.id.info_description);
-        String tipology;
+        TextView producer = findViewById(R.id.info_producer);
+        TextView weight = findViewById(R.id.info_weight);
         nome.setText(fragola.getName());
+        producer.setText(fragola.getProduttore());
         price.setText(fragola.getPrice());
-        description.setText(fragola.getDescription());
+        weight.setText(Float.toString(fragola.getWeight()));
+
     }
 
     public void cancel(View view){

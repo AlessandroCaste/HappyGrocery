@@ -12,6 +12,9 @@ public class Product {
     private String name;
     private String price;
     private String description;
+    private String productor;
+    private float weight;
+    private float sale;
     private Bitmap image;
 
     public Product(){
@@ -19,6 +22,9 @@ public class Product {
         name = "Fragole di Montagna";
         price = "30 Euro";
         description = "Le fragole di Montagna Esselunga sono il meglio che la nostra azienda offre";
+        productor = "Cascine Fragolose";
+        weight = 100;
+        sale = 0;
     }
 
     public String getTipology() {
@@ -36,5 +42,11 @@ public class Product {
     public String getDescription(){
         return description;
     }
+
+    public float getSale() { return sale; };
+
+    public String getProduttore() { return productor; }
+
+    public float getWeight() { return weight; }
 
 }
