@@ -99,6 +99,7 @@
                     android:layout_weight="0.6"
                     android:fontFamily="sans-serif"
                     android:gravity="left"
+                    android:paddingTop="10dp"
                     android:paddingLeft="10dp"
                     android:text="Price"
                     android:textColor="@android:color/darker_gray"
@@ -111,6 +112,7 @@
                     android:layout_weight="0.4"
                     android:fontFamily="sans-serif"
                     android:gravity="left"
+                    android:paddingTop="10dp"
                     android:text="Weight"
                     android:textColor="@android:color/darker_gray"
                     android:textSize="20dp" />

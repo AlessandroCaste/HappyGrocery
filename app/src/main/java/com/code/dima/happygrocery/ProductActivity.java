@@ -48,7 +48,7 @@ public class ProductActivity extends AppCompatActivity {
         nome.setText(fragola.getName());
         producer.setText(fragola.getProduttore());
         price.setText(fragola.getPrice());
-        weight.setText(Float.toString(fragola.getWeight()));
+        weight.setText(Float.toString(fragola.getWeight()) + "g");
 
     }
 
