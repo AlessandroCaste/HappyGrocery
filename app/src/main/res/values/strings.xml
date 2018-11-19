@@ -12,4 +12,18 @@
     <string name="nav_header_subtitle">android.studio@android.com</string>
     <string name="nav_header_desc">Navigation header</string>
     <string name="action_settings">Settings</string>
+
+    <!-- RELATIVE TO DASHBOARD ACTIVITY -->
+    <string name="title_activity_dashboard">DashboardActivity</string>
+    <string name="dashboard_default_prod_name">Product name</string>
+    <string name="dashboard_default_prod_details">30$</string>
+    <string name="last_product_image">Last product image</string>
+    <string name="currency">$</string>
+
+    <!-- NAMES OF THE CATEGORIES -->
+    <string name="category1">Food</string>
+    <string name="category2">Beverage</string>
+    <string name="category3">Kids</string>
+    <string name="category4">Home</string>
+    <string name="category5">Clothing</string>
 </resources>
