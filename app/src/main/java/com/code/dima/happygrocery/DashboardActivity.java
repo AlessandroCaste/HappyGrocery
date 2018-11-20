@@ -77,8 +77,10 @@ public class DashboardActivity extends AppCompatActivity
     private void setChartData() {
 
         ArrayList<String> xValues = new ArrayList<>();
+        ArrayList<Integer> colors = new ArrayList<>();
         for (Category category : Category.values()) {
             xValues.add(category.name());
+            colors.add(Category.getCategoryColor(category));
         }
 
         ArrayList<PieEntry> yValues = new ArrayList<>();
@@ -88,12 +90,6 @@ public class DashboardActivity extends AppCompatActivity
             yValues.add(new PieEntry(valueList.get(i), i));
         }
 
-        ArrayList<Integer> colors = new ArrayList<>();
-        colors.add(Color.RED);
-        colors.add(Color.BLUE);
-        colors.add(Color.GREEN);
-        colors.add(Color.YELLOW);
-        colors.add(Color.MAGENTA);
 
         PieDataSet dataset = new PieDataSet(yValues, "Categories");
         dataset.setSliceSpace(3);
@@ -101,7 +97,7 @@ public class DashboardActivity extends AppCompatActivity
         dataset.setColors(colors);
         PieData data = new PieData(dataset);
         data.setValueTextSize(11f);
-        data.setValueTextColor(Color.GRAY);
+        data.setValueTextColor(Color.WHITE);
         chart.setData(data);
         chart.invalidate();
     }
