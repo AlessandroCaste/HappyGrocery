@@ -9,9 +9,9 @@ public enum Category {
     HOME,
     CLOTHING;
 
-    public static Integer getCategoryColor (Category category) {
+    public Integer getCategoryColor () {
         int colorInt = 0;
-        switch (category) {
+        switch (this) {
             case FOOD:      colorInt = Color.parseColor("#C62828");
                             break;
             case BEVERAGE:  colorInt = Color.parseColor("#1565C0");

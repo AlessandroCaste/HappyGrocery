@@ -80,7 +80,7 @@ public class DashboardActivity extends AppCompatActivity
         ArrayList<Integer> colors = new ArrayList<>();
         for (Category category : Category.values()) {
             xValues.add(category.name());
-            colors.add(Category.getCategoryColor(category));
+            colors.add(category.getCategoryColor());
         }
 
         ArrayList<PieEntry> yValues = new ArrayList<>();
