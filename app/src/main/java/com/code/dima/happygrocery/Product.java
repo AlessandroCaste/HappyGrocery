@@ -6,19 +6,28 @@ import android.graphics.drawable.Drawable;
 
 import com.example.alessandro.barcodeyeah.R;
 
+
 public class Product {
 
+    private Category category;
     private String tipology;
     private String name;
     private String price;
     private String description;
     private Bitmap image;
 
+
     public Product(){
+        category = Category.FOOD;
         tipology = "Fruit";
         name = "Fragole di Montagna";
         price = "30 Euro";
         description = "Le fragole di Montagna Esselunga sono il meglio che la nostra azienda offre";
+    }
+
+
+    public Category getCategory() {
+        return category;
     }
 
     public String getTipology() {
@@ -35,6 +44,10 @@ public class Product {
 
     public String getDescription(){
         return description;
+    }
+
+    public Bitmap getImage() {
+        return image;
     }
 
 }
