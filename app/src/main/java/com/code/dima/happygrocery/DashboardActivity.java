@@ -13,12 +13,13 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.example.alessandro.barcodeyeah.R;
 import com.github.mikephil.charting.charts.PieChart;
 import com.github.mikephil.charting.components.Description;
 import com.github.mikephil.charting.components.Legend;
-import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.PieEntry;
 import com.github.mikephil.charting.data.PieData;
 import com.github.mikephil.charting.data.PieDataSet;
@@ -26,7 +27,6 @@ import com.github.mikephil.charting.data.PieDataSet;
 import java.util.ArrayList;
 import java.util.List;
 
-import static android.os.Build.VERSION_CODES.P;
 
 public class DashboardActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -68,10 +68,12 @@ public class DashboardActivity extends AppCompatActivity
             Description desc = new Description();
             desc.setText("");
             chart.setDescription(desc);
+            chart.setDrawEntryLabels(false);
             Legend legend = chart.getLegend();
             legend.setEnabled(false);
         }
         setChartData();
+        updateLastProduct();
     }
 
     private void setChartData() {
@@ -95,11 +97,25 @@ public class DashboardActivity extends AppCompatActivity
         dataset.setSliceSpace(3);
         dataset.setSelectionShift(3);
         dataset.setColors(colors);
+        dataset.setDrawValues(false);
         PieData data = new PieData(dataset);
-        data.setValueTextSize(11f);
-        data.setValueTextColor(Color.WHITE);
+        //data.setValueTextSize(11f);
+        //data.setValueTextColor(Color.WHITE);
         chart.setData(data);
         chart.invalidate();
+    }
+
+    private void updateLastProduct () {
+        Product lastProduct = ProductListDetails.getInstance().getLastProduct();
+        String name = lastProduct.getName();
+        String price = lastProduct.getPrice();
+        int imageID = lastProduct.getImageID();
+        ImageView imageView = findViewById(R.id.dashboardProdImage);
+        TextView nameText = findViewById(R.id.dashboardProdName);
+        TextView priceText = findViewById(R.id.dashboardProdDetails);
+        nameText.setText(name);
+        priceText.setText(price);
+        imageView.setImageResource(imageID);
     }
 
     @Override

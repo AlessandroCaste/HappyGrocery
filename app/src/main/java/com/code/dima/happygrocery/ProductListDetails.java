@@ -8,6 +8,7 @@ public class ProductListDetails {
 
     private static ProductListDetails instance = null;
     private ArrayList<Integer> productPerCategory;
+    private Product lastProduct;
 
 
     private ProductListDetails() {
@@ -15,6 +16,8 @@ public class ProductListDetails {
         for (int i = 0; i < Category.values().length; i ++) {
             productPerCategory.add(new Integer(1));
         }
+        lastProduct = new Product();
+
     }
 
 
@@ -40,4 +43,12 @@ public class ProductListDetails {
         return (List<Integer>) productPerCategory.clone();
     }
 
+
+    public Product getLastProduct() {
+        return lastProduct;
+    }
+
+    public void setLastProduct(Product lastProduct) {
+        this.lastProduct = lastProduct;
+    }
 }

@@ -1,11 +1,6 @@
 package com.code.dima.happygrocery;
 
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.drawable.Drawable;
-
 import com.example.alessandro.barcodeyeah.R;
-
 
 public class Product {
 
@@ -14,7 +9,7 @@ public class Product {
     private String name;
     private String price;
     private String description;
-    private Bitmap image;
+    private int imageID;
 
 
     public Product(){
@@ -23,6 +18,7 @@ public class Product {
         name = "Fragole di Montagna";
         price = "30 Euro";
         description = "Le fragole di Montagna Esselunga sono il meglio che la nostra azienda offre";
+        imageID = R.drawable.fragole;
     }
 
 
@@ -46,8 +42,8 @@ public class Product {
         return description;
     }
 
-    public Bitmap getImage() {
-        return image;
+    public int getImageID() {
+        return imageID;
     }
 
 }
