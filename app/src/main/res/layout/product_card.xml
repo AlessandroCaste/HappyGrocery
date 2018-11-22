@@ -23,13 +23,14 @@
         android:src="@drawable/fragole" />
 
     <TextView
+        android:paddingLeft="5dp"
         android:id="@+id/info_name"
         android:layout_width="match_parent"
         android:layout_height="38dp"
         android:layout_gravity="bottom"
         android:gravity="left"
         android:text="Product Name"
-        android:textColor="@color/common_google_signin_btn_text_dark_focused"
+        android:textColor="@android:color/darker_gray"
         android:textSize="20dp" />
 
     <Button

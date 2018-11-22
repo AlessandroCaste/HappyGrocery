@@ -9,55 +9,100 @@
     tools:showIn="@layout/app_bar_main">
 
     <android.support.v7.widget.LinearLayoutCompat
-        android:layout_width="match_parent"
-        android:layout_height="80dp"
-        android:layout_marginHorizontal="15dp">
+        android:id="@+id/linearLayoutCompat"
+        android:layout_width="0dp"
+        android:layout_height="50dp"
+        android:layout_marginHorizontal="5dp"
+        android:gravity="center"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginBottom="8dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent">
+
         <de.hdodenhof.circleimageview.CircleImageView xmlns:app="http://schemas.android.com/apk/res-auto"
             android:id="@+id/productType1"
             android:layout_width="48dp"
             android:layout_height="48dp"
             android:layout_gravity="center"
-            android:src="@drawable/fruit"
-            app:civ_border_color="#311B92"
+            android:src="@drawable/food"
+            app:civ_border_color="#E53935"
             app:civ_border_width="2dp"
-          />
+            android:layout_weight="1"/>
+
         <de.hdodenhof.circleimageview.CircleImageView xmlns:app="http://schemas.android.com/apk/res-auto"
             android:id="@+id/productType2"
             android:layout_width="48dp"
             android:layout_height="48dp"
             android:layout_gravity="center"
-            android:src="@drawable/fruit"
-            app:civ_border_color="#311B92"
+            android:src="@drawable/beverage"
+            app:civ_border_color="#E53935"
             app:civ_border_width="2dp"
-            android:layout_marginLeft="40dp"
-            />
+
+            android:layout_weight="1"/>
+
+
         <de.hdodenhof.circleimageview.CircleImageView xmlns:app="http://schemas.android.com/apk/res-auto"
             android:id="@+id/productType3"
             android:layout_width="48dp"
             android:layout_height="48dp"
             android:layout_gravity="center"
-            android:src="@drawable/furniture"
-            app:civ_border_color="#DAA520"
+            android:src="@drawable/pencil"
+            app:civ_border_color="#E53935"
             app:civ_border_width="2dp"
-            android:layout_marginLeft="40dp"
-            />
+            android:layout_weight="1"/>
+
+
+        <de.hdodenhof.circleimageview.CircleImageView xmlns:app="http://schemas.android.com/apk/res-auto"
+            android:id="@+id/productType4"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_gravity="center"
+            android:src="@drawable/home"
+            app:civ_border_color="#E53935"
+            app:civ_border_width="2dp"
+            android:layout_weight="1"/>
+        />
+
+        <de.hdodenhof.circleimageview.CircleImageView xmlns:app="http://schemas.android.com/apk/res-auto"
+            android:id="@+id/productType5"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_gravity="center"
+            android:src="@drawable/shirts"
+            app:civ_border_color="#E53935"
+            app:civ_border_width="2dp"
+            android:layout_weight="1"/>
+
+
+        <de.hdodenhof.circleimageview.CircleImageView xmlns:app="http://schemas.android.com/apk/res-auto"
+            android:id="@+id/productType6"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_gravity="center"
+            android:src="@drawable/etc"
+            app:civ_border_color="#E53935"
+            app:civ_border_width="2dp"
+            android:layout_weight="1"/>
+
+
     </android.support.v7.widget.LinearLayoutCompat>
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/recyclerView"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="0dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
         android:layout_marginEnd="8dp"
         android:layout_marginBottom="8dp"
-        android:paddingTop="@dimen/paddingTop"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/linearLayoutCompat"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.442"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.44">
+        app:layout_constraintVertical_bias="0.712">
 
 
     </android.support.v7.widget.RecyclerView>
