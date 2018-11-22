@@ -78,18 +78,20 @@ public class DashboardActivity extends AppCompatActivity
 
     private void setChartData() {
 
-        ArrayList<String> xValues = new ArrayList<>();
-        ArrayList<Integer> colors = new ArrayList<>();
-        for (Category category : Category.values()) {
-            xValues.add(category.name());
-            colors.add(category.getCategoryColor());
-        }
-
         ArrayList<PieEntry> yValues = new ArrayList<>();
         List<Integer> valueList = ProductListDetails.getInstance().getProductPerCategory();
+        List<String> labels = ProductListDetails.getInstance().getCategoriesNames();
+        ArrayList<Integer> colors = new ArrayList<>();
+        for(int i = 0; i < labels.size(); i ++) {
+            colors.add(Category.getCategoryColor(labels.get(i)));
+        }
 
+        PieEntry newEntry;
         for (int i = 0; i < valueList.size(); i++) {
-            yValues.add(new PieEntry(valueList.get(i), i));
+            newEntry = new PieEntry(valueList.get(i), i);
+            newEntry.setLabel(labels.get(i));
+            //yValues.add(new PieEntry(valueList.get(i), labels.get(i)));
+            yValues.add(newEntry);
         }
 
 

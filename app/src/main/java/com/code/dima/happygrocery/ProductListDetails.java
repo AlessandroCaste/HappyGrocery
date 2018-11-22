@@ -1,6 +1,8 @@
 package com.code.dima.happygrocery;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Hashtable;
 import java.util.List;
 
 public class ProductListDetails {
@@ -8,13 +10,18 @@ public class ProductListDetails {
 
     private static ProductListDetails instance = null;
     private ArrayList<Integer> productPerCategory;
+    private ArrayList<String> categoryNames;
     private Product lastProduct;
-
+    //private Hashtable<String, Integer> productPerCategory;
 
     private ProductListDetails() {
         productPerCategory = new ArrayList<>();
-        for (int i = 0; i < Category.values().length; i ++) {
+        //productPerCategory = new Hashtable<>();
+        categoryNames = new ArrayList<>();
+        for (Category category : Category.values()) {
+            //productPerCategory.put(category.name(), 1);
             productPerCategory.add(new Integer(1));
+            categoryNames.add(category.name());
         }
         lastProduct = new Product();
 
@@ -34,13 +41,22 @@ public class ProductListDetails {
 
 
     public void addProduct(Category category) {
-        int newValue = productPerCategory.get(category.ordinal()) + 1;
-        productPerCategory.set(category.ordinal(), newValue);
+        String label = category.name();
+        if (categoryNames.contains(label)) {
+        //if (productPerCategory.containsKey(label)) {
+            int index = categoryNames.indexOf(label);
+            int newValue = productPerCategory.get(index) + 1;
+            productPerCategory.set(index, newValue);
+        }
     }
 
 
     public List<Integer> getProductPerCategory() {
         return (List<Integer>) productPerCategory.clone();
+    }
+
+    public List<String> getCategoriesNames() {
+        return (List<String>) categoryNames.clone();
     }
 
 
