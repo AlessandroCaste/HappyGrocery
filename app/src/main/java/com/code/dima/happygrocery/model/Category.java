@@ -24,6 +24,7 @@ public enum Category {
             case "CLOTHING":colorInt = Color.parseColor("#6A1B9A");
                             break;
             case "OTHER":   colorInt = Color.WHITE;
+                            break;
             default:        colorInt = Color.BLACK;
         }
         return colorInt;

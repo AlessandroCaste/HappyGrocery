@@ -30,7 +30,7 @@ import com.google.zxing.integration.android.IntentResult;
 import java.util.ArrayList;
 
 
-public class MainActivity extends AppCompatActivity
+public class ShoppingCartActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
     private RecyclerView recyclerView;
@@ -206,19 +206,19 @@ public class MainActivity extends AppCompatActivity
     @Override
     public Object instantiateItem(ViewGroup container, int position) {
 
-        TextView textView = new TextView(MainActivity.this);
-        RecyclerView recyclerView= new RecyclerView(MainActivity.this);
+        TextView textView = new TextView(ShoppingCartActivity.this);
+        RecyclerView recyclerView= new RecyclerView(ShoppingCartActivity.this);
         textView.setTextSize(30);
         textView.setTypeface(Typeface.DEFAULT_BOLD);
         textView.setText(String.valueOf(position));
 
-        ImageView imageView = new ImageView(MainActivity.this);
+        ImageView imageView = new ImageView(ShoppingCartActivity.this);
         imageView.setImageResource(res[position]);
         ViewGroup.LayoutParams imageParams = new ViewGroup.LayoutParams(
                 ViewGroup.LayoutParams.MATCH_PARENT,ViewGroup.LayoutParams.MATCH_PARENT);
         imageView.setLayoutParams(imageParams);
 
-        LinearLayout layout = new LinearLayout(MainActivity.this);
+        LinearLayout layout = new LinearLayout(ShoppingCartActivity.this);
         layout.setOrientation(LinearLayout.VERTICAL);
         ViewGroup.LayoutParams layoutParams = new ViewGroup.LayoutParams(
                 ViewGroup.LayoutParams.MATCH_PARENT,ViewGroup.LayoutParams.MATCH_PARENT);

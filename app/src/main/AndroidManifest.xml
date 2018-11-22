@@ -22,7 +22,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
-            android:name="com.code.dima.happygrocery.core.MainActivity"
+            android:name="com.code.dima.happygrocery.core.ShoppingCartActivity"
             android:label="@string/title_activity_main"
             android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
