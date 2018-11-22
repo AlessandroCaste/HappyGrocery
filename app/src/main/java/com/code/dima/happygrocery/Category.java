@@ -7,7 +7,8 @@ public enum Category {
     BEVERAGE,
     KIDS,
     HOME,
-    CLOTHING;
+    CLOTHING,
+    OTHER;
 
     public static Integer getCategoryColor (String name) {
         int colorInt;
@@ -22,6 +23,7 @@ public enum Category {
                             break;
             case "CLOTHING":colorInt = Color.parseColor("#6A1B9A");
                             break;
+            case "OTHER":   colorInt = Color.WHITE;
             default:        colorInt = Color.BLACK;
         }
         return colorInt;

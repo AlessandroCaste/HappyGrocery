@@ -1,25 +1,20 @@
 package com.code.dima.happygrocery;
 
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Hashtable;
 import java.util.List;
 
 public class ProductListDetails {
 
-
     private static ProductListDetails instance = null;
+
     private ArrayList<Integer> productPerCategory;
     private ArrayList<String> categoryNames;
     private Product lastProduct;
-    //private Hashtable<String, Integer> productPerCategory;
 
     private ProductListDetails() {
         productPerCategory = new ArrayList<>();
-        //productPerCategory = new Hashtable<>();
         categoryNames = new ArrayList<>();
         for (Category category : Category.values()) {
-            //productPerCategory.put(category.name(), 1);
             productPerCategory.add(new Integer(1));
             categoryNames.add(category.name());
         }
@@ -43,7 +38,6 @@ public class ProductListDetails {
     public void addProduct(Category category) {
         String label = category.name();
         if (categoryNames.contains(label)) {
-        //if (productPerCategory.containsKey(label)) {
             int index = categoryNames.indexOf(label);
             int newValue = productPerCategory.get(index) + 1;
             productPerCategory.set(index, newValue);
