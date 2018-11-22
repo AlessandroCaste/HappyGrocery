@@ -1,5 +1,6 @@
 package com.code.dima.happygrocery.core;
 
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -26,6 +27,8 @@ import com.github.mikephil.charting.components.Legend;
 import com.github.mikephil.charting.data.PieEntry;
 import com.github.mikephil.charting.data.PieData;
 import com.github.mikephil.charting.data.PieDataSet;
+import com.google.zxing.integration.android.IntentIntegrator;
+import com.google.zxing.integration.android.IntentResult;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -42,15 +45,6 @@ public class DashboardActivity extends AppCompatActivity
         setContentView(R.layout.activity_dashboard);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -122,6 +116,35 @@ public class DashboardActivity extends AppCompatActivity
         priceText.setText(price);
         imageView.setImageResource(imageID);
     }
+
+
+    public void onButtonClick(View view){
+        IntentIntegrator integrator = new IntentIntegrator(this);
+        integrator.setDesiredBarcodeFormats(IntentIntegrator.EAN_13);
+        integrator.setBeepEnabled(true);
+        integrator.setPrompt(getResources().getString(R.string.prompt));
+        integrator.initiateScan();
+        overridePendingTransition(R.transition.slide_in_right,R.transition.slide_out_left);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+
+        IntentResult result = IntentIntegrator.parseActivityResult(requestCode, resultCode, data);
+        if (result != null) {
+            if (result.getContents() == null) {
+                overridePendingTransition(R.transition.slide_in_left,R.transition.slide_out_right);
+            } else {
+                //Toast.makeText(this, (result.getContents()), Toast.LENGTH_LONG).show();
+                Intent i = new Intent(this,ProductActivity.class);
+                startActivity(i);
+                overridePendingTransition(R.transition.slide_in_right,R.transition.slide_out_left);
+            }
+        } else {
+            super.onActivityResult(requestCode,resultCode,data);
+        }
+    }
+
 
     @Override
     public void onBackPressed() {

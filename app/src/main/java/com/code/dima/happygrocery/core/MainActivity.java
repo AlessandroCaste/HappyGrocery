@@ -68,9 +68,9 @@ public class MainActivity extends AppCompatActivity
 
 
         createDummyData(); */
-        viewPager = (ViewPager)findViewById(R.id.myviewpager);
-        myPagerAdapter = new SlideAdapter();
-        viewPager.setAdapter(myPagerAdapter);
+        //viewPager = (ViewPager)findViewById(R.id.myviewpager);
+        //myPagerAdapter = new SlideAdapter();
+        //viewPager.setAdapter(myPagerAdapter);
 
     }
 
@@ -154,6 +154,7 @@ public class MainActivity extends AppCompatActivity
         integrator.setBeepEnabled(true);
         integrator.setPrompt(getResources().getString(R.string.prompt));
         integrator.initiateScan();
+        integrator.setOrientationLocked(true);
         overridePendingTransition(R.transition.slide_in_right,R.transition.slide_out_left);
     }
 

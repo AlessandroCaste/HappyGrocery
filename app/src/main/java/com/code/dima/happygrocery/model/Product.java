@@ -10,6 +10,7 @@ public class Product {
     private String name;
     private String price;
     private String description;
+    private float weight;
     private int imageID;
 
 
@@ -20,6 +21,7 @@ public class Product {
         price = "30 Euro";
         description = "Le fragole di Montagna Esselunga sono il meglio che la nostra azienda offre";
         imageID = R.drawable.fragole;
+        weight = 0.4f;
     }
 
 
@@ -45,6 +47,10 @@ public class Product {
 
     public int getImageID() {
         return imageID;
+    }
+
+    public float getWeight() {
+        return weight;
     }
 
 }

@@ -6,6 +6,8 @@ import android.transition.Explode;
 import android.view.View;
 import android.view.Window;
 import android.widget.TextView;
+
+import com.code.dima.happygrocery.model.Product;
 import com.example.alessandro.barcodeyeah.R;
 
 public class ProductActivity extends AppCompatActivity {
@@ -46,7 +48,6 @@ public class ProductActivity extends AppCompatActivity {
         TextView producer = findViewById(R.id.info_producer);
         TextView weight = findViewById(R.id.info_weight);
         nome.setText(fragola.getName());
-        producer.setText(fragola.getProduttore());
         price.setText(fragola.getPrice());
         weight.setText(Float.toString(fragola.getWeight()) + "g");
 
