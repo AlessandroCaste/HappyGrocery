@@ -6,6 +6,12 @@
     <color name="semitransparent">#9A000000</color>
     <color name="lightGrey">#EFF2F7</color>
     <color name="transparent">#00000000</color>
+    <color name="FOOD">#C62828</color>
+    <color name="BEVERAGE">#1565C0</color>
+    <color name="KIDS">#F9A825</color>
+    <color name="HOME">#2E7D32</color>
+    <color name="CLOTHING">#6A1B9A</color>
+    <color name="OTHER">#78909C</color>
     common_google_signin_btn_text_dark_focused
 
 </resources>

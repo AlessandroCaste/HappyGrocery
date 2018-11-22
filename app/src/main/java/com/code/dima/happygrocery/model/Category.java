@@ -21,9 +21,9 @@ public enum Category {
                             break;
             case "HOME":    colorInt = Color.parseColor("#2E7D32");
                             break;
-            case "CLOTHING":colorInt = Color.parseColor("#6A1B9A");
+            case "CLOTHING":colorInt = Color.parseColor("#C2185B");
                             break;
-            case "OTHER":   colorInt = Color.WHITE;
+            case "OTHER":   colorInt = Color.parseColor("#6A1B9A");
                             break;
             default:        colorInt = Color.BLACK;
         }
