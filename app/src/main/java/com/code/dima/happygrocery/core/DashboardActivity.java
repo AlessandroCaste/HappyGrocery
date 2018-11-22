@@ -1,4 +1,4 @@
-package com.code.dima.happygrocery;
+package com.code.dima.happygrocery.core;
 
 import android.graphics.Color;
 import android.os.Bundle;
@@ -16,6 +16,9 @@ import android.view.MenuItem;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.code.dima.happygrocery.model.Product;
+import com.code.dima.happygrocery.model.ProductListDetails;
+import com.code.dima.happygrocery.model.Category;
 import com.example.alessandro.barcodeyeah.R;
 import com.github.mikephil.charting.charts.PieChart;
 import com.github.mikephil.charting.components.Description;

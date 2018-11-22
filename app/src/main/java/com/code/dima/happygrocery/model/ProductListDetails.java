@@ -1,4 +1,4 @@
-package com.code.dima.happygrocery;
+package com.code.dima.happygrocery.model;
 
 import java.util.ArrayList;
 import java.util.List;

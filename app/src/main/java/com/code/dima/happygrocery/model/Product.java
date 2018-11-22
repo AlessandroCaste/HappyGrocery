@@ -1,5 +1,6 @@
-package com.code.dima.happygrocery;
+package com.code.dima.happygrocery.model;
 
+import com.code.dima.happygrocery.model.Category;
 import com.example.alessandro.barcodeyeah.R;
 
 public class Product {

@@ -1,4 +1,4 @@
-package com.code.dima.happygrocery;
+package com.code.dima.happygrocery.model;
 
 import android.graphics.Color;
 

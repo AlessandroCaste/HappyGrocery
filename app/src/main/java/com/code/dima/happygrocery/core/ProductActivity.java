@@ -1,4 +1,4 @@
-package com.code.dima.happygrocery;
+package com.code.dima.happygrocery.core;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;

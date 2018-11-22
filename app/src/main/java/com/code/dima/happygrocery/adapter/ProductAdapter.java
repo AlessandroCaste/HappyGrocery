@@ -1,4 +1,4 @@
-package com.code.dima.happygrocery;
+package com.code.dima.happygrocery.adapter;
 
 import android.content.Context;
 import android.util.Log;
@@ -7,6 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.support.v7.widget.RecyclerView;
 
+import com.code.dima.happygrocery.model.Product;
 import com.example.alessandro.barcodeyeah.R;
 import java.util.ArrayList;
 
