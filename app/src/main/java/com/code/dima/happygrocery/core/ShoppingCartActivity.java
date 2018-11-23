@@ -78,9 +78,9 @@ public class ShoppingCartActivity extends AppCompatActivity
     }
 
     private void animation() {
-        int resId = R.anim.layout_animation_fall_down;
-        LayoutAnimationController animation = AnimationUtils.loadLayoutAnimation(this, resId);
-        recyclerView.setLayoutAnimation(animation);
+        //int resId = R.anim.layout_animation_fall_down;
+        //LayoutAnimationController animation = AnimationUtils.loadLayoutAnimation(this, resId);
+        //recyclerView.setLayoutAnimation(animation);
     }
 
     @Override

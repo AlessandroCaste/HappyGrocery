@@ -3,8 +3,6 @@ package com.code.dima.happygrocery.core;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -17,8 +15,9 @@ import android.view.MenuItem;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.code.dima.happygrocery.exception.NoLastProductException;
 import com.code.dima.happygrocery.model.Product;
-import com.code.dima.happygrocery.model.ProductListDetails;
+import com.code.dima.happygrocery.model.ProductList;
 import com.code.dima.happygrocery.model.Category;
 import com.example.alessandro.barcodeyeah.R;
 import com.github.mikephil.charting.charts.PieChart;
@@ -76,8 +75,8 @@ public class DashboardActivity extends AppCompatActivity
     private void setChartData() {
 
         ArrayList<PieEntry> yValues = new ArrayList<>();
-        List<Integer> valueList = ProductListDetails.getInstance().getProductPerCategory();
-        List<String> labels = ProductListDetails.getInstance().getCategoriesNames();
+        List<Integer> valueList = ProductList.getInstance().getNumberOfProductsPerCategory();
+        List<String> labels = ProductList.getInstance().getCategoryNames();
         ArrayList<Integer> colors = new ArrayList<>();
         for(int i = 0; i < labels.size(); i ++) {
             colors.add(Category.getCategoryColor(labels.get(i)));
@@ -105,10 +104,19 @@ public class DashboardActivity extends AppCompatActivity
     }
 
     private void updateLastProduct () {
-        Product lastProduct = ProductListDetails.getInstance().getLastProduct();
-        String name = lastProduct.getName();
-        String price = lastProduct.getPrice();
-        int imageID = lastProduct.getImageID();
+        String name;
+        String price;
+        int imageID;
+        try {
+            Product lastProduct = ProductList.getInstance().getLastProduct();
+            name = lastProduct.getName();
+            price = lastProduct.getPrice();
+            imageID = lastProduct.getImageID();
+        } catch (NoLastProductException e) {
+            name = getResources().getString(R.string.dashboard_default_prod_name);
+            price = getResources().getString(R.string.dashboard_default_prod_details);
+            imageID = R.drawable.fragole;
+        }
         ImageView imageView = findViewById(R.id.dashboardProdImage);
         TextView nameText = findViewById(R.id.dashboardProdName);
         TextView priceText = findViewById(R.id.dashboardProdDetails);

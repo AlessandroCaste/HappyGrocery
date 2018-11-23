@@ -10,8 +10,8 @@
     <color name="BEVERAGE">#1565C0</color>
     <color name="KIDS">#F9A825</color>
     <color name="HOME">#2E7D32</color>
-    <color name="CLOTHING">#6A1B9A</color>
-    <color name="OTHER">#78909C</color>
+    <color name="CLOTHING">#C2185B</color>
+    <color name="OTHER">#6A1B9A</color>
     common_google_signin_btn_text_dark_focused
 
 </resources>
