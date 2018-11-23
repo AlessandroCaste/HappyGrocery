@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <integer name="slide_animation_duration">250</integer>
-    <integer name="explode_animation_duration">200</integer>
+    <integer name="animation_fall_down">650</integer>
 </resources>

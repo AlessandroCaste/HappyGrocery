@@ -31,14 +31,6 @@ public class ProductActivity extends AppCompatActivity {
         return true;
     }
 
-    /**Garantisce l'explode animation all'avvio dell'activity**/
-    private void initAnimation() {
-
-        Explode enterTransition = new Explode();
-        enterTransition.setDuration(getResources().getInteger(R.integer.explode_animation_duration));
-        getWindow().setEnterTransition(enterTransition);
-
-    }
 
     // Classe test per rendere configurabile la gestione dei prodotti. Poi verrò naturalmente allargata/rimossa
     private void extractData() {
