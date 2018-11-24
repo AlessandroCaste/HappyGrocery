@@ -26,7 +26,7 @@
             android:layout_height="48dp"
             android:layout_gravity="center"
             android:src="@drawable/food"
-            app:civ_border_color="#E53935"
+            app:civ_border_color="@color/FOOD"
             app:civ_border_width="2dp"
             android:layout_weight="1"/>
 
@@ -36,7 +36,7 @@
             android:layout_height="48dp"
             android:layout_gravity="center"
             android:src="@drawable/beverage"
-            app:civ_border_color="#E53935"
+            app:civ_border_color="@color/BEVERAGE"
             app:civ_border_width="2dp"
 
             android:layout_weight="1"/>
@@ -48,7 +48,7 @@
             android:layout_height="48dp"
             android:layout_gravity="center"
             android:src="@drawable/pencil"
-            app:civ_border_color="#E53935"
+            app:civ_border_color="@color/KIDS"
             app:civ_border_width="2dp"
             android:layout_weight="1"/>
 
@@ -59,7 +59,7 @@
             android:layout_height="48dp"
             android:layout_gravity="center"
             android:src="@drawable/home"
-            app:civ_border_color="#E53935"
+            app:civ_border_color="@color/HOME"
             app:civ_border_width="2dp"
             android:layout_weight="1"/>
         />
@@ -70,7 +70,7 @@
             android:layout_height="48dp"
             android:layout_gravity="center"
             android:src="@drawable/shirts"
-            app:civ_border_color="#E53935"
+            app:civ_border_color="@color/CLOTHING"
             app:civ_border_width="2dp"
             android:layout_weight="1"/>
 
@@ -81,7 +81,7 @@
             android:layout_height="48dp"
             android:layout_gravity="center"
             android:src="@drawable/etc"
-            app:civ_border_color="#E53935"
+            app:civ_border_color="@color/OTHER"
             app:civ_border_width="2dp"
             android:layout_weight="1"/>
 
@@ -101,7 +101,9 @@
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.712">
+        app:layout_constraintVertical_bias="0.712"
+        android:layoutAnimation="@anim/layout_animation_fall_down"
+        >
 
 
     </android.support.v7.widget.RecyclerView>

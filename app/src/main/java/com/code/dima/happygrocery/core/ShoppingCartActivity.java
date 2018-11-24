@@ -1,36 +1,24 @@
 package com.code.dima.happygrocery.core;
 
-
-import android.content.Intent;
-import android.graphics.Typeface;
 import android.os.Bundle;
-import android.support.v4.view.PagerAdapter;
-import android.support.v4.view.ViewPager;
+import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
-import android.view.View;
+import android.support.v7.widget.SearchView;
+import android.support.v7.widget.Toolbar;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.ViewGroup;
-import android.view.animation.AnimationUtils;
-import android.view.animation.LayoutAnimationController;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.TextView;
+import android.widget.Toast;
 
 import com.code.dima.happygrocery.model.Product;
 import com.code.dima.happygrocery.adapter.ProductAdapter;
 import com.example.alessandro.barcodeyeah.R;
-import com.google.zxing.integration.android.IntentIntegrator;
-import com.google.zxing.integration.android.IntentResult;
 
 import java.util.ArrayList;
 
@@ -46,9 +34,9 @@ public class ShoppingCartActivity extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        Log.w("myApp", "Avvio");
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -61,11 +49,9 @@ public class ShoppingCartActivity extends AppCompatActivity
 
         productArrayList = new ArrayList<>();
         initializeRecycler();
-        animation();
         createDummyData();
 
     }
-
 
     private void initializeRecycler(){
         recyclerView = findViewById(R.id.recyclerView);
@@ -75,12 +61,6 @@ public class ShoppingCartActivity extends AppCompatActivity
         decoration.setDrawable(getResources().getDrawable(R.drawable.rectangle));
         recyclerView.addItemDecoration(decoration);
         recyclerView.setAdapter(adapter);
-    }
-
-    private void animation() {
-        //int resId = R.anim.layout_animation_fall_down;
-        //LayoutAnimationController animation = AnimationUtils.loadLayoutAnimation(this, resId);
-        //recyclerView.setLayoutAnimation(animation);
     }
 
     @Override
@@ -93,12 +73,7 @@ public class ShoppingCartActivity extends AppCompatActivity
         }
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.main2, menu);
-        return true;
-    }
+
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -143,47 +118,32 @@ public class ShoppingCartActivity extends AppCompatActivity
     //   .setAction("Action", null).show()
 
     private void createDummyData() {
+        for(int i= 0; i < 100; i++)
         productArrayList.add(new Product());
-        productArrayList.add(new Product());
-        productArrayList.add(new Product());
-        productArrayList.add(new Product());
-        productArrayList.add(new Product());
-        productArrayList.add(new Product());
-        productArrayList.add(new Product());
+
         adapter.notifyDataSetChanged();
     }
 
-
-    public void onClick(View view){
-        IntentIntegrator integrator = new IntentIntegrator(this);
-        integrator.setDesiredBarcodeFormats(IntentIntegrator.EAN_13);
-        integrator.setBeepEnabled(true);
-        integrator.setPrompt(getResources().getString(R.string.prompt));
-        integrator.initiateScan();
-        integrator.setOrientationLocked(true);
-        overridePendingTransition(R.transition.slide_in_right,R.transition.slide_out_left);
-    }
-
     @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-
-        IntentResult result = IntentIntegrator.parseActivityResult(requestCode, resultCode, data);
-        if (result != null) {
-            if (result.getContents() == null) {
-                overridePendingTransition(R.transition.slide_in_left,R.transition.slide_out_right);
-            } else {
-                //Toast.makeText(this, (result.getContents()), Toast.LENGTH_LONG).show();
-                Intent i = new Intent(this,ProductActivity.class);
-                startActivity(i);
-                overridePendingTransition(R.transition.slide_in_right,R.transition.slide_out_left);
+    public boolean onCreateOptionsMenu( Menu menu) {
+        getMenuInflater().inflate( R.menu.main_menu, menu);
+        final MenuItem item = menu.findItem(R.id.action_search);
+        final SearchView searchView = (SearchView) item.getActionView();
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                return false;
             }
-        } else {
-            super.onActivityResult(requestCode,resultCode,data);
-        }
+            @Override
+            public boolean onQueryTextChange(String query) {
+                //FILTER AS YOU TYPE
+                if(query.length() > 15) { Toast.makeText(ShoppingCartActivity.this, getString(R.string.long_search), Toast.LENGTH_SHORT).show(); }
+                adapter.getFilter().filter(query);
+                return false;
+            }
+        });
+        return true;
     }
-
-
-
 
 }
 

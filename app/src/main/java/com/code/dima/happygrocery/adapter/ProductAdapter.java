@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.support.v7.widget.RecyclerView;
+import android.widget.Filter;
 
 import com.code.dima.happygrocery.model.Product;
 import com.example.alessandro.barcodeyeah.R;
@@ -15,6 +16,7 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductHolder> {
 
     private Context context;
     private ArrayList<Product> products;
+    CustomFilter filter;
 
     public ProductAdapter(Context context, ArrayList<Product> products) {
         this.context = context;
@@ -36,4 +38,18 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductHolder> {
         Product product = products.get(position);
         holder.setDetails(product);
     }
+
+    public void set (ArrayList<Product> filtered){
+        products = filtered;
+    }
+
+    //RETURN FILTER OBJ
+    public Filter getFilter() {
+        if(filter==null)
+        {
+            filter=new CustomFilter(products,this);
+        }
+        return filter;
+    }
+
 }
