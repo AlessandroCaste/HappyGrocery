@@ -16,11 +16,11 @@
    >
 
     <ImageView
+        android:id="@+id/productImage"
         android:layout_width="match_parent"
         android:layout_height="130dp"
         android:adjustViewBounds="true"
-        android:scaleType="centerCrop"
-        android:src="@drawable/fragole" />
+        android:scaleType="centerCrop" />
 
     <TextView
         android:paddingLeft="5dp"

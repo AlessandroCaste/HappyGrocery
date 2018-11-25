@@ -13,13 +13,33 @@ public class Product {
     private int imageID;
 
 
-    public Product(){
-        category = Category.FOOD;
-        name = "Fragole di Montagna";
-        price = "30 Euro";
-        imageID = R.drawable.fragole;
-        weight = 0.4f;
+    public Product(int id){
+        if(id == 0) {
+            category = Category.FOOD;
+            name = "Fragole di Montagna";
+            price = "30 Euro";
+            imageID = R.drawable.fragole;
+            weight = 0.9f;
+        }
+
+        if(id == 1) {
+            category = Category.BEVERAGE;
+            name = "Vino Buono";
+            price = "50 Euro";
+            imageID = R.drawable.wine;
+            weight = 1.2f;
+        }
+
+        if(id == 2) {
+            category = Category.HOME;
+            name = "Swiffer";
+            price = "10 Euro";
+            imageID = R.drawable.swiffer;
+            weight = 0.7f;
+        }
+
     }
+
 
 
     public Category getCategory() {

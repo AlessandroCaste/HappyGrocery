@@ -34,7 +34,7 @@ public class ProductActivity extends AppCompatActivity {
 
     // Classe test per rendere configurabile la gestione dei prodotti. Poi verrò naturalmente allargata/rimossa
     private void extractData() {
-        Product fragola = new Product();
+        Product fragola = new Product(0);
         TextView nome = findViewById(R.id.info_name);
         TextView price = findViewById(R.id.info_price);
         TextView producer = findViewById(R.id.info_producer);

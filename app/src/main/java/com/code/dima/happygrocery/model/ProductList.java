@@ -21,12 +21,11 @@ public class ProductList {
         productLists = new ArrayList<>();
         categoryNames = new ArrayList<>();
         for (Category category : Category.values()) {
-            ArrayList<Product> initialList = new ArrayList<>(1);
-            initialList.add(new Product());
+            ArrayList<Product> initialList = new ArrayList<>();
             productLists.add(initialList);
             categoryNames.add(category.name());
         }
-        lastProduct = new Product();
+        lastProduct = new Product(0);
 
     }
 
@@ -44,7 +43,12 @@ public class ProductList {
         return categoryNames.indexOf(categoryName);
     }
 
-
+    public int getNumberofProducts() {
+        int count = 0;
+        for (ArrayList<Product> list : productLists)
+            count += list.size();
+        return count;
+    }
     public int getNumberOfCategories() {
         return productLists.size();
     }
@@ -98,6 +102,13 @@ public class ProductList {
         return productsPerCategory;
     }
 
+    public int getNumberOfProductsPerCategory(String category) throws NoSuchCategoryException{
+        int index, count;
+        index = getCategoryIndex(category);
+        count = productLists.get(index).size();
+        return count;
+    }
+
 
     public List<String> getCategoryNames() {
         return (List<String>) categoryNames.clone();
@@ -112,5 +123,11 @@ public class ProductList {
 
     public void setLastProduct(Product lastProduct) {
         this.lastProduct = lastProduct;
+    }
+
+    public Product get(String category, int position) throws NoSuchCategoryException {
+        int index = getCategoryIndex(category);
+        Product product = productLists.get(index).get(position);
+        return product;
     }
 }

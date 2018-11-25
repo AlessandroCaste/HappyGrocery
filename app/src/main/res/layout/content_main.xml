@@ -25,10 +25,12 @@
             android:layout_width="48dp"
             android:layout_height="48dp"
             android:layout_gravity="center"
-            android:src="@drawable/food"
+            android:src="@drawable/foodx"
             app:civ_border_color="@color/FOOD"
             app:civ_border_width="2dp"
-            android:layout_weight="1"/>
+            android:layout_weight="1"
+            android:background="?attr/selectableItemBackgroundBorderless"
+        />
 
         <de.hdodenhof.circleimageview.CircleImageView xmlns:app="http://schemas.android.com/apk/res-auto"
             android:id="@+id/beverage"
@@ -38,7 +40,7 @@
             android:src="@drawable/beverage"
             app:civ_border_color="@color/BEVERAGE"
             app:civ_border_width="2dp"
-
+            android:background="?attr/selectableItemBackgroundBorderless"
             android:layout_weight="1"/>
 
 
@@ -50,7 +52,9 @@
             android:src="@drawable/pencil"
             app:civ_border_color="@color/KIDS"
             app:civ_border_width="2dp"
-            android:layout_weight="1"/>
+            android:layout_weight="1"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            />
 
 
         <de.hdodenhof.circleimageview.CircleImageView xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -61,8 +65,9 @@
             android:src="@drawable/home"
             app:civ_border_color="@color/HOME"
             app:civ_border_width="2dp"
-            android:layout_weight="1"/>
-        />
+            android:layout_weight="1"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            />
 
         <de.hdodenhof.circleimageview.CircleImageView xmlns:app="http://schemas.android.com/apk/res-auto"
             android:id="@+id/clothing"
@@ -72,7 +77,9 @@
             android:src="@drawable/shirts"
             app:civ_border_color="@color/CLOTHING"
             app:civ_border_width="2dp"
-            android:layout_weight="1"/>
+            android:layout_weight="1"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            />
 
 
         <de.hdodenhof.circleimageview.CircleImageView xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -83,7 +90,9 @@
             android:src="@drawable/etc"
             app:civ_border_color="@color/OTHER"
             app:civ_border_width="2dp"
-            android:layout_weight="1"/>
+            android:layout_weight="1"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            />
 
 
     </android.support.v7.widget.LinearLayoutCompat>
