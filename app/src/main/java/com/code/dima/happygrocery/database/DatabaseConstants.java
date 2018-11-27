@@ -24,7 +24,7 @@ public class DatabaseConstants {
 
     // Product column names
     public static final String PRODUCT_TABLE = "product";
-    public static final String PRODUCT_ID = "id";
+    public static final String PRODUCT_ID = "barcode";
     public static final String PRODUCT_NAME = "name";
     public static final String PRODUCT_WEIGHT = "weight";
     public static final String PRODUCT_CATEGORY = "category";
@@ -48,7 +48,7 @@ public class DatabaseConstants {
 
     public static final String CREATE_PRODUCT_TABLE =
             "CREATE TABLE " + PRODUCT_TABLE + "("
-                    + PRODUCT_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
+                    + PRODUCT_ID + " INTEGER PRIMARY KEY, "
                     + PRODUCT_NAME + " TEXT, "
                     + PRODUCT_WEIGHT + " REAL, "
                     + PRODUCT_CATEGORY + " TEXT)";
@@ -56,7 +56,7 @@ public class DatabaseConstants {
     public static final String CREATE_PRODUCT_LIST_TABLE =
             "CREATE TABLE " + LIST_TABLE + "("
                 + LIST_HID + " INTEGER REFERENCES grocery_history(id) NOT NULL, "
-                + LIST_PID + " INTEGER REFERENCES product(id) NOT NULL, "
+                + LIST_PID + " INTEGER REFERENCES product(barcode) NOT NULL, "
                 + LIST_QUANTITY + " INTEGER, "
                 + LIST_PRICE + " REAL, "
                 + "PRIMARY KEY (h_id, p_id))";
