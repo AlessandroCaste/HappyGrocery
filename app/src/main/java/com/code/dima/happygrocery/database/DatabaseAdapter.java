@@ -4,6 +4,7 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.provider.ContactsContract;
 
 import com.code.dima.happygrocery.exception.NoSuchProductException;
 import com.code.dima.happygrocery.model.Product;
@@ -118,8 +119,18 @@ public class DatabaseAdapter {
     }
 
     // used everytime the user removes a product from the product list
-    public void deleteProductFromProductList() {
-
+    public void deleteProductFromProductList(Product product) {
+        if (database != null) {
+            long groceryID = queryGroceryID();
+            try {
+                long productID = queryProductIDWithBarcode(product.getBarcode());
+                database.delete(DatabaseConstants.LIST_TABLE,
+                        DatabaseConstants.LIST_HID + " = " + groceryID
+                                + " AND " + DatabaseConstants.LIST_PID + " = " + productID, null);
+            } catch (NoSuchProductException e) {
+                e.printStackTrace();
+            }
+        }
     }
 
     // used everytime the user modifies the quantity of a product in the product list
@@ -141,8 +152,19 @@ public class DatabaseAdapter {
     }
 
     // used by the system to update information about a product
-    public void updateProduct() {
-
+    public void updateProduct(Product product) {
+        if (database != null) {
+            try {
+                long productID = queryProductIDWithBarcode(product.getBarcode());
+                ContentValues values = createProductContentValues(
+                        product.getBarcode(), product.getName(), product.getWeight(), product.getCategory().name()
+                );
+                database.update(DatabaseConstants.PRODUCT_TABLE, values,
+                        DatabaseConstants.PRODUCT_ID + " = " + productID, null);
+            } catch (NoSuchProductException e) {
+                e.printStackTrace();
+            }
+        }
     }
 
     // set attribute "active" of the active grocery to 0
