@@ -8,17 +8,31 @@ public class Product {
 
     private Category category;
     private String name;
-    private String price;
+    private float price;
+    private String barcode;
     private float weight;
+    private int quantity;
     private int imageID;
 
 
     public Product(){
         category = Category.FOOD;
         name = "Fragole di Montagna";
-        price = "30 Euro";
+        price = 30f;
         imageID = R.drawable.fragole;
         weight = 0.4f;
+        quantity = 1;
+    }
+
+
+    public Product(Category category, String name, float price, String barcode, float weight, int quantity, int imageID){
+        this.category = category;
+        this.name = name;
+        this.price = price;
+        this.barcode = barcode;
+        this.weight = weight;
+        this.quantity = quantity;
+        this.imageID = imageID;
     }
 
 
@@ -32,9 +46,20 @@ public class Product {
     }
 
 
-    public String getPrice() {
+    public float getPrice() {
         return price;
     }
+
+
+    public String getBarcode() {return barcode;}
+
+
+    public float getWeight() {
+        return weight;
+    }
+
+
+    public int getQuantity() {return quantity; }
 
 
     public int getImageID() {
@@ -42,9 +67,7 @@ public class Product {
     }
 
 
-    public float getWeight() {
-        return weight;
-    }
+
 
 
     @Override
@@ -53,11 +76,12 @@ public class Product {
         //if (other == null) return false;
         if (other == this) answer = true;
         // if (!(other instanceof Product))return false;
-        if (other instanceof Policy) {
+        if (other instanceof Product) {
             Product otherP = (Product) other;
             answer = (
                     this.name == otherP.name &&
                     this.category == otherP.category &&
+                    this.barcode == otherP.barcode &&
                     this.imageID == otherP.imageID &&
                     this.price == otherP.price &&
                     this.weight == otherP.weight
