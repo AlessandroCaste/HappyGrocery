@@ -167,7 +167,7 @@ public class DatabaseAdapter {
     }
 
     // used by the system to update information about a product
-    public void updateProduct(Product product) {
+    private void updateProduct(Product product) {
         if (database != null) {
             try {
                 long productID = queryProductIDWithBarcode(product.getBarcode());
