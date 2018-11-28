@@ -110,7 +110,7 @@ public class DashboardActivity extends AppCompatActivity
         try {
             Product lastProduct = ProductList.getInstance().getLastProduct();
             name = lastProduct.getName();
-            price = lastProduct.getPrice();
+            price = String.valueOf(lastProduct.getPrice()) + getResources().getString(R.string.currency);
             imageID = lastProduct.getImageID();
         } catch (NoLastProductException e) {
             name = getResources().getString(R.string.dashboard_default_prod_name);

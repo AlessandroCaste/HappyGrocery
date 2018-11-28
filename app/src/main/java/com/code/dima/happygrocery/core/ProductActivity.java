@@ -40,7 +40,7 @@ public class ProductActivity extends AppCompatActivity {
         TextView producer = findViewById(R.id.info_producer);
         TextView weight = findViewById(R.id.info_weight);
         nome.setText(fragola.getName());
-        price.setText(fragola.getPrice());
+        price.setText(String.valueOf(fragola.getPrice()));
         weight.setText(Float.toString(fragola.getWeight()) + "g");
 
     }
