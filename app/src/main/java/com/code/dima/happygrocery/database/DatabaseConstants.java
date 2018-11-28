@@ -60,4 +60,14 @@ public class DatabaseConstants {
                 + LIST_QUANTITY + " INTEGER, "
                 + LIST_PRICE + " REAL, "
                 + "PRIMARY KEY (h_id, p_id))";
+
+    public static final String QUERY_PRODUCTS_PER_CATEGORY =
+            "SELECT " + PRODUCT_CATEGORY + ", COUNT(*) FROM "
+            + LIST_TABLE + " JOIN " + PRODUCT_TABLE + " ON " + LIST_PID + " = " + PRODUCT_ID
+            + " WHERE " + HISTORY_ID + " = ? GROUP BY " + PRODUCT_CATEGORY;
+
+    public static final String QUERY_PRODUCT_LIST =
+            "SELECT * FROM "
+                    + LIST_TABLE + " JOIN " + PRODUCT_TABLE + " ON " + LIST_PID + " = " + PRODUCT_ID
+                    + " WHERE " + HISTORY_ID + " = ?";
 }

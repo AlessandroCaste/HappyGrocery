@@ -4,12 +4,14 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.provider.ContactsContract;
 
 import com.code.dima.happygrocery.exception.NoSuchProductException;
+import com.code.dima.happygrocery.model.Category;
 import com.code.dima.happygrocery.model.Product;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 public class DatabaseAdapter {
 
@@ -17,9 +19,12 @@ public class DatabaseAdapter {
     private DatabaseHelper helper;
     private SQLiteDatabase database;
 
+    private long actualGroceryID;
+
 
     public DatabaseAdapter(Context context) {
         this.context = context;
+        this.actualGroceryID = -1;
     }
 
 
@@ -70,12 +75,15 @@ public class DatabaseAdapter {
     }
 
     private long queryGroceryID() {
-        long groceryID;
-        Cursor cursor = database.rawQuery("SELECT * FROM " + DatabaseConstants.HISTORY_TABLE
-                + " WHERE " + DatabaseConstants.HISTORY_ACTIVE + " = 1", null);
-        groceryID = cursor.getLong(cursor.getColumnIndex(DatabaseConstants.HISTORY_ID));
-        cursor.close();
-        return groceryID;
+        if (actualGroceryID < 0) {
+            if (database != null) {
+                Cursor cursor = database.rawQuery("SELECT * FROM " + DatabaseConstants.HISTORY_TABLE
+                        + " WHERE " + DatabaseConstants.HISTORY_ACTIVE + " = 1", null);
+                actualGroceryID = cursor.getLong(cursor.getColumnIndex(DatabaseConstants.HISTORY_ID));
+                cursor.close();
+            }
+        }
+        return actualGroceryID;
     }
 
     private long queryProductIDWithBarcode(String barcode) throws NoSuchProductException {
@@ -178,11 +186,39 @@ public class DatabaseAdapter {
         }
     }
 
-    public ArrayList<Integer> queryNumberOfProductsPerCategory() {
-        return null;
+    public List<Integer> queryNumberOfProductsPerCategory(List<String> categoryNames) {
+        Integer[] productsPerCategory = new Integer[categoryNames.size()];
+        if (database != null) {
+            long groceryID = queryGroceryID();
+            Cursor cursor = database.rawQuery(DatabaseConstants.QUERY_PRODUCTS_PER_CATEGORY,
+                    new String[] {String.valueOf(groceryID)});
+            while (cursor.moveToNext()) {
+                String category = cursor.getString(cursor.getColumnIndex(DatabaseConstants.PRODUCT_CATEGORY));
+                int index = categoryNames.indexOf(category);
+                if (index >= 0)
+                    productsPerCategory[index] = cursor.getInt(1);
+            }
+            cursor.close();
+        }
+        return Arrays.asList(productsPerCategory);
     }
 
-    public Cursor queryProductList() {
-        return null;
+    public List<Product> queryProductList() {
+        ArrayList<Product> products = new ArrayList<>();
+        if (database != null) {
+            long groceryID = queryGroceryID();
+            Cursor cursor = database.rawQuery(DatabaseConstants.QUERY_PRODUCT_LIST, new String[] {String.valueOf(groceryID)});
+            while (cursor.moveToNext()) {
+                String category = cursor.getString(cursor.getColumnIndex(DatabaseConstants.PRODUCT_CATEGORY));
+                String name = cursor.getString(cursor.getColumnIndex(DatabaseConstants.PRODUCT_NAME));
+                float price = cursor.getFloat(cursor.getColumnIndex(DatabaseConstants.LIST_PRICE));
+                String barcode = cursor.getString(cursor.getColumnIndex(DatabaseConstants.PRODUCT_ID));
+                float weight = cursor.getFloat(cursor.getColumnIndex(DatabaseConstants.PRODUCT_WEIGHT));
+                int quantity = cursor.getInt(cursor.getColumnIndex(DatabaseConstants.LIST_QUANTITY));
+                products.add(new Product(Category.valueOf(category), name, price, barcode, weight, quantity, 0));
+            }
+            cursor.close();
+        }
+        return products;
     }
 }
