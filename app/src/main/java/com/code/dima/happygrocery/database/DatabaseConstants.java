@@ -62,12 +62,12 @@ public class DatabaseConstants {
                 + "PRIMARY KEY (h_id, p_id))";
 
     public static final String QUERY_PRODUCTS_PER_CATEGORY =
-            "SELECT " + PRODUCT_CATEGORY + ", COUNT(*) FROM "
+            "SELECT " + PRODUCT_CATEGORY + ", count(*) FROM "
             + LIST_TABLE + " JOIN " + PRODUCT_TABLE + " ON " + LIST_PID + " = " + PRODUCT_ID
-            + " WHERE " + HISTORY_ID + " = ? GROUP BY " + PRODUCT_CATEGORY;
+            + " WHERE " + LIST_HID + " = ? GROUP BY " + PRODUCT_CATEGORY;
 
     public static final String QUERY_PRODUCT_LIST =
             "SELECT * FROM "
                     + LIST_TABLE + " JOIN " + PRODUCT_TABLE + " ON " + LIST_PID + " = " + PRODUCT_ID
-                    + " WHERE " + HISTORY_ID + " = ?";
+                    + " WHERE " + LIST_HID + " = ?";
 }

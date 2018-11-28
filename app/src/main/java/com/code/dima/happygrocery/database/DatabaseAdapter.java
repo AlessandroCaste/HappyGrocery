@@ -3,6 +3,7 @@ package com.code.dima.happygrocery.database;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
+import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 
 import com.code.dima.happygrocery.exception.NoSuchProductException;
@@ -22,23 +23,27 @@ public class DatabaseAdapter {
     private long actualGroceryID;
 
 
-    public DatabaseAdapter(Context context) {
+    private DatabaseAdapter(Context context) {
         this.context = context;
         this.actualGroceryID = -1;
     }
 
 
-    public DatabaseAdapter openInReadMode(Context context) {
-        helper = new DatabaseHelper(context);
-        database = helper.getReadableDatabase();
-        return this;
+    public static DatabaseAdapter openInReadMode(Context context) throws SQLException
+
+    {
+        DatabaseAdapter adapter = new DatabaseAdapter(context);
+        adapter.helper = new DatabaseHelper(context);
+        adapter.database = adapter.helper.getReadableDatabase();
+        return adapter;
     }
 
 
-    public DatabaseAdapter openInWriteMode(Context context) {
-        helper = new DatabaseHelper(context);
-        database = helper.getWritableDatabase();
-        return this;
+    public static DatabaseAdapter openInWriteMode(Context context) throws SQLException {
+        DatabaseAdapter adapter = new DatabaseAdapter(context);
+        adapter.helper = new DatabaseHelper(context);
+        adapter.database = adapter.helper.getWritableDatabase();
+        return adapter;
     }
 
 
@@ -79,6 +84,7 @@ public class DatabaseAdapter {
             if (database != null) {
                 Cursor cursor = database.rawQuery("SELECT * FROM " + DatabaseConstants.HISTORY_TABLE
                         + " WHERE " + DatabaseConstants.HISTORY_ACTIVE + " = 1", null);
+                cursor.moveToNext();
                 actualGroceryID = cursor.getLong(cursor.getColumnIndex(DatabaseConstants.HISTORY_ID));
                 cursor.close();
             }
@@ -92,6 +98,7 @@ public class DatabaseAdapter {
                 + " WHERE " + DatabaseConstants.PRODUCT_ID + " = " + barLong, null);
         if (cursor.getCount() == 0)
             throw new NoSuchProductException();
+        cursor.moveToNext();
         long productID = cursor.getLong(cursor.getColumnIndex(DatabaseConstants.PRODUCT_ID));
         cursor.close();
         return productID;
@@ -220,5 +227,13 @@ public class DatabaseAdapter {
             cursor.close();
         }
         return products;
+    }
+
+    public Cursor querySQL(String sql) {
+        Cursor cursor = null;
+        if(database != null) {
+            cursor = database.rawQuery(sql, null);
+        }
+        return cursor;
     }
 }
