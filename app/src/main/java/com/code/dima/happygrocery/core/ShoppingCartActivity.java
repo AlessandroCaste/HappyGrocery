@@ -151,11 +151,11 @@ public class ShoppingCartActivity extends AppCompatActivity
 
     private void createDummyData() {
         for(int i= 0; i < 2; i++)
-        productList.addProduct(new Product(0));
+        productList.addProduct(new Product());
         for(int i= 0; i < 2; i++)
-            productList.addProduct(new Product(1));
+            productList.addProduct(new Product());
         for(int i= 0; i < 2; i++)
-            productList.addProduct(new Product(2));
+            productList.addProduct(new Product());
 
         adapter.notifyDataSetChanged();
     }

@@ -25,7 +25,7 @@ public class ProductList {
             productLists.add(initialList);
             categoryNames.add(category.name());
         }
-        lastProduct = new Product(0);
+        lastProduct = new Product();
 
     }
 
