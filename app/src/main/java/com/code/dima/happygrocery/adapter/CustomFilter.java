@@ -6,12 +6,13 @@ import com.code.dima.happygrocery.adapter.ProductAdapter;
 import com.code.dima.happygrocery.model.Product;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class CustomFilter extends Filter{
         ProductAdapter adapter;
-        ArrayList<Product> filterList;
+        List<Product> filterList;
 
-        public CustomFilter(ArrayList<Product> filterList, ProductAdapter adapter)
+        public CustomFilter(List<Product> filterList, ProductAdapter adapter)
         {
             this.adapter=adapter;
             this.filterList=filterList;
@@ -47,7 +48,7 @@ public class CustomFilter extends Filter{
         }
         @Override
         protected void publishResults(CharSequence constraint, FilterResults results) {
-            adapter.set((ArrayList<Product>)results.values);
+            adapter.set((List<Product>)results.values);
             //REFRESH
             adapter.notifyDataSetChanged();
         }

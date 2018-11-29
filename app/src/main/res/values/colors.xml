@@ -12,6 +12,5 @@
     <color name="HOME">#2E7D32</color>
     <color name="CLOTHING">#C2185B</color>
     <color name="OTHER">#6A1B9A</color>
-    common_google_signin_btn_text_dark_focused
-
+    <color name="Ripple">#FFB74D</color>
 </resources>
