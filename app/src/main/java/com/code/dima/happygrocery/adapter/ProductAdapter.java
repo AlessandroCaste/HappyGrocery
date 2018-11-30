@@ -32,7 +32,7 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductHolder> {
     }
 
     @Override
-    public int getItemCount() { return products.size(); };
+    public int getItemCount() { return products.size(); }
 
     @Override
     public void onBindViewHolder(ProductHolder holder, int position) {

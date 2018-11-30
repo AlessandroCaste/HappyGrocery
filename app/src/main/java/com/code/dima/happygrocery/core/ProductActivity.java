@@ -12,8 +12,6 @@ import com.example.alessandro.barcodeyeah.R;
 
 public class ProductActivity extends AppCompatActivity {
 
-    private String code;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         getWindow().requestFeature(Window.FEATURE_CONTENT_TRANSITIONS);
@@ -37,7 +35,6 @@ public class ProductActivity extends AppCompatActivity {
         Product fragola = new Product();
         TextView nome = findViewById(R.id.info_name);
         TextView price = findViewById(R.id.info_price);
-        TextView producer = findViewById(R.id.info_producer);
         TextView weight = findViewById(R.id.info_weight);
         nome.setText(fragola.getName());
         price.setText(String.valueOf(fragola.getPrice()));

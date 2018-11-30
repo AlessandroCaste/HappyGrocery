@@ -127,7 +127,6 @@ public class ProductList {
 
     public Product get(String category, int position) throws NoSuchCategoryException {
         int index = getCategoryIndex(category);
-        Product product = productLists.get(index).get(position);
-        return product;
+        return productLists.get(index).get(position);
     }
 }
