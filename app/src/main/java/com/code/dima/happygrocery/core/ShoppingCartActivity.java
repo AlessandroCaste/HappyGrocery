@@ -237,6 +237,9 @@ public class ShoppingCartActivity extends AppCompatActivity
         recyclerView.scheduleLayoutAnimation();
     }
 
+    public void removeItem(View view) {
+
+    }
 }
 
 

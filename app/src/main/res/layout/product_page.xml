@@ -12,17 +12,18 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:layout_marginStart="15dp"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="24dp"
         android:layout_marginEnd="15dp"
         android:layout_marginBottom="8dp"
         android:layout_weight="0.9"
         card_view:cardBackgroundColor="@color/lightGrey"
         card_view:cardCornerRadius="5dp"
-        card_view:layout_constraintBottom_toTopOf="@+id/elegantNumberButton"
+        card_view:contentPadding="5dp"
+        card_view:layout_constraintBottom_toTopOf="@+id/quantityButton"
         card_view:layout_constraintEnd_toEndOf="parent"
         card_view:layout_constraintStart_toStartOf="parent"
         card_view:layout_constraintTop_toTopOf="parent"
-        card_view:layout_constraintVertical_chainStyle="spread_inside">
+        card_view:layout_constraintVertical_chainStyle="packed">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -51,7 +52,7 @@
                         android:gravity="left"
                         android:paddingLeft="5dp"
                         android:text="Product Name"
-                        android:textSize="24dp" />
+                        android:textSize="22dp" />
 
                     <TextView
                         android:id="@+id/info_producer"
@@ -71,7 +72,7 @@
                     android:layout_gravity="center"
                     android:layout_weight="0.1"
                     android:src="@drawable/fruit"
-                    app:civ_border_color="#311B92"
+                    app:civ_border_color="#F5F5F5"
                     app:civ_border_width="2dp" />
 
             </LinearLayout>
@@ -117,6 +118,20 @@
         </LinearLayout>
     </android.support.v7.widget.CardView>
 
+    <com.cepheuen.elegantnumberbutton.view.ElegantNumberButton
+        android:id="@+id/quantityButton"
+        android:layout_width="183dp"
+        android:layout_height="52dp"
+        android:layout_marginTop="36dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.503"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/card_view"
+        app:initialNumber="1"
+        app:finalNumber="10"
+        app:textSize="11dp"/>
+
+
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/acceptActionButton"
         android:layout_width="wrap_content"
@@ -143,15 +158,5 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         android:onClick="cancel"/>
-
-    <com.cepheuen.elegantnumberbutton.view.ElegantNumberButton
-        android:id="@+id/elegantNumberButton"
-        android:layout_width="180dp"
-        android:layout_height="wrap_content"
-        app:layout_constraintTop_toBottomOf="@id/card_view"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginTop="50dp"
-        />
 
 </android.support.constraint.ConstraintLayout>

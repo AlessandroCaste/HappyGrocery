@@ -2,13 +2,18 @@ package com.code.dima.happygrocery.core;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.transition.Explode;
 import android.view.View;
 import android.view.Window;
 import android.widget.TextView;
 
+import com.cepheuen.elegantnumberbutton.view.ElegantNumberButton;
 import com.code.dima.happygrocery.model.Product;
 import com.example.alessandro.barcodeyeah.R;
+
+import de.hdodenhof.circleimageview.CircleImageView;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
+
 
 public class ProductActivity extends AppCompatActivity {
 
@@ -19,6 +24,7 @@ public class ProductActivity extends AppCompatActivity {
         this.requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.product_page);
         extractData();
+    //    query();
     }
 
 
@@ -36,17 +42,32 @@ public class ProductActivity extends AppCompatActivity {
         TextView nome = findViewById(R.id.info_name);
         TextView price = findViewById(R.id.info_price);
         TextView weight = findViewById(R.id.info_weight);
+        ElegantNumberButton quantityButton = findViewById(R.id.quantityButton);
+        CircleImageView productType = findViewById(R.id.productType);
         nome.setText(fragola.getName());
         price.setText(String.valueOf(fragola.getPrice()));
         weight.setText(Float.toString(fragola.getWeight()) + "g");
-
+        quantityButton.setRange(1,10);
+        quantityButton.getNumber();
+        int id = getResources().getIdentifier("com.code.dima.happygrocery:drawable/" + "food", null, null);
+        productType.setImageResource(id);
     }
 
     public void cancel(View view){
         finish();
-        overridePendingTransition(R.transition.slide_in_left,R.transition.slide_out_right);
        // this.onBackPressed();
     }
+
+    private void query(){
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl("https://api.myjson.com/bins/avbua")
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+    }
+
+    //HappyGroceryRESTInterface restInterface =
+         //   retrofit.create(HappyGroceryRESTInterface.class);
+
 
 }
 
