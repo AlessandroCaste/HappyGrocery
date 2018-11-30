@@ -28,4 +28,7 @@
     <string name="category3">Kids</string>
     <string name="category4">Home</string>
     <string name="category5">Clothing</string>
+
+    <!-- NAMES OF MENU ITEMS -->
+    <string name="shopping_cart">Cart</string>
 </resources>
