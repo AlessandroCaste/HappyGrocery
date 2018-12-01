@@ -220,4 +220,20 @@ public class DatabaseTest {
         }
     }
 
+    @Test
+    public void newQueryTest() {
+        try {
+            Context appContext = InstrumentationRegistry.getTargetContext();
+            DatabaseAdapter adapter = DatabaseAdapter.openInWriteMode(appContext);
+            Cursor c = adapter.querySQL("SELECT * FROM grocery_history WHERE active = 1");
+            if (c.getCount() == 0) {
+                adapter.insertNewGrocery("11/07/2018", "Esselungone");
+            }
+            adapter.close();
+            assertTrue(true);
+        } catch (SQLException e) {
+            fail(e.getMessage());
+        }
+    }
+
 }

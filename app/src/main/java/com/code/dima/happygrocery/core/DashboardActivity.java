@@ -73,7 +73,7 @@ public class DashboardActivity extends AppCompatActivity
             Legend legend = chart.getLegend();
             legend.setEnabled(false);
         }
-        DatabaseAdapter adapter = DatabaseAdapter.openInWriteMode(this.getApplicationContext());
+        DatabaseAdapter adapter = DatabaseAdapter.openInWriteMode(getApplicationContext());
         Cursor c = adapter.querySQL("SELECT * FROM grocery_history WHERE active = 1");
         if (c.getCount() == 0) {
             adapter.insertNewGrocery("11/07/2018", "Esselungone");
