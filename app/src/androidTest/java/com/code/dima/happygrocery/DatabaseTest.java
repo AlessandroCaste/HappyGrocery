@@ -190,6 +190,35 @@ public class DatabaseTest {
 
 
     @Test
+    public void databaseZeroProductPerCategoryTest() {
+        // Context of the app under test.
+        Context appContext = InstrumentationRegistry.getTargetContext();
+        boolean answer = false;
+
+        try {
+            DatabaseAdapter adapter = DatabaseAdapter.openInWriteMode(appContext);
+            adapter.insertNewGrocery("11/12/2018", "Carrefour");
+
+            ArrayList<String> names = new ArrayList<>();
+            names.add(Category.FOOD.name());
+            names.add(Category.BEVERAGE.name());
+            names.add(Category.CLOTHING.name());
+            List<Integer> prodPerCategory = adapter.queryNumberOfProductsPerCategory(names);
+            Log.d("PRODUCTS_PER_CATEGORY",prodPerCategory.toString());
+            if (prodPerCategory.size() == 3 && prodPerCategory.get(0) == 0
+                    && prodPerCategory.get(1) == 0 && prodPerCategory.get(2) == 0)
+                answer = true;
+
+            adapter.finishGrocery();
+            adapter.close();
+            assertTrue(answer);
+        } catch (SQLException e) {
+            fail(e.getMessage());
+        }
+    }
+
+
+    @Test
     public void databaseProductListTest() {
         // Context of the app under test.
         Context appContext = InstrumentationRegistry.getTargetContext();

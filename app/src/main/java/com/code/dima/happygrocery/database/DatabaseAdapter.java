@@ -195,6 +195,9 @@ public class DatabaseAdapter {
 
     public List<Integer> queryNumberOfProductsPerCategory(List<String> categoryNames) {
         Integer[] productsPerCategory = new Integer[categoryNames.size()];
+        for (int i = 0; i < productsPerCategory.length; i ++) {
+            productsPerCategory[i] = new Integer(0);
+        }
         if (database != null) {
             long groceryID = queryGroceryID();
             Cursor cursor = database.rawQuery(DatabaseConstants.QUERY_PRODUCTS_PER_CATEGORY,

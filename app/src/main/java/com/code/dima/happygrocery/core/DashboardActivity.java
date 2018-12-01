@@ -42,6 +42,10 @@ public class DashboardActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
     private PieChart chart;
+    private ArrayList<String> labels;
+    private ArrayList<Integer> colors;
+    private Product lastProduct;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,6 +63,28 @@ public class DashboardActivity extends AppCompatActivity
         NavigationView navigationView = findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
+        // workaround to add a new active grocery to database
+        DatabaseAdapter adapter = DatabaseAdapter.openInWriteMode(getApplicationContext());
+        Cursor c = adapter.querySQL("SELECT * FROM grocery_history WHERE active = 1");
+        if (c.getCount() == 0) {
+            adapter.insertNewGrocery("11/07/2018", "Esselungone");
+        }
+        adapter.close();
+
+        labels = new ArrayList<>();
+        colors = new ArrayList<>();
+
+        for (Category category : Category.values()) {
+            labels.add(category.name());
+            colors.add(Category.getCategoryColor(category.name()));
+        }
+
+        updateChartData();
+        updateLastProduct();
+    }
+
+    private void updateChartData() {
+        // executed at start to setup the chart
         if (chart == null) {
             chart = findViewById(R.id.DashboardPieChart);
             chart.setDrawHoleEnabled(true);
@@ -73,34 +99,18 @@ public class DashboardActivity extends AppCompatActivity
             Legend legend = chart.getLegend();
             legend.setEnabled(false);
         }
-        DatabaseAdapter adapter = DatabaseAdapter.openInWriteMode(getApplicationContext());
-        Cursor c = adapter.querySQL("SELECT * FROM grocery_history WHERE active = 1");
-        if (c.getCount() == 0) {
-            adapter.insertNewGrocery("11/07/2018", "Esselungone");
-        }
-        adapter.close();
-        setChartData();
-        updateLastProduct();
-    }
 
-    private void setChartData() {
+        DatabaseAdapter adapter = DatabaseAdapter.openInReadMode(getApplicationContext());
+        List<Integer> valueList = adapter.queryNumberOfProductsPerCategory(labels);
+        adapter.close();
 
         ArrayList<PieEntry> yValues = new ArrayList<>();
-        List<Integer> valueList = ProductList.getInstance().getNumberOfProductsPerCategory();
-        List<String> labels = ProductList.getInstance().getCategoryNames();
-        ArrayList<Integer> colors = new ArrayList<>();
-        for(int i = 0; i < labels.size(); i ++) {
-            colors.add(Category.getCategoryColor(labels.get(i)));
-        }
-
         PieEntry newEntry;
         for (int i = 0; i < valueList.size(); i++) {
             newEntry = new PieEntry(valueList.get(i), i);
             newEntry.setLabel(labels.get(i));
-            //yValues.add(new PieEntry(valueList.get(i), labels.get(i)));
             yValues.add(newEntry);
         }
-
 
         PieDataSet dataset = new PieDataSet(yValues, "Categories");
         dataset.setSliceSpace(3);
@@ -108,25 +118,23 @@ public class DashboardActivity extends AppCompatActivity
         dataset.setColors(colors);
         dataset.setDrawValues(false);
         PieData data = new PieData(dataset);
-        //data.setValueTextSize(11f);
-        //data.setValueTextColor(Color.WHITE);
         chart.setData(data);
         chart.invalidate();
     }
+
 
     private void updateLastProduct () {
         String name;
         String price;
         int imageID;
-        try {
-            Product lastProduct = ProductList.getInstance().getLastProduct();
-            name = lastProduct.getName();
-            price = String.valueOf(lastProduct.getPrice()) + getResources().getString(R.string.currency);
-            imageID = lastProduct.getImageID();
-        } catch (NoLastProductException e) {
+        if (lastProduct == null) {
             name = getResources().getString(R.string.dashboard_default_prod_name);
             price = getResources().getString(R.string.dashboard_default_prod_details);
             imageID = R.drawable.fragole;
+        } else {
+            name = lastProduct.getName();
+            price = lastProduct.getPrice() + getResources().getString(R.string.currency);
+            imageID = lastProduct.getImageID();
         }
         ImageView imageView = findViewById(R.id.dashboardProdImage);
         TextView nameText = findViewById(R.id.dashboardProdName);
@@ -162,6 +170,7 @@ public class DashboardActivity extends AppCompatActivity
             }
 
         } else if (resultCode == getResources().getInteger(R.integer.PRODUCT_REQUEST_CODE)) {
+            updateChartData();
             Bundle bundle   = data.getExtras();
             String category = bundle.getString("category");
             String name     = bundle.getString("name");
@@ -170,9 +179,9 @@ public class DashboardActivity extends AppCompatActivity
             float weight    = bundle.getFloat("weight");
             int quantity    = bundle.getInt("quantity");
             int imageID     = bundle.getInt("imageId");
+            lastProduct = new Product(Category.valueOf(category), name, price, barcode, weight, quantity, imageID);
+            updateLastProduct();
 
-            Product lastProduct = new Product(Category.valueOf(category), name, price, barcode, weight, quantity, imageID);
-            String debug = new String();
             overridePendingTransition(R.transition.slide_in_left,R.transition.slide_out_right);
         }
 
