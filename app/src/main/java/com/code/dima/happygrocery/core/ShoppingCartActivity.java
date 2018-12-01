@@ -1,10 +1,8 @@
 package com.code.dima.happygrocery.core;
 
 import android.content.Context;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Vibrator;
-import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
@@ -20,7 +18,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.animation.AnimationUtils;
 import android.view.animation.LayoutAnimationController;
-import android.widget.Button;
 import android.widget.Toast;
 
 import com.code.dima.happygrocery.exception.NoSuchCategoryException;
@@ -29,8 +26,6 @@ import com.code.dima.happygrocery.adapter.ProductAdapter;
 import com.code.dima.happygrocery.model.ProductList;
 import com.example.alessandro.barcodeyeah.R;
 
-import java.util.ArrayList;
-import java.util.List;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
@@ -237,9 +232,7 @@ public class ShoppingCartActivity extends AppCompatActivity
         recyclerView.scheduleLayoutAnimation();
     }
 
-    public void removeItem(View view) {
 
-    }
 }
 
 

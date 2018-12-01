@@ -1,21 +1,20 @@
 package com.code.dima.happygrocery.core;
 
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.view.Window;
 import android.widget.TextView;
 
-import com.cepheuen.elegantnumberbutton.view.ElegantNumberButton;
 import com.code.dima.happygrocery.model.Product;
 import com.example.alessandro.barcodeyeah.R;
 
-import de.hdodenhof.circleimageview.CircleImageView;
-import retrofit2.Retrofit;
-import retrofit2.converter.gson.GsonConverterFactory;
-
-
 public class ProductActivity extends AppCompatActivity {
+
+    private String code;
+    String previousActivityName;
+    Product lastProduct;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -23,13 +22,13 @@ public class ProductActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         this.requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.product_page);
+        String ciao = getIntent().getStringExtra("barcode");
+        previousActivityName = getIntent().getStringExtra("activityName");
         extractData();
-    //    query();
     }
 
 
 
-    /**Copre la back arrow dell'action bar**/
     public boolean onSupportNavigateUp() {
         finishAfterTransition();
         return true;
@@ -41,33 +40,37 @@ public class ProductActivity extends AppCompatActivity {
         Product fragola = new Product();
         TextView nome = findViewById(R.id.info_name);
         TextView price = findViewById(R.id.info_price);
+        TextView producer = findViewById(R.id.info_producer);
         TextView weight = findViewById(R.id.info_weight);
-        ElegantNumberButton quantityButton = findViewById(R.id.quantityButton);
-        CircleImageView productType = findViewById(R.id.productType);
         nome.setText(fragola.getName());
         price.setText(String.valueOf(fragola.getPrice()));
         weight.setText(Float.toString(fragola.getWeight()) + "g");
-        quantityButton.setRange(1,10);
-        quantityButton.getNumber();
-        int id = getResources().getIdentifier("com.code.dima.happygrocery:drawable/" + "food", null, null);
-        productType.setImageResource(id);
+        lastProduct = fragola;
     }
 
     public void cancel(View view){
         finish();
-       // this.onBackPressed();
+        overridePendingTransition(R.transition.slide_in_left,R.transition.slide_out_right);
+        // this.onBackPressed();
     }
 
-    private void query(){
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl("https://api.myjson.com/bins/avbua")
-                .addConverterFactory(GsonConverterFactory.create())
-                .build();
+    public void acceptProduct (View view) {
+
+        if(previousActivityName.equals("DashboardActivity")) {
+            Intent returnIntent = new Intent();
+            Bundle bundle = new Bundle();
+            bundle.putString("name", lastProduct.getName());
+            bundle.putString("category",lastProduct.getCategory().name());
+            bundle.putFloat("price",lastProduct.getPrice());
+            bundle.putString("barcode", getIntent().getStringExtra("barcode"));
+            bundle.putFloat("weight",lastProduct.getWeight());
+            bundle.putInt("quantity", lastProduct.getQuantity());
+            bundle.putInt("imageId", lastProduct.getImageID());
+            returnIntent.putExtras(bundle);
+            setResult(getResources().getInteger(R.integer.PRODUCT_REQUEST_CODE), returnIntent);
+            finish();
+        }
+
     }
-
-    //HappyGroceryRESTInterface restInterface =
-         //   retrofit.create(HappyGroceryRESTInterface.class);
-
 
 }
-

@@ -1,6 +1,8 @@
 package com.code.dima.happygrocery.adapter;
 
 import android.content.Context;
+import android.content.Intent;
+import android.os.Handler;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -8,6 +10,10 @@ import android.view.ViewGroup;
 import android.support.v7.widget.RecyclerView;
 import android.widget.Filter;
 
+import com.code.dima.happygrocery.core.DashboardActivity;
+import com.code.dima.happygrocery.core.ProductActivity;
+import com.code.dima.happygrocery.core.ShoppingCartActivity;
+import com.code.dima.happygrocery.database.DatabaseAdapter;
 import com.code.dima.happygrocery.model.Product;
 import com.example.alessandro.barcodeyeah.R;
 import java.util.ArrayList;
@@ -35,9 +41,43 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductHolder> {
     public int getItemCount() { return products.size(); }
 
     @Override
-    public void onBindViewHolder(ProductHolder holder, int position) {
-        Product product = products.get(position);
+    public void onBindViewHolder(final ProductHolder holder, int position) {
+        final Product product = products.get(position);
         holder.setDetails(product);
+
+        Handler handler = new Handler();
+        handler.post(new Runnable() {
+            @Override
+            public void run() {
+                holder.removeButton.setOnClickListener(new View.OnClickListener() {
+                    public void onClick(View v) {
+                        boolean notEmpty = product.decreaseQuantity();
+                        if (notEmpty)
+                            holder.setDetails(product);
+                            /* DATABASE REMOVAL CODE HERE */
+                        else {
+                            int removedPosition = holder.getAdapterPosition();
+                            products.remove(removedPosition);
+                            notifyItemRemoved(removedPosition);
+                        }
+                    }
+                });
+            }
+        });
+
+        handler.post(new Runnable() {
+            @Override
+            public void run() {
+                holder.editButton.setOnClickListener(new View.OnClickListener() {
+                    public void onClick(View v) {
+                        Intent i = new Intent(context,ProductActivity.class);
+                        i.putExtra("activityName","ShoppingCartActivity");
+                        context.startActivity(i);
+                    }
+                });
+            }
+        });
+
     }
 
     public void set (List<Product> filtered){
@@ -53,5 +93,6 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductHolder> {
         }
         return filter;
     }
+
 
 }

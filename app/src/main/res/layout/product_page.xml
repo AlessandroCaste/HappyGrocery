@@ -52,7 +52,9 @@
                         android:gravity="left"
                         android:paddingLeft="5dp"
                         android:text="Product Name"
-                        android:textSize="22dp" />
+                        android:textSize="22sp"
+                        android:ellipsize="end"
+                        android:maxLines="1"/>
 
                     <TextView
                         android:id="@+id/info_producer"
@@ -143,7 +145,8 @@
         android:src="@drawable/ic_add_white_24dp"
         app:backgroundTint="@android:color/holo_green_light"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
+        app:layout_constraintEnd_toEndOf="parent"
+        android:onClick="acceptProduct"/>
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/cancelButton"

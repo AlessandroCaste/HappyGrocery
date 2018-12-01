@@ -17,11 +17,11 @@ public class Product {
 
     public Product(){
         category = Category.FOOD;
-        name = "Fragole di Montagna";
+        name = "Fragole di Montagnaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa";
         price = 30f;
         imageID = R.drawable.fragole;
         weight = 0.4f;
-        quantity = 1;
+        quantity = 2;
     }
 
 
@@ -67,9 +67,6 @@ public class Product {
     }
 
 
-
-
-
     @Override
     public boolean equals(Object other){
         boolean answer = false;
@@ -88,6 +85,13 @@ public class Product {
                     );
         }
         return answer;
+    }
+
+    public boolean decreaseQuantity(){
+        quantity = quantity - 1;
+        if(quantity == 0)
+            return false;
+        return true;
     }
 
 }
