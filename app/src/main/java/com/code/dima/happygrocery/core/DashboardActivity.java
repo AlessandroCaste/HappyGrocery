@@ -2,6 +2,7 @@ package com.code.dima.happygrocery.core;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.database.Cursor;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.view.View;
@@ -16,6 +17,7 @@ import android.view.MenuItem;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.code.dima.happygrocery.database.DatabaseAdapter;
 import com.code.dima.happygrocery.exception.NoLastProductException;
 import com.code.dima.happygrocery.model.Product;
 import com.code.dima.happygrocery.model.ProductList;
@@ -71,6 +73,12 @@ public class DashboardActivity extends AppCompatActivity
             Legend legend = chart.getLegend();
             legend.setEnabled(false);
         }
+        DatabaseAdapter adapter = DatabaseAdapter.openInWriteMode(this.getApplicationContext());
+        Cursor c = adapter.querySQL("SELECT * FROM grocery_history WHERE active = 1");
+        if (c.getCount() == 0) {
+            adapter.insertNewGrocery("11/07/2018", "Esselungone");
+        }
+        adapter.close();
         setChartData();
         updateLastProduct();
     }
@@ -228,5 +236,11 @@ public class DashboardActivity extends AppCompatActivity
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+    @Override
+    public void onDestroy() {
+
+        super.onDestroy();
     }
 }
