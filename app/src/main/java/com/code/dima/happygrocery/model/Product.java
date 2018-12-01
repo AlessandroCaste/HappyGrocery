@@ -17,6 +17,7 @@ public class Product {
 
     public Product(){
         category = Category.FOOD;
+        barcode = "1234567890100";
         name = "Fragole di Montagnaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa";
         price = 30f;
         imageID = R.drawable.fragole;
