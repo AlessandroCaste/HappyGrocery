@@ -51,15 +51,17 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductHolder> {
             public void run() {
                 holder.removeButton.setOnClickListener(new View.OnClickListener() {
                     public void onClick(View v) {
+                        DatabaseAdapter adapter = DatabaseAdapter.openInWriteMode(context);
                         boolean notEmpty = product.decreaseQuantity();
-                        if (notEmpty)
+                        if (notEmpty) {
                             holder.setDetails(product);
-                            /* DATABASE REMOVAL CODE HERE */
-                        else {
+                            adapter.updateProductQuantity(product, product.getQuantity());
+                       } else {
                             int removedPosition = holder.getAdapterPosition();
                             products.remove(removedPosition);
                             notifyItemRemoved(removedPosition);
-                        }
+                            adapter.deleteProductFromProductList(product);
+                        } adapter.close();
                     }
                 });
             }
