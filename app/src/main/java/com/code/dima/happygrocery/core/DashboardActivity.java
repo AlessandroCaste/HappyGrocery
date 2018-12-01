@@ -162,27 +162,30 @@ public class DashboardActivity extends AppCompatActivity
             if (resultCode == Activity.RESULT_OK) {
                 String contents = data.getStringExtra("SCAN_RESULT");
                 String formatName = data.getStringExtra("SCAN_RESULT_FORMAT");
-                Intent i = new Intent(this,ProductActivity.class);
-                i.putExtra("barcode",contents);
-                i.putExtra("activityName","DashboardActivity");
+                Intent i = new Intent(this, ProductActivity.class);
+                i.putExtra("barcode", contents);
+                i.putExtra("activityName", "DashboardActivity");
                 startActivityForResult(i, getResources().getInteger(R.integer.PRODUCT_REQUEST_CODE));
-                overridePendingTransition(R.transition.slide_in_right,R.transition.slide_out_left);
+                overridePendingTransition(R.transition.slide_in_right, R.transition.slide_out_left);
             }
+        }
 
-        } else if (resultCode == getResources().getInteger(R.integer.PRODUCT_REQUEST_CODE)) {
-            updateChartData();
-            Bundle bundle   = data.getExtras();
-            String category = bundle.getString("category");
-            String name     = bundle.getString("name");
-            float price     = bundle.getFloat("price");
-            String barcode  = bundle.getString("barcode");
-            float weight    = bundle.getFloat("weight");
-            int quantity    = bundle.getInt("quantity");
-            int imageID     = bundle.getInt("imageId");
-            lastProduct = new Product(Category.valueOf(category), name, price, barcode, weight, quantity, imageID);
-            updateLastProduct();
+         if (requestCode == getResources().getInteger(R.integer.PRODUCT_REQUEST_CODE)) {
 
-            overridePendingTransition(R.transition.slide_in_left,R.transition.slide_out_right);
+            if(resultCode == Activity.RESULT_OK) {
+                updateChartData();
+                Bundle bundle = data.getExtras();
+                String category = bundle.getString("category");
+                String name = bundle.getString("name");
+                float price = bundle.getFloat("price");
+                String barcode = bundle.getString("barcode");
+                float weight = bundle.getFloat("weight");
+                int quantity = bundle.getInt("quantity");
+                int imageID = bundle.getInt("imageId");
+                lastProduct = new Product(Category.valueOf(category), name, price, barcode, weight, quantity, imageID);
+                updateLastProduct();
+                overridePendingTransition(R.transition.slide_in_left, R.transition.slide_out_right);
+            }
         }
 
     }

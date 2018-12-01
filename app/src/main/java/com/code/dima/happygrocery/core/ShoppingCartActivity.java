@@ -1,6 +1,8 @@
 package com.code.dima.happygrocery.core;
 
+import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Vibrator;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -221,6 +223,22 @@ public class ShoppingCartActivity extends AppCompatActivity
                 break;
         }
     }
+
+    @Override
+    protected void onActivityResult (int requestCode, int resultCode, Intent data) {
+
+        if (requestCode == getResources().getInteger(R.integer.CART_REQUEST_CODE)) {
+
+            if (resultCode == Activity.RESULT_OK) {
+                int quantityInt;
+                String quantityStr = data.getStringExtra("quantity");
+                quantityInt = Integer.parseInt(quantityStr);
+
+                int position = data.getIntExtra("position",1);
+            }
+        }
+    }
+
 
     private void updateAnimation(final RecyclerView recyclerView) {
         adapter.notifyDataSetChanged();

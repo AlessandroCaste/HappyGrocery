@@ -1,5 +1,6 @@
 package com.code.dima.happygrocery.adapter;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Handler;
@@ -8,6 +9,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.support.v7.widget.RecyclerView;
+import android.view.animation.AccelerateInterpolator;
 import android.widget.Filter;
 
 import com.code.dima.happygrocery.core.DashboardActivity;
@@ -41,7 +43,7 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductHolder> {
     public int getItemCount() { return products.size(); }
 
     @Override
-    public void onBindViewHolder(final ProductHolder holder, int position) {
+    public void onBindViewHolder(final ProductHolder holder, final int position) {
         final Product product = products.get(position);
         holder.setDetails(product);
 
@@ -73,8 +75,9 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductHolder> {
                 holder.editButton.setOnClickListener(new View.OnClickListener() {
                     public void onClick(View v) {
                         Intent i = new Intent(context,ProductActivity.class);
+                        i.putExtra("position",position);
                         i.putExtra("activityName","ShoppingCartActivity");
-                        context.startActivity(i);
+                        ((Activity) context).startActivityForResult(i,context.getResources().getInteger(R.integer.CART_REQUEST_CODE));
                     }
                 });
             }
@@ -82,7 +85,7 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductHolder> {
 
     }
 
-    public void set (List<Product> filtered){
+            public void set (List<Product> filtered){
         products = filtered;
     }
 

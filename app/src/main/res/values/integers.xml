@@ -3,4 +3,5 @@
     <integer name="slide_animation_duration">250</integer>
     <integer name="animation_fall_down">650</integer>
     <integer name="PRODUCT_REQUEST_CODE">100</integer>
+    <integer name="CART_REQUEST_CODE">101</integer>
 </resources>

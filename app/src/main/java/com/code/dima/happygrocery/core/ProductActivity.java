@@ -1,5 +1,6 @@
 package com.code.dima.happygrocery.core;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -7,6 +8,7 @@ import android.view.View;
 import android.view.Window;
 import android.widget.TextView;
 
+import com.cepheuen.elegantnumberbutton.view.ElegantNumberButton;
 import com.code.dima.happygrocery.model.Product;
 import com.example.alessandro.barcodeyeah.R;
 
@@ -15,6 +17,7 @@ public class ProductActivity extends AppCompatActivity {
     private String code;
     String previousActivityName;
     Product lastProduct;
+    ElegantNumberButton quantityButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -22,6 +25,7 @@ public class ProductActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         this.requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.product_page);
+        quantityButton = findViewById(R.id.quantityButton);
         String ciao = getIntent().getStringExtra("barcode");
         previousActivityName = getIntent().getStringExtra("activityName");
         extractData();
@@ -67,7 +71,16 @@ public class ProductActivity extends AppCompatActivity {
             bundle.putInt("quantity", lastProduct.getQuantity());
             bundle.putInt("imageId", lastProduct.getImageID());
             returnIntent.putExtras(bundle);
-            setResult(getResources().getInteger(R.integer.PRODUCT_REQUEST_CODE), returnIntent);
+            setResult(Activity.RESULT_OK, returnIntent);
+            finish();
+        }
+
+        if(previousActivityName.equals("ShoppingCartActivity")) {
+            int recyclerPosition = getIntent().getIntExtra("position",1);
+            Intent returnIntent = new Intent();
+            returnIntent.putExtra("quantity",quantityButton.getNumber());
+            returnIntent.putExtra("position",recyclerPosition);
+            setResult(Activity.RESULT_OK,returnIntent);
             finish();
         }
 

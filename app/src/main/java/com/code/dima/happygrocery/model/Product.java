@@ -95,4 +95,8 @@ public class Product {
         return true;
     }
 
+    public void updateQuantity(int quantity) {
+        this.quantity = quantity;
+    }
+
 }
