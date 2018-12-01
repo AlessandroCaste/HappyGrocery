@@ -238,9 +238,4 @@ public class DashboardActivity extends AppCompatActivity
         return true;
     }
 
-    @Override
-    public void onDestroy() {
-
-        super.onDestroy();
-    }
 }
