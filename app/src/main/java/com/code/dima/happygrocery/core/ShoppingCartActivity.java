@@ -127,8 +127,7 @@ public class ShoppingCartActivity extends AppCompatActivity
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
-    // Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-    //   .setAction("Action", null).show()
+
 
     private void createDummyData() {
         for(int i= 0; i < 2; i++)

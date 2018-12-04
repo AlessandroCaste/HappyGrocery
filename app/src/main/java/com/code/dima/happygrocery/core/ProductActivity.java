@@ -8,9 +8,15 @@ import android.view.View;
 import android.view.Window;
 import android.widget.TextView;
 
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
 import com.cepheuen.elegantnumberbutton.view.ElegantNumberButton;
 import com.code.dima.happygrocery.model.Product;
 import com.example.alessandro.barcodeyeah.R;
+
 
 public class ProductActivity extends AppCompatActivity {
 
@@ -28,10 +34,29 @@ public class ProductActivity extends AppCompatActivity {
         quantityButton = findViewById(R.id.quantityButton);
         String ciao = getIntent().getStringExtra("barcode");
         previousActivityName = getIntent().getStringExtra("activityName");
-        extractData();
+
+
+        // Instantiate the RequestQueue.
+                final TextView mTextView = findViewById(R.id.textView2);
+                RequestQueue queue = Volley.newRequestQueue(this);
+                String url ="https://api.myjson.com/bins/92md6";
+
+        // Request a string response from the provided URL.
+                StringRequest stringRequest = new StringRequest(Request.Method.GET, url,
+                        new com.android.volley.Response.Listener<String>() {
+                            @Override
+                            public void onResponse(String response) {
+                                // Display the first 500 characters of the response string.
+                                mTextView.setText("Response is: "+ response.substring(0,500));
+                            }
+                        }, new com.android.volley.Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        mTextView.setText("That didn't work!");
+                    }
+                });
+                queue.add(stringRequest);
     }
-
-
 
     public boolean onSupportNavigateUp() {
         finishAfterTransition();

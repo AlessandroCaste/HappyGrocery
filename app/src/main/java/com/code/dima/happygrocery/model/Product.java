@@ -1,17 +1,35 @@
 package com.code.dima.happygrocery.model;
 
 import com.example.alessandro.barcodeyeah.R;
+import com.google.gson.annotations.Expose;
+import com.google.gson.annotations.SerializedName;
 
 import java.security.Policy;
 
 public class Product {
 
     private Category category;
+
+    @SerializedName("name")
+    @Expose
     private String name;
+
+    @SerializedName("price")
+    @Expose
     private float price;
+
+    @SerializedName("barcode")
+    @Expose
     private String barcode;
+
+    @SerializedName("weight")
+    @Expose
     private float weight;
+
+    @SerializedName("quantity")
+    @Expose
     private int quantity;
+
     private int imageID;
 
 
