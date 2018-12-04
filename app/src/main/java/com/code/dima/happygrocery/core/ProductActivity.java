@@ -38,6 +38,8 @@ public class ProductActivity extends AppCompatActivity {
         quantityButton = findViewById(R.id.quantityButton);
         String ciao = getIntent().getStringExtra("barcode");
         previousActivityName = getIntent().getStringExtra("activityName");
+        //only for testing
+        extractData();
 
 
         // Instantiate the RequestQueue.
@@ -92,7 +94,8 @@ public class ProductActivity extends AppCompatActivity {
         if(previousActivityName.equals("DashboardActivity")) {
             // this call will automatically update lastProduct
             ShoppingCart.getInstance().addProduct(lastProduct);
-            new InsertInDatabaseTask().execute(lastProduct);
+            InsertInDatabaseTask task = new InsertInDatabaseTask(getApplicationContext());
+            task.execute(lastProduct);
             Intent returnIntent = new Intent();
             setResult(Activity.RESULT_OK, returnIntent);
             finish();
@@ -114,9 +117,8 @@ public class ProductActivity extends AppCompatActivity {
 
         private Context context;
 
-        @Override
-        protected void onPreExecute() {
-            context = getApplicationContext();
+        public InsertInDatabaseTask(Context context) {
+            this.context = context;
         }
 
         @Override
