@@ -25,7 +25,7 @@ import android.widget.Toast;
 import com.code.dima.happygrocery.exception.NoSuchCategoryException;
 import com.code.dima.happygrocery.model.Product;
 import com.code.dima.happygrocery.adapter.ProductAdapter;
-import com.code.dima.happygrocery.model.ProductList;
+import com.code.dima.happygrocery.model.ShoppingCart;
 import com.example.alessandro.barcodeyeah.R;
 
 
@@ -37,7 +37,7 @@ public class ShoppingCartActivity extends AppCompatActivity
 
     private RecyclerView recyclerView;
     private ProductAdapter adapter;
-    private ProductList productList;
+    private ShoppingCart shoppingCart;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,7 +56,7 @@ public class ShoppingCartActivity extends AppCompatActivity
         NavigationView navigationView = findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
-        productList = ProductList.getInstance();
+        shoppingCart = ShoppingCart.getInstance();
         try {
             initializeRecycler();
         } catch (NoSuchCategoryException e) {
@@ -70,7 +70,7 @@ public class ShoppingCartActivity extends AppCompatActivity
     private void initializeRecycler() throws NoSuchCategoryException {
         recyclerView = findViewById(R.id.recyclerView);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        adapter = new ProductAdapter(this, productList.getProductsInCategory("FOOD"));
+        adapter = new ProductAdapter(this, shoppingCart.getProductsInCategory("FOOD"));
         DividerItemDecoration decoration = new DividerItemDecoration(getApplicationContext(), DividerItemDecoration.VERTICAL);
         decoration.setDrawable(getResources().getDrawable(R.drawable.rectangle));
         recyclerView.addItemDecoration(decoration);
@@ -131,11 +131,11 @@ public class ShoppingCartActivity extends AppCompatActivity
 
     private void createDummyData() {
         for(int i= 0; i < 2; i++)
-        productList.addProduct(new Product());
+        shoppingCart.addProduct(new Product());
         for(int i= 0; i < 2; i++)
-            productList.addProduct(new Product());
+            shoppingCart.addProduct(new Product());
         for(int i= 0; i < 2; i++)
-            productList.addProduct(new Product());
+            shoppingCart.addProduct(new Product());
 
         adapter.notifyDataSetChanged();
     }
@@ -169,7 +169,7 @@ public class ShoppingCartActivity extends AppCompatActivity
             case (R.id.food):
                 setTitle("Food");
                 try {
-                    adapter.set(productList.getProductsInCategory("FOOD"));
+                    adapter.set(shoppingCart.getProductsInCategory("FOOD"));
                     updateAnimation(recyclerView);
                 } catch (NoSuchCategoryException e) {
                     e.printStackTrace();
@@ -178,7 +178,7 @@ public class ShoppingCartActivity extends AppCompatActivity
             case (R.id.beverage):
                 setTitle("Beverage");
                 try {
-                    adapter.set(productList.getProductsInCategory("BEVERAGE"));
+                    adapter.set(shoppingCart.getProductsInCategory("BEVERAGE"));
                     updateAnimation(recyclerView);
                 } catch (NoSuchCategoryException e) {
                     e.printStackTrace();
@@ -187,7 +187,7 @@ public class ShoppingCartActivity extends AppCompatActivity
             case (R.id.kids):
                 setTitle("Kids and stationery");
                 try {
-                    adapter.set(productList.getProductsInCategory("KIDS"));
+                    adapter.set(shoppingCart.getProductsInCategory("KIDS"));
                     updateAnimation(recyclerView);
                 } catch (NoSuchCategoryException e) {
                     e.printStackTrace();
@@ -196,7 +196,7 @@ public class ShoppingCartActivity extends AppCompatActivity
             case (R.id.home):
                 setTitle("Home needs");
                 try {
-                    adapter.set(productList.getProductsInCategory("HOME"));
+                    adapter.set(shoppingCart.getProductsInCategory("HOME"));
                     updateAnimation(recyclerView);
                 } catch (NoSuchCategoryException e) {
                     e.printStackTrace();
@@ -205,7 +205,7 @@ public class ShoppingCartActivity extends AppCompatActivity
             case (R.id.clothing):
                 setTitle("Clothing");
                 try {
-                    adapter.set(productList.getProductsInCategory("CLOTHING"));
+                    adapter.set(shoppingCart.getProductsInCategory("CLOTHING"));
                     updateAnimation(recyclerView);
                 } catch (NoSuchCategoryException e) {
                     e.printStackTrace();
@@ -214,7 +214,7 @@ public class ShoppingCartActivity extends AppCompatActivity
             case (R.id.others):
                 setTitle("Other Categories");
                 try {
-                    adapter.set(productList.getProductsInCategory("OTHER"));
+                    adapter.set(shoppingCart.getProductsInCategory("OTHER"));
                     updateAnimation(recyclerView);
                 } catch (NoSuchCategoryException e) {
                     e.printStackTrace();

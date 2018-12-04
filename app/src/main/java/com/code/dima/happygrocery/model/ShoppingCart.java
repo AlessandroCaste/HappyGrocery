@@ -7,22 +7,22 @@ import com.code.dima.happygrocery.exception.NoSuchProductException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ProductList {
+public class ShoppingCart {
 
-    private static ProductList instance = null;
+    private static ShoppingCart instance = null;
 
     private ArrayList<String> categoryNames;
-    private ArrayList<ArrayList<Product>> productLists;
+    private ArrayList<ArrayList<Product>> shoppingCart;
 
     private Product lastProduct;
 
 
-    private ProductList() {
-        productLists = new ArrayList<>();
+    private ShoppingCart() {
+        shoppingCart = new ArrayList<>();
         categoryNames = new ArrayList<>();
         for (Category category : Category.values()) {
             ArrayList<Product> initialList = new ArrayList<>();
-            productLists.add(initialList);
+            shoppingCart.add(initialList);
             categoryNames.add(category.name());
         }
         lastProduct = new Product();
@@ -30,9 +30,9 @@ public class ProductList {
     }
 
 
-    public static ProductList getInstance() {
+    public static ShoppingCart getInstance() {
         if (instance == null)
-            instance = new ProductList();
+            instance = new ShoppingCart();
         return instance;
     }
 
@@ -45,12 +45,12 @@ public class ProductList {
 
     public int getNumberofProducts() {
         int count = 0;
-        for (ArrayList<Product> list : productLists)
+        for (ArrayList<Product> list : shoppingCart)
             count += list.size();
         return count;
     }
     public int getNumberOfCategories() {
-        return productLists.size();
+        return shoppingCart.size();
     }
 
 
@@ -61,7 +61,7 @@ public class ProductList {
         } catch (NoSuchCategoryException e) {
             index = categoryNames.indexOf(Category.OTHER.name());
         }
-        productLists.get(index).add(product);
+        shoppingCart.get(index).add(product);
         this.lastProduct = product;
     }
 
@@ -73,8 +73,8 @@ public class ProductList {
             index = categoryNames.indexOf(Category.OTHER.name());
         }
 
-        if (productLists.get(index).contains(product)) {
-            productLists.remove(product);
+        if (shoppingCart.get(index).contains(product)) {
+            shoppingCart.remove(product);
         } else
             throw new NoSuchProductException();
         if (lastProduct == product) {
@@ -85,19 +85,19 @@ public class ProductList {
 
     public List<Product> getProductsInCategory(Category category) throws NoSuchCategoryException {
         int index = getCategoryIndex(category.name());
-        return productLists.get(index);
+        return shoppingCart.get(index);
     }
 
     public List<Product> getProductsInCategory(String categoryName) throws NoSuchCategoryException {
         int index = getCategoryIndex(categoryName);
-        return productLists.get(index);
+        return shoppingCart.get(index);
     }
 
 
     public List<Integer> getNumberOfProductsPerCategory() {
         ArrayList<Integer> productsPerCategory = new ArrayList<>();
-        for (int i = 0; i < productLists.size(); i ++) {
-            productsPerCategory.add(productLists.get(i).size());
+        for (int i = 0; i < shoppingCart.size(); i ++) {
+            productsPerCategory.add(shoppingCart.get(i).size());
         }
         return productsPerCategory;
     }
@@ -105,7 +105,7 @@ public class ProductList {
     public int getNumberOfProductsPerCategory(String category) throws NoSuchCategoryException{
         int index, count;
         index = getCategoryIndex(category);
-        count = productLists.get(index).size();
+        count = shoppingCart.get(index).size();
         return count;
     }
 
@@ -127,6 +127,6 @@ public class ProductList {
 
     public Product get(String category, int position) throws NoSuchCategoryException {
         int index = getCategoryIndex(category);
-        return productLists.get(index).get(position);
+        return shoppingCart.get(index).get(position);
     }
 }

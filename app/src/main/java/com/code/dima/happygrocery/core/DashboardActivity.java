@@ -4,7 +4,9 @@ import android.app.Activity;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Color;
+import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.v7.widget.CardView;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -20,8 +22,8 @@ import android.widget.TextView;
 import com.code.dima.happygrocery.database.DatabaseAdapter;
 import com.code.dima.happygrocery.exception.NoLastProductException;
 import com.code.dima.happygrocery.model.Product;
-import com.code.dima.happygrocery.model.ProductList;
 import com.code.dima.happygrocery.model.Category;
+import com.code.dima.happygrocery.model.ShoppingCart;
 import com.example.alessandro.barcodeyeah.R;
 import com.github.mikephil.charting.charts.PieChart;
 import com.github.mikephil.charting.components.Description;
@@ -30,7 +32,6 @@ import com.github.mikephil.charting.data.PieEntry;
 import com.github.mikephil.charting.data.PieData;
 import com.github.mikephil.charting.data.PieDataSet;
 import com.google.zxing.integration.android.IntentIntegrator;
-import com.google.zxing.integration.android.IntentResult;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -42,9 +43,8 @@ public class DashboardActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
     private PieChart chart;
-    private ArrayList<String> labels;
-    private ArrayList<Integer> colors;
-    private Product lastProduct;
+    private List<String> labels;
+    private List<Integer> colors;
 
 
     @Override
@@ -71,38 +71,34 @@ public class DashboardActivity extends AppCompatActivity
         }
         adapter.close();
 
-        labels = new ArrayList<>();
-        colors = new ArrayList<>();
+        labels = ShoppingCart.getInstance().getCategoryNames();
 
-        for (Category category : Category.values()) {
-            labels.add(category.name());
-            colors.add(Category.getCategoryColor(category.name()));
+        colors = new ArrayList<>();
+        for (int i = 0; i < labels.size(); i++) {
+            colors.add(Category.getCategoryColor(labels.get(i)));
         }
+
+        chart = findViewById(R.id.DashboardPieChart);
+        chart.setDrawHoleEnabled(true);
+        chart.setHoleColor(Color.WHITE);
+        chart.setHoleRadius(75);
+        String centerText = getResources().getString(R.string.currency) + "0.00";
+        chart.setCenterText(centerText);
+        chart.setCenterTextSize(36);
+        Description desc = new Description();
+        desc.setText("");
+        chart.setDescription(desc);
+        chart.setDrawEntryLabels(false);
+        Legend legend = chart.getLegend();
+        legend.setEnabled(false);
 
         updateChartData();
         updateLastProduct();
     }
 
     private void updateChartData() {
-        // executed at start to setup the chart
-        if (chart == null) {
-            chart = findViewById(R.id.DashboardPieChart);
-            chart.setDrawHoleEnabled(true);
-            chart.setHoleColor(Color.WHITE);
-            chart.setHoleRadius(75);
-            chart.setCenterText(getString(R.string.currency) + "30");
-            chart.setCenterTextSize(36);
-            Description desc = new Description();
-            desc.setText("");
-            chart.setDescription(desc);
-            chart.setDrawEntryLabels(false);
-            Legend legend = chart.getLegend();
-            legend.setEnabled(false);
-        }
-
-        DatabaseAdapter adapter = DatabaseAdapter.openInReadMode(getApplicationContext());
-        List<Integer> valueList = adapter.queryNumberOfProductsPerCategory(labels);
-        adapter.close();
+        ShoppingCart cart = ShoppingCart.getInstance();
+        List<Integer> valueList = cart.getNumberOfProductsPerCategory();
 
         ArrayList<PieEntry> yValues = new ArrayList<>();
         PieEntry newEntry;
@@ -114,7 +110,7 @@ public class DashboardActivity extends AppCompatActivity
 
         PieDataSet dataset = new PieDataSet(yValues, "Categories");
         dataset.setSliceSpace(3);
-        dataset.setSelectionShift(3);
+        dataset.setSelectionShift(4);
         dataset.setColors(colors);
         dataset.setDrawValues(false);
         PieData data = new PieData(dataset);
@@ -124,24 +120,23 @@ public class DashboardActivity extends AppCompatActivity
 
 
     private void updateLastProduct () {
-        String name;
-        String price;
-        int imageID;
-        if (lastProduct == null) {
-            name = getResources().getString(R.string.dashboard_default_prod_name);
-            price = getResources().getString(R.string.dashboard_default_prod_details);
-            imageID = R.drawable.fragole;
-        } else {
-            name = lastProduct.getName();
-            price = lastProduct.getPrice() + getResources().getString(R.string.currency);
-            imageID = lastProduct.getImageID();
+        CardView card = findViewById(R.id.dashboardCardView);
+        try {
+            Product lastProduct = ShoppingCart.getInstance().getLastProduct();
+            String name = lastProduct.getName();
+            String price = lastProduct.getPrice() + getResources().getString(R.string.currency);
+            int imageID = lastProduct.getImageID();
+            card.setActivated(true);
+            ImageView imageView = findViewById(R.id.dashboardProdImage);
+            TextView nameText = findViewById(R.id.dashboardProdName);
+            TextView priceText = findViewById(R.id.dashboardProdDetails);
+            nameText.setText(name);
+            priceText.setText(price);
+            imageView.setImageResource(imageID);
+        } catch (NoLastProductException e) {
+            card.setActivated(false);
         }
-        ImageView imageView = findViewById(R.id.dashboardProdImage);
-        TextView nameText = findViewById(R.id.dashboardProdName);
-        TextView priceText = findViewById(R.id.dashboardProdDetails);
-        nameText.setText(name);
-        priceText.setText(price);
-        imageView.setImageResource(imageID);
+
     }
 
 
@@ -175,14 +170,13 @@ public class DashboardActivity extends AppCompatActivity
             if(resultCode == Activity.RESULT_OK) {
                 updateChartData();
                 Bundle bundle = data.getExtras();
-                String category = bundle.getString("category");
-                String name = bundle.getString("name");
-                float price = bundle.getFloat("price");
-                String barcode = bundle.getString("barcode");
-                float weight = bundle.getFloat("weight");
-                int quantity = bundle.getInt("quantity");
-                int imageID = bundle.getInt("imageId");
-                lastProduct = new Product(Category.valueOf(category), name, price, barcode, weight, quantity, imageID);
+                //String category = bundle.getString("category");
+                //String name = bundle.getString("name");
+                //float price = bundle.getFloat("price");
+                //String barcode = bundle.getString("barcode");
+                //float weight = bundle.getFloat("weight");
+                //int quantity = bundle.getInt("quantity");
+                //int imageID = bundle.getInt("imageId");
                 updateLastProduct();
                 overridePendingTransition(R.transition.slide_in_left, R.transition.slide_out_right);
             }
@@ -248,6 +242,34 @@ public class DashboardActivity extends AppCompatActivity
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+    private class QueryShoppingCart extends AsyncTask<Void, Void, Boolean> {
+
+        @Override
+        protected Boolean doInBackground(Void... voids) {
+            boolean updateNeeded = false;
+            DatabaseAdapter adapter = DatabaseAdapter.openInWriteMode(getApplicationContext());
+            List<Product> productList = adapter.queryProductList();
+            if (productList.size() > 0) {
+                updateNeeded = true;
+                ShoppingCart cart = ShoppingCart.getInstance();
+                for (Product product : productList) {
+                    cart.addProduct(product);
+                }
+            }
+            adapter.close();
+            return updateNeeded;
+        }
+
+        protected void OnPostExecute (Boolean update) {
+            // executed on UI thread
+            // set new data and chart.invalidate()
+            if (update) {
+                updateChartData();
+            }
+        }
+
     }
 
 }
