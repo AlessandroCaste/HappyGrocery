@@ -1,7 +1,9 @@
 package com.code.dima.happygrocery.core;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -14,7 +16,9 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.cepheuen.elegantnumberbutton.view.ElegantNumberButton;
+import com.code.dima.happygrocery.database.DatabaseAdapter;
 import com.code.dima.happygrocery.model.Product;
+import com.code.dima.happygrocery.model.ShoppingCart;
 import com.example.alessandro.barcodeyeah.R;
 
 
@@ -86,16 +90,10 @@ public class ProductActivity extends AppCompatActivity {
     public void acceptProduct (View view) {
 
         if(previousActivityName.equals("DashboardActivity")) {
+            // this call will automatically update lastProduct
+            ShoppingCart.getInstance().addProduct(lastProduct);
+            new InsertInDatabaseTask().execute(lastProduct);
             Intent returnIntent = new Intent();
-            Bundle bundle = new Bundle();
-            bundle.putString("name", lastProduct.getName());
-            bundle.putString("category",lastProduct.getCategory().name());
-            bundle.putFloat("price",lastProduct.getPrice());
-            bundle.putString("barcode", getIntent().getStringExtra("barcode"));
-            bundle.putFloat("weight",lastProduct.getWeight());
-            bundle.putInt("quantity", lastProduct.getQuantity());
-            bundle.putInt("imageId", lastProduct.getImageID());
-            returnIntent.putExtras(bundle);
             setResult(Activity.RESULT_OK, returnIntent);
             finish();
         }
@@ -109,6 +107,28 @@ public class ProductActivity extends AppCompatActivity {
             finish();
         }
 
+    }
+
+
+    private class InsertInDatabaseTask extends AsyncTask<Product, Void, Void> {
+
+        private Context context;
+
+        @Override
+        protected void onPreExecute() {
+            context = getApplicationContext();
+        }
+
+        @Override
+        protected Void doInBackground(Product... products) {
+            if (products.length == 1) {
+                Product product = products[0];
+                DatabaseAdapter adapter = DatabaseAdapter.openInWriteMode(context);
+                adapter.insertProductIntoProductList(product);
+                adapter.close();
+            }
+            return null;
+        }
     }
 
 }

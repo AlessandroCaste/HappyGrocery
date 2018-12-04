@@ -169,14 +169,6 @@ public class DashboardActivity extends AppCompatActivity
 
             if(resultCode == Activity.RESULT_OK) {
                 updateChartData();
-                Bundle bundle = data.getExtras();
-                //String category = bundle.getString("category");
-                //String name = bundle.getString("name");
-                //float price = bundle.getFloat("price");
-                //String barcode = bundle.getString("barcode");
-                //float weight = bundle.getFloat("weight");
-                //int quantity = bundle.getInt("quantity");
-                //int imageID = bundle.getInt("imageId");
                 updateLastProduct();
                 overridePendingTransition(R.transition.slide_in_left, R.transition.slide_out_right);
             }
