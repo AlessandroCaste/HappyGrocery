@@ -15,6 +15,7 @@ public class ShoppingCart {
     private ArrayList<ArrayList<Product>> shoppingCart;
 
     private Product lastProduct;
+    private float amount;
 
 
     private ShoppingCart() {
@@ -26,7 +27,7 @@ public class ShoppingCart {
             categoryNames.add(category.name());
         }
         lastProduct = new Product();
-
+        amount = 0f;
     }
 
 
@@ -62,6 +63,8 @@ public class ShoppingCart {
             index = categoryNames.indexOf(Category.OTHER.name());
         }
         shoppingCart.get(index).add(product);
+        float price = product.getPrice() * product.getQuantity();
+        this.amount += price;
         this.lastProduct = product;
     }
 
@@ -75,6 +78,8 @@ public class ShoppingCart {
 
         if (shoppingCart.get(index).contains(product)) {
             shoppingCart.remove(product);
+            float price = product.getPrice() * product.getQuantity();
+            this.amount -= price;
         } else
             throw new NoSuchProductException();
         if (lastProduct == product) {
@@ -128,5 +133,9 @@ public class ShoppingCart {
     public Product get(String category, int position) throws NoSuchCategoryException {
         int index = getCategoryIndex(category);
         return shoppingCart.get(index).get(position);
+    }
+
+    public float getAmount() {
+        return amount;
     }
 }

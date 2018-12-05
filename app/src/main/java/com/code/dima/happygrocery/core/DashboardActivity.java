@@ -35,6 +35,7 @@ import com.google.zxing.integration.android.IntentIntegrator;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 import static com.google.zxing.integration.android.IntentIntegrator.REQUEST_CODE;
 
@@ -99,6 +100,8 @@ public class DashboardActivity extends AppCompatActivity
     private void updateChartData() {
         ShoppingCart cart = ShoppingCart.getInstance();
         List<Integer> valueList = cart.getNumberOfProductsPerCategory();
+        float amount = cart.getAmount();
+        String amountString = getResources().getString(R.string.currency) + String.format("%.2f", amount);
 
         ArrayList<PieEntry> yValues = new ArrayList<>();
         PieEntry newEntry;
@@ -115,6 +118,7 @@ public class DashboardActivity extends AppCompatActivity
         dataset.setDrawValues(false);
         PieData data = new PieData(dataset);
         chart.setData(data);
+        chart.setCenterText(amountString);
         chart.invalidate();
     }
 
