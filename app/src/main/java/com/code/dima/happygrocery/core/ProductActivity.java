@@ -4,15 +4,20 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.CardView;
+import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.widget.TextView;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
+import com.android.volley.Response;
 import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.cepheuen.elegantnumberbutton.view.ElegantNumberButton;
@@ -20,6 +25,11 @@ import com.code.dima.happygrocery.database.DatabaseAdapter;
 import com.code.dima.happygrocery.model.Product;
 import com.code.dima.happygrocery.model.ShoppingCart;
 import com.example.alessandro.barcodeyeah.R;
+import com.google.gson.JsonArray;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 
 public class ProductActivity extends AppCompatActivity {
@@ -28,40 +38,78 @@ public class ProductActivity extends AppCompatActivity {
     String previousActivityName;
     Product lastProduct;
     ElegantNumberButton quantityButton;
+    CardView cardView;
+    FloatingActionButton cancel;
+    FloatingActionButton accept;
+    String barcode;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
         getWindow().requestFeature(Window.FEATURE_CONTENT_TRANSITIONS);
         super.onCreate(savedInstanceState);
         this.requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.product_page);
+
+        cardView = findViewById(R.id.card_view);
         quantityButton = findViewById(R.id.quantityButton);
-        String ciao = getIntent().getStringExtra("barcode");
+        cancel = findViewById(R.id.cancelButton);
+        accept = findViewById(R.id.acceptButton);
+
+
+        barcode = getIntent().getStringExtra("barcode");
         previousActivityName = getIntent().getStringExtra("activityName");
+        findViewById(R.id.loadingPanel).bringToFront();
+
         //only for testing
         extractData();
-
+        jsonParse();
 
         // Instantiate the RequestQueue.
-                final TextView mTextView = findViewById(R.id.textView2);
-                RequestQueue queue = Volley.newRequestQueue(this);
-                String url ="https://api.myjson.com/bins/92md6";
 
-        // Request a string response from the provided URL.
-                StringRequest stringRequest = new StringRequest(Request.Method.GET, url,
-                        new com.android.volley.Response.Listener<String>() {
-                            @Override
-                            public void onResponse(String response) {
-                                // Display the first 500 characters of the response string.
-                                mTextView.setText("Response is: "+ response.substring(0,500));
-                            }
-                        }, new com.android.volley.Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                        mTextView.setText("That didn't work!");
+
+    }
+
+    private void jsonParse() {
+        RequestQueue queue = Volley.newRequestQueue(this);
+
+        final TextView mTextView = findViewById(R.id.textView2);
+
+        String url ="https://my-json-server.typicode.com/AlessandroCaste/HappyGroceryDB/db";
+
+        JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, url, null, new Response.Listener<JSONObject>() {
+            @Override
+            public void onResponse(JSONObject response) {
+                try {
+                    JSONObject jsonObject = new JSONObject();
+                    JSONArray jsonArray = response.getJSONArray("products");
+                    for(int i = 0; i<5; i++) {
+                        JSONObject products = jsonArray.getJSONObject(i);
+                        String category = products.getString("category");
+                        String barcode = products.getString("barcode");
+                        String name = products.getString("name");
+                        String price = products.getString("price");
+                        mTextView.setText(name);
+                        cardView.setVisibility(View.VISIBLE);
+                        quantityButton.setVisibility(View.VISIBLE);
+                        cancel.show();
+                        accept.show();
+                        findViewById(R.id.loadingPanel).setVisibility(View.INVISIBLE);
                     }
-                });
-                queue.add(stringRequest);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                    finish();
+                }
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.e("ERROR", "Error occured", error);
+                finish();
+            }
+        });
+        queue.add(request);
+
     }
 
     public boolean onSupportNavigateUp() {
