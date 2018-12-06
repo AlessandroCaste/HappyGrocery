@@ -17,6 +17,7 @@ import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
@@ -75,27 +76,24 @@ public class ProductActivity extends AppCompatActivity {
 
         final TextView mTextView = findViewById(R.id.textView2);
 
-        String url ="https://my-json-server.typicode.com/AlessandroCaste/HappyGroceryDB/db";
+        String url ="https://my-json-server.typicode.com/AlessandroCaste/HappyGroceryDB/products?barcode="+barcode;
 
-        JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, url, null, new Response.Listener<JSONObject>() {
+        JsonArrayRequest request = new JsonArrayRequest(Request.Method.GET, url, null, new Response.Listener<JSONArray>() {
             @Override
-            public void onResponse(JSONObject response) {
+            public void onResponse(JSONArray response) {
                 try {
-                    JSONObject jsonObject = new JSONObject();
-                    JSONArray jsonArray = response.getJSONArray("products");
-                    for(int i = 0; i<5; i++) {
-                        JSONObject products = jsonArray.getJSONObject(i);
-                        String category = products.getString("category");
-                        String barcode = products.getString("barcode");
-                        String name = products.getString("name");
-                        String price = products.getString("price");
-                        mTextView.setText(name);
-                        cardView.setVisibility(View.VISIBLE);
-                        quantityButton.setVisibility(View.VISIBLE);
-                        cancel.show();
-                        accept.show();
-                        findViewById(R.id.loadingPanel).setVisibility(View.INVISIBLE);
-                    }
+                    JSONArray jsonArray = response;
+                    JSONObject reader = jsonArray.getJSONObject(0);
+                    String category = reader.getString("category");
+                    String barcode = reader.getString("barcode");
+                    String name = reader.getString("name");
+                    String price = reader.getString("price");
+                    mTextView.setText(name);
+                    cardView.setVisibility(View.VISIBLE);
+                    quantityButton.setVisibility(View.VISIBLE);
+                    cancel.show();
+                    accept.show();
+                    findViewById(R.id.loadingPanel).setVisibility(View.INVISIBLE);
                 } catch (JSONException e) {
                     e.printStackTrace();
                     finish();
@@ -111,6 +109,7 @@ public class ProductActivity extends AppCompatActivity {
         queue.add(request);
 
     }
+
 
     public boolean onSupportNavigateUp() {
         finishAfterTransition();
