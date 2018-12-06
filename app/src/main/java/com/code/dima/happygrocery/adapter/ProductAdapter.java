@@ -16,6 +16,8 @@ import com.code.dima.happygrocery.core.DashboardActivity;
 import com.code.dima.happygrocery.core.ProductActivity;
 import com.code.dima.happygrocery.core.ShoppingCartActivity;
 import com.code.dima.happygrocery.database.DatabaseAdapter;
+import com.code.dima.happygrocery.database.DeleteProductFromDBTask;
+import com.code.dima.happygrocery.database.UpdateProductQuantityInDBTask;
 import com.code.dima.happygrocery.exception.NoSuchProductException;
 import com.code.dima.happygrocery.model.Product;
 import com.code.dima.happygrocery.model.ShoppingCart;
@@ -55,12 +57,12 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductHolder> {
             public void run() {
                 holder.removeButton.setOnClickListener(new View.OnClickListener() {
                     public void onClick(View v) {
-                        //DatabaseAdapter adapter = DatabaseAdapter.openInWriteMode(context);
                         int newQuantity = product.getQuantity() - 1;
                         if (newQuantity > 0) {
                             ShoppingCart.getInstance().updateQuantity(product, newQuantity);
                             holder.setDetails(product);
-                            //adapter.updateProductQuantity(product, product.getQuantity());
+                            UpdateProductQuantityInDBTask task = new UpdateProductQuantityInDBTask(context, product, newQuantity);
+                            task.execute();
                        } else {
                             try {
                                 ShoppingCart.getInstance().removeProduct(product);
@@ -70,8 +72,9 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductHolder> {
                             int removedPosition = holder.getAdapterPosition();
                             products.remove(removedPosition);
                             notifyItemRemoved(removedPosition);
-                            //adapter.deleteProductFromProductList(product);
-                        } //adapter.close();
+                            DeleteProductFromDBTask task = new DeleteProductFromDBTask(context, product);
+                            task.execute();
+                        }
                     }
                 });
             }

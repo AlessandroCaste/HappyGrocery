@@ -23,6 +23,8 @@ import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.cepheuen.elegantnumberbutton.view.ElegantNumberButton;
 import com.code.dima.happygrocery.database.DatabaseAdapter;
+import com.code.dima.happygrocery.database.InsertProductInDBTask;
+import com.code.dima.happygrocery.database.UpdateProductQuantityInDBTask;
 import com.code.dima.happygrocery.model.Product;
 import com.code.dima.happygrocery.model.ShoppingCart;
 import com.example.alessandro.barcodeyeah.R;
@@ -147,8 +149,9 @@ public class ProductActivity extends AppCompatActivity {
             int quantity = Integer.parseInt(quantityButton.getNumber());
             currentProduct.setQuantity(quantity);
             ShoppingCart.getInstance().addProduct(currentProduct);
-            //InsertInDatabaseTask task = new InsertInDatabaseTask(getApplicationContext());
-            //task.execute(currentProduct);
+            //update in database
+            InsertProductInDBTask task = new InsertProductInDBTask(getApplicationContext(), currentProduct);
+            task.execute();
             Intent returnIntent = new Intent();
             setResult(Activity.RESULT_OK, returnIntent);
             finish();
@@ -161,6 +164,7 @@ public class ProductActivity extends AppCompatActivity {
             int newQuantity = Integer.parseInt(quantityButton.getNumber());
             ShoppingCart.getInstance().updateQuantity(currentProduct, newQuantity);
             // update in database
+            UpdateProductQuantityInDBTask task = new UpdateProductQuantityInDBTask(getApplicationContext(), currentProduct, newQuantity);
             setResult(Activity.RESULT_OK,returnIntent);
             finish();
         }
@@ -168,24 +172,51 @@ public class ProductActivity extends AppCompatActivity {
     }
 
 
-    private class InsertInDatabaseTask extends AsyncTask<Product, Void, Void> {
+    /*private class InsertInDatabaseTask extends AsyncTask<Void, Void, Void> {
 
         private Context context;
+        private Product product;
+        private int quantity;
 
-        public InsertInDatabaseTask(Context context) {
+        public InsertInDatabaseTask(Context context, Product product) {
             this.context = context;
+            this.product = product;
+            this.quantity = product.getQuantity();
         }
 
         @Override
-        protected Void doInBackground(Product... products) {
-            if (products.length == 1) {
-                Product product = products[0];
+        protected Void doInBackground(Void... voids) {
+            if (product != null) {
                 DatabaseAdapter adapter = DatabaseAdapter.openInWriteMode(context);
                 adapter.insertProductIntoProductList(product);
+                adapter.updateProductQuantity(product, quantity);
                 adapter.close();
             }
             return null;
         }
     }
+
+    private class UpdateInDatabaseTask extends AsyncTask<Void, Void, Void> {
+
+        private Context context;
+        private Product product;
+        private int quantity;
+
+        public UpdateInDatabaseTask(Context context, Product product, int quantity) {
+            this.context = context;
+            this.product = product;
+            this.quantity = quantity;
+        }
+
+        @Override
+        protected Void doInBackground(Void... voids) {
+            if (product != null && quantity > 0) {
+                DatabaseAdapter adapter = DatabaseAdapter.openInWriteMode(context);
+                adapter.updateProductQuantity(product, quantity);
+                adapter.close();
+            }
+            return null;
+        }
+    }*/
 
 }

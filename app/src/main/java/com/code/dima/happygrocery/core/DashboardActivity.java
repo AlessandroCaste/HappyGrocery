@@ -1,6 +1,7 @@
 package com.code.dima.happygrocery.core;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Color;
@@ -65,12 +66,8 @@ public class DashboardActivity extends AppCompatActivity
         navigationView.setNavigationItemSelectedListener(this);
 
         // workaround to add a new active grocery to database
-        DatabaseAdapter adapter = DatabaseAdapter.openInWriteMode(getApplicationContext());
-        Cursor c = adapter.querySQL("SELECT * FROM grocery_history WHERE active = 1");
-        if (c.getCount() == 0) {
-            adapter.insertNewGrocery("11/07/2018", "Esselungone");
-        }
-        adapter.close();
+        AddGroceryInDatabase task = new AddGroceryInDatabase(getApplicationContext());
+        task.execute();
 
         labels = ShoppingCart.getInstance().getCategoryNames();
 
@@ -243,32 +240,25 @@ public class DashboardActivity extends AppCompatActivity
         return true;
     }
 
-    private class QueryShoppingCart extends AsyncTask<Void, Void, Boolean> {
+
+    private class AddGroceryInDatabase extends AsyncTask<Void, Void, Void> {
+
+        private Context context;
+
+        public AddGroceryInDatabase(Context context) {
+            this.context = context;
+        }
 
         @Override
-        protected Boolean doInBackground(Void... voids) {
-            boolean updateNeeded = false;
-            DatabaseAdapter adapter = DatabaseAdapter.openInWriteMode(getApplicationContext());
-            List<Product> productList = adapter.queryProductList();
-            if (productList.size() > 0) {
-                updateNeeded = true;
-                ShoppingCart cart = ShoppingCart.getInstance();
-                for (Product product : productList) {
-                    cart.addProduct(product);
-                }
+        protected Void doInBackground(Void... voids) {
+            // workaround to add a new active grocery to database
+            DatabaseAdapter adapter = DatabaseAdapter.openInWriteMode(context);
+            Cursor c = adapter.querySQL("SELECT * FROM grocery_history WHERE active = 1");
+            if (c.getCount() == 0) {
+                adapter.insertNewGrocery("11/07/2018", "Esselungone");
             }
             adapter.close();
-            return updateNeeded;
+            return null;
         }
-
-        protected void OnPostExecute (Boolean update) {
-            // executed on UI thread
-            // set new data and chart.invalidate()
-            if (update) {
-                updateChartData();
-            }
-        }
-
     }
-
 }
