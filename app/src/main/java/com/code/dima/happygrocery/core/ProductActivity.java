@@ -1,7 +1,9 @@
 package com.code.dima.happygrocery.core;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.support.design.widget.FloatingActionButton;
@@ -64,14 +66,14 @@ public class ProductActivity extends AppCompatActivity {
 
         //only for testing
         extractData();
-        jsonParse();
+        jsonParse(this);
 
         // Instantiate the RequestQueue.
 
 
     }
 
-    private void jsonParse() {
+    private void jsonParse(final Context context) {
         RequestQueue queue = Volley.newRequestQueue(this);
 
         final TextView mTextView = findViewById(R.id.textView2);
@@ -95,9 +97,18 @@ public class ProductActivity extends AppCompatActivity {
                     accept.show();
                     findViewById(R.id.loadingPanel).setVisibility(View.INVISIBLE);
                 } catch (JSONException e) {
+                    AlertDialog.Builder builder = new AlertDialog.Builder(context, android.R.style.Theme_DeviceDefault_Dialog_Alert);
                     e.printStackTrace();
-                    finish();
-                }
+                    builder.setTitle("Barcode not recognized!")
+                            .setMessage("Barcode not found!\nAsk shopping assistants!")
+                            .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int which) {
+                                    finish();
+                                }
+                            })
+                            .setIcon(R.drawable.ic_error_black_dp)
+                            .show();
+                    }
             }
         }, new Response.ErrorListener() {
             @Override
@@ -107,7 +118,6 @@ public class ProductActivity extends AppCompatActivity {
             }
         });
         queue.add(request);
-
     }
 
 
