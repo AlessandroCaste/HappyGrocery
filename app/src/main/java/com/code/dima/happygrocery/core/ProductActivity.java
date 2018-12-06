@@ -27,6 +27,7 @@ import com.cepheuen.elegantnumberbutton.view.ElegantNumberButton;
 import com.code.dima.happygrocery.database.DatabaseAdapter;
 import com.code.dima.happygrocery.database.InsertProductInDBTask;
 import com.code.dima.happygrocery.database.UpdateProductQuantityInDBTask;
+import com.code.dima.happygrocery.model.Category;
 import com.code.dima.happygrocery.model.Product;
 import com.code.dima.happygrocery.model.ShoppingCart;
 import com.example.alessandro.barcodeyeah.R;
@@ -66,11 +67,14 @@ public class ProductActivity extends AppCompatActivity {
 
         findViewById(R.id.loadingPanel).bringToFront();
 
-        //only for testing
-        extractData();
-        if (previousActivityName.equals("DashboardActivity"))
-            jsonParse(this);
+        if (previousActivityName.equals("DashboardActivity")) {
+            cardView.setVisibility(View.INVISIBLE);
+            quantityButton.setVisibility(View.INVISIBLE);
+            cancel.hide();
+            accept.hide();
 
+            jsonParse(this);
+        }
         // Instantiate the RequestQueue.
 
 
@@ -79,26 +83,39 @@ public class ProductActivity extends AppCompatActivity {
     private void jsonParse(final Context context) {
         RequestQueue queue = Volley.newRequestQueue(this);
 
-        final TextView mTextView = findViewById(R.id.textView2);
-
         String url ="https://my-json-server.typicode.com/AlessandroCaste/HappyGroceryDB/products?barcode="+barcode;
 
         JsonArrayRequest request = new JsonArrayRequest(Request.Method.GET, url, null, new Response.Listener<JSONArray>() {
             @Override
             public void onResponse(JSONArray response) {
                 try {
+
+                    // Info extraction
                     JSONArray jsonArray = response;
                     JSONObject reader = jsonArray.getJSONObject(0);
-                    String category = reader.getString("category");
-                    String barcode = reader.getString("barcode");
-                    String name = reader.getString("name");
-                    String price = reader.getString("price");
-                    mTextView.setText(name);
+                    Category category = Category.valueOf(reader.getString("category"));
+                    String name       = reader.getString("name");
+                    float price       = Float.parseFloat(reader.getString("price"));
+                    String barcode    = reader.getString("barcode");
+                    float weight      = Float.parseFloat(reader.getString("weight"));
+                    currentProduct    = new Product(category,name,price,barcode,weight,1,0);
+
+                    //Visibility settings
                     cardView.setVisibility(View.VISIBLE);
                     quantityButton.setVisibility(View.VISIBLE);
                     cancel.show();
                     accept.show();
                     findViewById(R.id.loadingPanel).setVisibility(View.INVISIBLE);
+
+                    //Items customization
+                    TextView nameView = findViewById(R.id.info_name);
+                    TextView priceView = findViewById(R.id.info_price);
+                    //TextView producer = findViewById(R.id.info_producer);
+                    TextView weightView = findViewById(R.id.info_weight);
+                    nameView.setText(currentProduct.getName());
+                    priceView.setText(String.valueOf(currentProduct.getPrice()));
+                    weightView.setText(Float.toString(currentProduct.getWeight()) + "g");
+
                 } catch (JSONException e) {
                     AlertDialog.Builder builder = new AlertDialog.Builder(context, android.R.style.Theme_DeviceDefault_Dialog_Alert);
                     e.printStackTrace();
@@ -109,7 +126,7 @@ public class ProductActivity extends AppCompatActivity {
                                     finish();
                                 }
                             })
-                            .setIcon(R.drawable.ic_error_black_dp)
+                            .setIcon(R.drawable.ic_error_white_dp)
                             .show();
                     }
             }
@@ -117,6 +134,16 @@ public class ProductActivity extends AppCompatActivity {
             @Override
             public void onErrorResponse(VolleyError error) {
                 Log.e("ERROR", "Error occured", error);
+                AlertDialog.Builder builder = new AlertDialog.Builder(context, android.R.style.Theme_DeviceDefault_Dialog_Alert);
+                builder.setTitle("Server Problem!")
+                        .setMessage("Service unavailable\nTry again later!")
+                        .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+                                finish();
+                            }
+                        })
+                        .setIcon(R.drawable.ic_error_white_dp)
+                        .show();
                 finish();
             }
         });
@@ -129,23 +156,6 @@ public class ProductActivity extends AppCompatActivity {
         return true;
     }
 
-
-    // Classe test per rendere configurabile la gestione dei prodotti. Poi verrò naturalmente allargata/rimossa
-    private void extractData() {
-        if (previousActivityName.equals("DashboardActivity")) {
-            Product fragola = new Product();
-            currentProduct = fragola;
-        } else {
-            currentProduct = ShoppingCart.getInstance().getProductWithBarcode(barcode);
-        }
-        TextView name = findViewById(R.id.info_name);
-        TextView price = findViewById(R.id.info_price);
-        TextView producer = findViewById(R.id.info_producer);
-        TextView weight = findViewById(R.id.info_weight);
-        name.setText(currentProduct.getName());
-        price.setText(String.valueOf(currentProduct.getPrice()));
-        weight.setText(Float.toString(currentProduct.getWeight()) + "g");
-    }
 
     public void cancel(View view){
         finish();
