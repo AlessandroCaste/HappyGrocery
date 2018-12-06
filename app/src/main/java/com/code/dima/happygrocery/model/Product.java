@@ -36,11 +36,11 @@ public class Product {
     public Product(){
         category = Category.FOOD;
         barcode = "1234567890100";
-        name = "Fragole di Montagnaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa";
-        price = 30f;
+        name = "Fragole di Montagna";
+        price = 2.50f;
         imageID = R.drawable.fragole;
         weight = 0.4f;
-        quantity = 2;
+        quantity = 1;
     }
 
 
@@ -79,6 +79,10 @@ public class Product {
 
 
     public int getQuantity() {return quantity; }
+
+    public void setQuantity(int newQuantity) {
+        this.quantity = newQuantity;
+    }
 
 
     public int getImageID() {

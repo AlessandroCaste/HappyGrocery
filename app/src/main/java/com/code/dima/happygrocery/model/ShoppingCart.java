@@ -26,7 +26,7 @@ public class ShoppingCart {
             shoppingCart.add(initialList);
             categoryNames.add(category.name());
         }
-        lastProduct = new Product();
+        lastProduct = null;
         amount = 0f;
     }
 
@@ -88,13 +88,23 @@ public class ShoppingCart {
     }
 
 
-    public List<Product> getProductsInCategory(Category category) throws NoSuchCategoryException {
-        int index = getCategoryIndex(category.name());
+    public List<Product> getProductsInCategory(Category category) {
+        int index;
+        try {
+            index = getCategoryIndex(category.name());
+        } catch (NoSuchCategoryException e) {
+            index = 0;
+        }
         return shoppingCart.get(index);
     }
 
-    public List<Product> getProductsInCategory(String categoryName) throws NoSuchCategoryException {
-        int index = getCategoryIndex(categoryName);
+    public List<Product> getProductsInCategory(String categoryName) {
+        int index;
+        try {
+            index = getCategoryIndex(categoryName);
+        } catch (NoSuchCategoryException e) {
+            index = 0;
+        }
         return shoppingCart.get(index);
     }
 
@@ -137,5 +147,24 @@ public class ShoppingCart {
 
     public float getAmount() {
         return amount;
+    }
+
+    public Product getProductWithBarcode(String barcode) {
+        Product product = null;
+        for (int i = 0; i < shoppingCart.size() && product == null; i ++) {
+            List<Product> list = shoppingCart.get(i);
+            for (int j = 0; j < list.size() && product == null; j ++) {
+                if (list.get(j).getBarcode().equals(barcode))
+                    product = list.get(j);
+            }
+        }
+        return product;
+    }
+
+    public void updateQuantity (Product product, int newQuantity) {
+        int previousQuantity = product.getQuantity();
+        product.setQuantity(newQuantity);
+        int delta = newQuantity - previousQuantity;
+        this.amount += delta * product.getPrice();
     }
 }

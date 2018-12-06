@@ -16,7 +16,9 @@ import com.code.dima.happygrocery.core.DashboardActivity;
 import com.code.dima.happygrocery.core.ProductActivity;
 import com.code.dima.happygrocery.core.ShoppingCartActivity;
 import com.code.dima.happygrocery.database.DatabaseAdapter;
+import com.code.dima.happygrocery.exception.NoSuchProductException;
 import com.code.dima.happygrocery.model.Product;
+import com.code.dima.happygrocery.model.ShoppingCart;
 import com.example.alessandro.barcodeyeah.R;
 import java.util.ArrayList;
 import java.util.List;
@@ -53,17 +55,23 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductHolder> {
             public void run() {
                 holder.removeButton.setOnClickListener(new View.OnClickListener() {
                     public void onClick(View v) {
-                        DatabaseAdapter adapter = DatabaseAdapter.openInWriteMode(context);
-                        boolean notEmpty = product.decreaseQuantity();
-                        if (notEmpty) {
+                        //DatabaseAdapter adapter = DatabaseAdapter.openInWriteMode(context);
+                        int newQuantity = product.getQuantity() - 1;
+                        if (newQuantity > 0) {
+                            ShoppingCart.getInstance().updateQuantity(product, newQuantity);
                             holder.setDetails(product);
-                            adapter.updateProductQuantity(product, product.getQuantity());
+                            //adapter.updateProductQuantity(product, product.getQuantity());
                        } else {
+                            try {
+                                ShoppingCart.getInstance().removeProduct(product);
+                            } catch (NoSuchProductException e) {
+                                e.printStackTrace();
+                            }
                             int removedPosition = holder.getAdapterPosition();
                             products.remove(removedPosition);
                             notifyItemRemoved(removedPosition);
-                            adapter.deleteProductFromProductList(product);
-                        } adapter.close();
+                            //adapter.deleteProductFromProductList(product);
+                        } //adapter.close();
                     }
                 });
             }
@@ -75,7 +83,8 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductHolder> {
                 holder.editButton.setOnClickListener(new View.OnClickListener() {
                     public void onClick(View v) {
                         Intent i = new Intent(context,ProductActivity.class);
-                        i.putExtra("position",position);
+                        //i.putExtra("position",position);
+                        i.putExtra("barcode", product.getBarcode());
                         i.putExtra("activityName","ShoppingCartActivity");
                         ((Activity) context).startActivityForResult(i,context.getResources().getInteger(R.integer.CART_REQUEST_CODE));
                     }
@@ -85,12 +94,13 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductHolder> {
 
     }
 
-            public void set (List<Product> filtered){
+    public void set (List<Product> filtered){
         products = filtered;
+        super.notifyDataSetChanged();
     }
 
 
-    //RETURN FILTER OBJ
+    //RETURN FILTER OBJposition
     public Filter getFilter() {
         if(filter==null)
         {

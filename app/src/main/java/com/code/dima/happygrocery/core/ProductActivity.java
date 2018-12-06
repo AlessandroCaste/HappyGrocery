@@ -36,7 +36,7 @@ public class ProductActivity extends AppCompatActivity {
 
     private String code;
     String previousActivityName;
-    Product lastProduct;
+    Product currentProduct;
     ElegantNumberButton quantityButton;
     CardView cardView;
     FloatingActionButton cancel;
@@ -56,9 +56,9 @@ public class ProductActivity extends AppCompatActivity {
         cancel = findViewById(R.id.cancelButton);
         accept = findViewById(R.id.acceptButton);
 
-
-        barcode = getIntent().getStringExtra("barcode");
         previousActivityName = getIntent().getStringExtra("activityName");
+        barcode = getIntent().getStringExtra("barcode");
+
         findViewById(R.id.loadingPanel).bringToFront();
 
         //only for testing
@@ -120,15 +120,19 @@ public class ProductActivity extends AppCompatActivity {
 
     // Classe test per rendere configurabile la gestione dei prodotti. Poi verrò naturalmente allargata/rimossa
     private void extractData() {
-        Product fragola = new Product();
-        TextView nome = findViewById(R.id.info_name);
+        if (previousActivityName.equals("DashboardActivity")) {
+            Product fragola = new Product();
+            currentProduct = fragola;
+        } else {
+            currentProduct = ShoppingCart.getInstance().getProductWithBarcode(barcode);
+        }
+        TextView name = findViewById(R.id.info_name);
         TextView price = findViewById(R.id.info_price);
         TextView producer = findViewById(R.id.info_producer);
         TextView weight = findViewById(R.id.info_weight);
-        nome.setText(fragola.getName());
-        price.setText(String.valueOf(fragola.getPrice()));
-        weight.setText(Float.toString(fragola.getWeight()) + "g");
-        lastProduct = fragola;
+        name.setText(currentProduct.getName());
+        price.setText(String.valueOf(currentProduct.getPrice()));
+        weight.setText(Float.toString(currentProduct.getWeight()) + "g");
     }
 
     public void cancel(View view){
@@ -141,19 +145,23 @@ public class ProductActivity extends AppCompatActivity {
 
         if(previousActivityName.equals("DashboardActivity")) {
             // this call will automatically update lastProduct
-            ShoppingCart.getInstance().addProduct(lastProduct);
-            InsertInDatabaseTask task = new InsertInDatabaseTask(getApplicationContext());
-            task.execute(lastProduct);
+            int quantity = Integer.parseInt(quantityButton.getNumber());
+            currentProduct.setQuantity(quantity);
+            ShoppingCart.getInstance().addProduct(currentProduct);
+            //InsertInDatabaseTask task = new InsertInDatabaseTask(getApplicationContext());
+            //task.execute(currentProduct);
             Intent returnIntent = new Intent();
             setResult(Activity.RESULT_OK, returnIntent);
             finish();
         }
 
         if(previousActivityName.equals("ShoppingCartActivity")) {
-            int recyclerPosition = getIntent().getIntExtra("position",1);
+            //int recyclerPosition = getIntent().getIntExtra("position",1);
             Intent returnIntent = new Intent();
-            returnIntent.putExtra("quantity",quantityButton.getNumber());
-            returnIntent.putExtra("position",recyclerPosition);
+            returnIntent.putExtra("category", currentProduct.getCategory().name());
+            int newQuantity = Integer.parseInt(quantityButton.getNumber());
+            ShoppingCart.getInstance().updateQuantity(currentProduct, newQuantity);
+            // update in database
             setResult(Activity.RESULT_OK,returnIntent);
             finish();
         }

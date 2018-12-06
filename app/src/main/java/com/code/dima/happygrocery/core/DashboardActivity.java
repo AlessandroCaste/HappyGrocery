@@ -83,8 +83,8 @@ public class DashboardActivity extends AppCompatActivity
         chart.setDrawHoleEnabled(true);
         chart.setHoleColor(Color.WHITE);
         chart.setHoleRadius(75);
-        String centerText = getResources().getString(R.string.currency) + "0.00";
-        chart.setCenterText(centerText);
+        //String centerText = getResources().getString(R.string.currency) + "0.00";
+        //chart.setCenterText(centerText);
         chart.setCenterTextSize(36);
         Description desc = new Description();
         desc.setText("");
@@ -130,7 +130,7 @@ public class DashboardActivity extends AppCompatActivity
             String name = lastProduct.getName();
             String price = lastProduct.getPrice() + getResources().getString(R.string.currency);
             int imageID = lastProduct.getImageID();
-            card.setActivated(true);
+            card.setVisibility(View.VISIBLE);
             ImageView imageView = findViewById(R.id.dashboardProdImage);
             TextView nameText = findViewById(R.id.dashboardProdName);
             TextView priceText = findViewById(R.id.dashboardProdDetails);
@@ -138,7 +138,7 @@ public class DashboardActivity extends AppCompatActivity
             priceText.setText(price);
             imageView.setImageResource(imageID);
         } catch (NoLastProductException e) {
-            card.setActivated(false);
+            card.setVisibility(View.INVISIBLE);
         }
 
     }
@@ -167,17 +167,20 @@ public class DashboardActivity extends AppCompatActivity
                 startActivityForResult(i, getResources().getInteger(R.integer.PRODUCT_REQUEST_CODE));
                 overridePendingTransition(R.transition.slide_in_right, R.transition.slide_out_left);
             }
-        }
-
-         if (requestCode == getResources().getInteger(R.integer.PRODUCT_REQUEST_CODE)) {
-
+        } else if (requestCode == getResources().getInteger(R.integer.PRODUCT_REQUEST_CODE)) {
             if(resultCode == Activity.RESULT_OK) {
                 updateChartData();
                 updateLastProduct();
                 overridePendingTransition(R.transition.slide_in_left, R.transition.slide_out_right);
             }
         }
+    }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        updateChartData();
+        updateLastProduct();
     }
 
 
