@@ -68,7 +68,8 @@ public class ProductActivity extends AppCompatActivity {
 
         //only for testing
         extractData();
-        jsonParse(this);
+        if (previousActivityName.equals("DashboardActivity"))
+            jsonParse(this);
 
         // Instantiate the RequestQueue.
 
