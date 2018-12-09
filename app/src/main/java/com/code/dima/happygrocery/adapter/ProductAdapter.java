@@ -59,7 +59,11 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductHolder> {
                     public void onClick(View v) {
                         int newQuantity = product.getQuantity() - 1;
                         if (newQuantity > 0) {
-                            ShoppingCart.getInstance().updateQuantity(product, newQuantity);
+                            try {
+                                ShoppingCart.getInstance().updateQuantity(product, newQuantity);
+                            } catch (NoSuchProductException e) {
+                                e.printStackTrace();
+                            }
                             holder.setDetails(product);
                             UpdateProductQuantityInDBTask task = new UpdateProductQuantityInDBTask(context, product, newQuantity);
                             task.execute();

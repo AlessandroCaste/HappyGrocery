@@ -27,6 +27,7 @@ import com.cepheuen.elegantnumberbutton.view.ElegantNumberButton;
 import com.code.dima.happygrocery.database.DatabaseAdapter;
 import com.code.dima.happygrocery.database.InsertProductInDBTask;
 import com.code.dima.happygrocery.database.UpdateProductQuantityInDBTask;
+import com.code.dima.happygrocery.exception.NoSuchProductException;
 import com.code.dima.happygrocery.model.Category;
 import com.code.dima.happygrocery.model.Product;
 import com.code.dima.happygrocery.model.ShoppingCart;
@@ -183,7 +184,11 @@ public class ProductActivity extends AppCompatActivity {
             Intent returnIntent = new Intent();
             returnIntent.putExtra("category", currentProduct.getCategory().name());
             int newQuantity = Integer.parseInt(quantityButton.getNumber());
-            ShoppingCart.getInstance().updateQuantity(currentProduct, newQuantity);
+            try {
+                ShoppingCart.getInstance().updateQuantity(currentProduct, newQuantity);
+            } catch (NoSuchProductException e) {
+                e.printStackTrace();
+            }
             // update in database
             UpdateProductQuantityInDBTask task = new UpdateProductQuantityInDBTask(getApplicationContext(), currentProduct, newQuantity);
             setResult(Activity.RESULT_OK,returnIntent);
