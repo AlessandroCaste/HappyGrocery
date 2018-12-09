@@ -44,28 +44,25 @@ public class ShoppingCart {
         return categoryNames.indexOf(categoryName);
     }
 
-    public int getNumberofProducts() {
-        int count = 0;
-        for (ArrayList<Product> list : shoppingCart)
-            count += list.size();
-        return count;
-    }
-    public int getNumberOfCategories() {
-        return shoppingCart.size();
-    }
-
 
     public void addProduct(Product product) {
-        int index;
+        // if the product is already in list, simply update it
+        int newQuantity = product.getQuantity();
         try {
-            index = getCategoryIndex(product.getCategory().name());
-        } catch (NoSuchCategoryException e) {
-            index = categoryNames.indexOf(Category.OTHER.name());
+            updateQuantity(product, newQuantity);
+        } catch (NoSuchProductException e) {
+            // the product isn't already in the list -> add it
+            int index;
+            try {
+                index = getCategoryIndex(product.getCategory().name());
+            } catch (NoSuchCategoryException e2) {
+                index = categoryNames.indexOf(Category.OTHER.name());
+            }
+            shoppingCart.get(index).add(product);
+            float price = product.getPrice() * product.getQuantity();
+            this.amount += price;
+            this.lastProduct = product;
         }
-        shoppingCart.get(index).add(product);
-        float price = product.getPrice() * product.getQuantity();
-        this.amount += price;
-        this.lastProduct = product;
     }
 
     public void removeProduct(Product product) throws NoSuchProductException {
@@ -117,13 +114,6 @@ public class ShoppingCart {
         return productsPerCategory;
     }
 
-    public int getNumberOfProductsPerCategory(String category) throws NoSuchCategoryException{
-        int index, count;
-        index = getCategoryIndex(category);
-        count = shoppingCart.get(index).size();
-        return count;
-    }
-
 
     public List<String> getCategoryNames() {
         return (List<String>) categoryNames.clone();
@@ -140,10 +130,6 @@ public class ShoppingCart {
         this.lastProduct = lastProduct;
     }
 
-    public Product get(String category, int position) throws NoSuchCategoryException {
-        int index = getCategoryIndex(category);
-        return shoppingCart.get(index).get(position);
-    }
 
     public float getAmount() {
         return amount;
@@ -161,10 +147,29 @@ public class ShoppingCart {
         return product;
     }
 
-    public void updateQuantity (Product product, int newQuantity) {
-        int previousQuantity = product.getQuantity();
-        product.setQuantity(newQuantity);
+    public void updateQuantity (Product product, int newQuantity) throws NoSuchProductException {
+        // find the product in list correspondent to product
+        Product productInCart = getProductInCartCorrespondentTo(product);
+        int previousQuantity = productInCart.getQuantity();
+        productInCart.setQuantity(newQuantity);
         int delta = newQuantity - previousQuantity;
         this.amount += delta * product.getPrice();
+    }
+
+    private Product getProductInCartCorrespondentTo(Product product) throws NoSuchProductException {
+        // find the product in list correspondent to product
+        Product productInCart = null;
+        int index;
+        try {
+            index = getCategoryIndex(product.getCategory().name());
+        } catch (NoSuchCategoryException e) {
+            index = categoryNames.indexOf(Category.OTHER.name());
+        }
+        List<Product> list = shoppingCart.get(index);
+        if (list.contains(product)) {
+            productInCart = list.get(list.indexOf(product));
+        } else
+            throw new NoSuchProductException();
+        return productInCart;
     }
 }
