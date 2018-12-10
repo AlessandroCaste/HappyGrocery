@@ -31,4 +31,17 @@
 
     <!-- NAMES OF MENU ITEMS -->
     <string name="shopping_cart">Cart</string>
+
+    <!--SERVER URL -->
+    <string name="server_url">"https://my-json-server.typicode.com/AlessandroCaste/HappyGroceryDB/products?barcode="</string>
+    <!-- <string name="default_web_client_id">636017224538-hdchojmaea1l7tr0d90qocv6ttovl6hf.apps.googleusercontent.com</string> -->
+
+    <!-- SERVICE STRINGS -->
+    <string name="loading">Load in progress</string>
+    <string name="firebase_status_fmt">Firebase User: %s</string>
+    <string name="google_status_fmt">Google User: %s</string>
+    <string name="signed_out">Signed Out</string>
+    <string name="facebook_status_fmt">Facebook user :%s</string>
+    <string name="facebook_app_id">738193019859979</string> <string name="fb_login_protocol_scheme">fb738193019859979</string>
+
 </resources>

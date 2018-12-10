@@ -15,6 +15,14 @@
       },
       "oauth_client": [
         {
+          "client_id": "636017224538-cc742hp3ahsqp1jum5p5aeb660lng2d3.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.code.dima.happygrocery",
+            "certificate_hash": "4663cfcbac967736504c9ba0789161fc2cf04858"
+          }
+        },
+        {
           "client_id": "636017224538-hdchojmaea1l7tr0d90qocv6ttovl6hf.apps.googleusercontent.com",
           "client_type": 3
         }
@@ -29,8 +37,13 @@
           "status": 1
         },
         "appinvite_service": {
-          "status": 1,
-          "other_platform_oauth_client": []
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "636017224538-hdchojmaea1l7tr0d90qocv6ttovl6hf.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
         },
         "ads_service": {
           "status": 2

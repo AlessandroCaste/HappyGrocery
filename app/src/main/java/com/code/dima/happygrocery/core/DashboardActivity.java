@@ -20,12 +20,12 @@ import android.view.MenuItem;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.code.dima.happygrocery.R;
 import com.code.dima.happygrocery.database.DatabaseAdapter;
 import com.code.dima.happygrocery.exception.NoLastProductException;
 import com.code.dima.happygrocery.model.Product;
 import com.code.dima.happygrocery.model.Category;
 import com.code.dima.happygrocery.model.ShoppingCart;
-import com.example.alessandro.barcodeyeah.R;
 import com.github.mikephil.charting.charts.PieChart;
 import com.github.mikephil.charting.components.Description;
 import com.github.mikephil.charting.components.Legend;

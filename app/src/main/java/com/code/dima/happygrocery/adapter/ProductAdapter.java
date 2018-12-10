@@ -12,17 +12,13 @@ import android.support.v7.widget.RecyclerView;
 import android.view.animation.AccelerateInterpolator;
 import android.widget.Filter;
 
-import com.code.dima.happygrocery.core.DashboardActivity;
+import com.code.dima.happygrocery.R;
 import com.code.dima.happygrocery.core.ProductActivity;
-import com.code.dima.happygrocery.core.ShoppingCartActivity;
-import com.code.dima.happygrocery.database.DatabaseAdapter;
 import com.code.dima.happygrocery.database.DeleteProductFromDBTask;
 import com.code.dima.happygrocery.database.UpdateProductQuantityInDBTask;
 import com.code.dima.happygrocery.exception.NoSuchProductException;
 import com.code.dima.happygrocery.model.Product;
 import com.code.dima.happygrocery.model.ShoppingCart;
-import com.example.alessandro.barcodeyeah.R;
-import java.util.ArrayList;
 import java.util.List;
 
 public class ProductAdapter extends RecyclerView.Adapter<ProductHolder> {

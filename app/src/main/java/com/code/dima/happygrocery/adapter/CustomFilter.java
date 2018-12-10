@@ -2,7 +2,6 @@ package com.code.dima.happygrocery.adapter;
 
 import android.widget.Filter;
 
-import com.code.dima.happygrocery.adapter.ProductAdapter;
 import com.code.dima.happygrocery.model.Product;
 
 import java.util.ArrayList;

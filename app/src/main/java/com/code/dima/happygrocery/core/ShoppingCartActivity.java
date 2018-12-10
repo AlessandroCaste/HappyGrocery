@@ -22,12 +22,12 @@ import android.view.animation.AnimationUtils;
 import android.view.animation.LayoutAnimationController;
 import android.widget.Toast;
 
+import com.code.dima.happygrocery.R;
 import com.code.dima.happygrocery.exception.NoSuchCategoryException;
 import com.code.dima.happygrocery.model.Category;
 import com.code.dima.happygrocery.model.Product;
 import com.code.dima.happygrocery.adapter.ProductAdapter;
 import com.code.dima.happygrocery.model.ShoppingCart;
-import com.example.alessandro.barcodeyeah.R;
 
 
 import de.hdodenhof.circleimageview.CircleImageView;

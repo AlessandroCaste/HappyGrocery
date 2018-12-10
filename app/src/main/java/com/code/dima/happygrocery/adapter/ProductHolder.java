@@ -1,20 +1,15 @@
 package com.code.dima.happygrocery.adapter;
 
-import android.content.Intent;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.code.dima.happygrocery.core.DashboardActivity;
-import com.code.dima.happygrocery.core.ShoppingCartActivity;
+import com.code.dima.happygrocery.R;
 import com.code.dima.happygrocery.model.Product;
-import com.example.alessandro.barcodeyeah.R;
 
-import org.w3c.dom.Text;
 
 public class ProductHolder extends RecyclerView.ViewHolder {
 

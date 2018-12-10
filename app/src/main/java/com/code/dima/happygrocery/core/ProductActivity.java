@@ -24,6 +24,7 @@ import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.cepheuen.elegantnumberbutton.view.ElegantNumberButton;
+import com.code.dima.happygrocery.R;
 import com.code.dima.happygrocery.database.DatabaseAdapter;
 import com.code.dima.happygrocery.database.InsertProductInDBTask;
 import com.code.dima.happygrocery.database.UpdateProductQuantityInDBTask;
@@ -31,7 +32,6 @@ import com.code.dima.happygrocery.exception.NoSuchProductException;
 import com.code.dima.happygrocery.model.Category;
 import com.code.dima.happygrocery.model.Product;
 import com.code.dima.happygrocery.model.ShoppingCart;
-import com.example.alessandro.barcodeyeah.R;
 import com.google.gson.JsonArray;
 
 import org.json.JSONArray;
@@ -84,7 +84,7 @@ public class ProductActivity extends AppCompatActivity {
     private void jsonParse(final Context context) {
         RequestQueue queue = Volley.newRequestQueue(this);
 
-        String url ="https://my-json-server.typicode.com/AlessandroCaste/HappyGroceryDB/products?barcode="+barcode;
+        String url =getResources().getString(R.string.server_url)+barcode;
 
         JsonArrayRequest request = new JsonArrayRequest(Request.Method.GET, url, null, new Response.Listener<JSONArray>() {
             @Override
@@ -96,7 +96,7 @@ public class ProductActivity extends AppCompatActivity {
                     JSONObject reader = jsonArray.getJSONObject(0);
                     Category category = Category.valueOf(reader.getString("category"));
                     String name       = reader.getString("name");
-                    float price       = Float.parseFloat(reader.getString("price"));
+                    float price       = Float.parseFloat(reader.getString("price") + " €");
                     String barcode    = reader.getString("barcode");
                     float weight      = Float.parseFloat(reader.getString("weight"));
                     currentProduct    = new Product(category,name,price,barcode,weight,1,0);
