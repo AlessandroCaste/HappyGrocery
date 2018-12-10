@@ -5,6 +5,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
+import android.provider.ContactsContract;
 
 import com.code.dima.happygrocery.exception.NoSuchProductException;
 import com.code.dima.happygrocery.model.Category;
@@ -104,6 +105,13 @@ public class DatabaseAdapter {
         return productID;
     }
 
+    private Cursor queryProductAlreadyInGroceryList(long productID, long groceryID) {
+        Cursor cursor = database.rawQuery("SELECT * FROM " + DatabaseConstants.LIST_TABLE
+                + " WHERE " + DatabaseConstants.LIST_HID + " = " + groceryID
+                + " AND " + DatabaseConstants.LIST_PID + " = " + productID, null);
+        return cursor;
+    }
+
 
     public void insertNewGrocery(String date, String market) {
         if (database != null) {
@@ -126,10 +134,18 @@ public class DatabaseAdapter {
                 productID = database.insert(DatabaseConstants.PRODUCT_TABLE, null, pValues);
             }
 
+            // choose whether to create a new entry in productlist or to update a previous one
             long groceryID = queryGroceryID();
-
-            ContentValues values = createProductListContentValues(groceryID, productID, product.getQuantity(), product.getPrice());
-            database.insert(DatabaseConstants.LIST_TABLE, null, values);
+            Cursor cursor = queryProductAlreadyInGroceryList(productID, groceryID);
+            if(cursor.moveToNext()) {
+                int oldQuantity = cursor.getInt(cursor.getColumnIndex(DatabaseConstants.LIST_QUANTITY));
+                int newQuantity = oldQuantity + product.getQuantity();
+                updateProductQuantity(product, newQuantity);
+            } else {
+                ContentValues values = createProductListContentValues(groceryID, productID, product.getQuantity(), product.getPrice());
+                database.insert(DatabaseConstants.LIST_TABLE, null, values);
+            }
+            cursor.close();
         }
     }
 

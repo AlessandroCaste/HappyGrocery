@@ -3,6 +3,7 @@ package com.code.dima.happygrocery;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.SQLException;
+import android.provider.ContactsContract;
 import android.support.test.InstrumentationRegistry;
 import android.support.test.runner.AndroidJUnit4;
 import android.util.Log;
@@ -260,6 +261,37 @@ public class DatabaseTest {
             }
             adapter.close();
             assertTrue(true);
+        } catch (SQLException e) {
+            fail(e.getMessage());
+        }
+    }
+
+
+    @Test
+    public void databaseProductAddedTwoTimesTest() {
+        // Context of the app under test.
+        Context appContext = InstrumentationRegistry.getTargetContext();
+        boolean answer = false;
+
+        try {
+            DatabaseAdapter adapter = DatabaseAdapter.openInWriteMode(appContext);
+            adapter.insertNewGrocery("11/12/2018", "Carrefour");
+
+            Product product1 = new Product(Category.FOOD, "Fragole", 1.2f, "900111223", 0.4f, 1, 0);
+
+            adapter.insertProductIntoProductList(product1);
+            adapter.insertProductIntoProductList(product1);
+
+            Cursor cursor = adapter.querySQL("SELECT * FROM " + DatabaseConstants.LIST_TABLE);
+            int count = cursor.getCount();
+            cursor.moveToNext();
+            int quantity = cursor.getInt(cursor.getColumnIndex(DatabaseConstants.LIST_QUANTITY));
+            cursor.close();
+            if (count == 1 && quantity == 2)
+                answer = true;
+            adapter.finishGrocery();
+            adapter.close();
+            assertTrue(answer);
         } catch (SQLException e) {
             fail(e.getMessage());
         }
