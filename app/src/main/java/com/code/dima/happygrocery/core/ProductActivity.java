@@ -182,6 +182,7 @@ public class ProductActivity extends AppCompatActivity {
         if(previousActivityName.equals("ShoppingCartActivity")) {
             //int recyclerPosition = getIntent().getIntExtra("position",1);
             Intent returnIntent = new Intent();
+            currentProduct = ShoppingCart.getInstance().getProductWithBarcode(barcode);
             returnIntent.putExtra("category", currentProduct.getCategory().name());
             int newQuantity = Integer.parseInt(quantityButton.getNumber());
             try {
