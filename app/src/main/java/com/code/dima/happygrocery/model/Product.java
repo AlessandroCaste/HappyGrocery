@@ -1,10 +1,9 @@
 package com.code.dima.happygrocery.model;
 
-import com.example.alessandro.barcodeyeah.R;
+import com.code.dima.happygrocery.R;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-import java.security.Policy;
 
 public class Product {
 
