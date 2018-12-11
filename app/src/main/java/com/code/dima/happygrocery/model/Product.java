@@ -92,15 +92,13 @@ public class Product {
     @Override
     public boolean equals(Object other){
         boolean answer = false;
-        //if (other == null) return false;
         if (other == this) answer = true;
-        // if (!(other instanceof Product))return false;
         if (other instanceof Product) {
             Product otherP = (Product) other;
             answer = (
-                    this.name == otherP.name &&
+                    this.name.equals(otherP.name) &&
                     this.category == otherP.category &&
-                    this.barcode == otherP.barcode &&
+                    this.barcode.equals(otherP.barcode) &&
                     this.imageID == otherP.imageID &&
                     this.price == otherP.price &&
                     this.weight == otherP.weight
@@ -118,6 +116,11 @@ public class Product {
 
     public void updateQuantity(int quantity) {
         this.quantity = quantity;
+    }
+
+    @Override
+    public String toString() {
+        return this.name;
     }
 
 }

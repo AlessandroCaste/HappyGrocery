@@ -49,7 +49,10 @@ public class ShoppingCart {
         // if the product is already in list, simply update it
         int newQuantity = product.getQuantity();
         try {
-            updateQuantity(product, newQuantity);
+            Product productInCart = getProductInCartCorrespondentTo(product);
+            int previousQuantity = productInCart.getQuantity();
+            productInCart.setQuantity(newQuantity + previousQuantity);
+            this.amount += newQuantity * product.getPrice();
         } catch (NoSuchProductException e) {
             // the product isn't already in the list -> add it
             int index;
@@ -59,7 +62,7 @@ public class ShoppingCart {
                 index = categoryNames.indexOf(Category.OTHER.name());
             }
             shoppingCart.get(index).add(product);
-            float price = product.getPrice() * product.getQuantity();
+            float price = product.getPrice() * newQuantity;
             this.amount += price;
             this.lastProduct = product;
         }
@@ -166,9 +169,11 @@ public class ShoppingCart {
             index = categoryNames.indexOf(Category.OTHER.name());
         }
         List<Product> list = shoppingCart.get(index);
-        if (list.contains(product)) {
-            productInCart = list.get(list.indexOf(product));
-        } else
+        for (Product listProduct : list) {
+            if (listProduct.equals(product))
+                productInCart = listProduct;
+        }
+        if (productInCart == null)
             throw new NoSuchProductException();
         return productInCart;
     }

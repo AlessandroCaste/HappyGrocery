@@ -8,6 +8,7 @@ import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.widget.CardView;
+import android.util.Log;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -36,7 +37,6 @@ import com.google.zxing.integration.android.IntentIntegrator;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
 
 import static com.google.zxing.integration.android.IntentIntegrator.REQUEST_CODE;
 
@@ -52,6 +52,10 @@ public class DashboardActivity extends AppCompatActivity
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        updateChartData();
+        updateLastProduct();
+
         setContentView(R.layout.activity_dashboard);
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -69,12 +73,12 @@ public class DashboardActivity extends AppCompatActivity
         AddGroceryInDatabase task = new AddGroceryInDatabase(getApplicationContext());
         task.execute();
 
-        labels = ShoppingCart.getInstance().getCategoryNames();
-
-        colors = new ArrayList<>();
-        for (int i = 0; i < labels.size(); i++) {
-            colors.add(Category.getCategoryColor(labels.get(i)));
-        }
+//        labels = ShoppingCart.getInstance().getCategoryNames();
+//
+//        colors = new ArrayList<>();
+//        for (int i = 0; i < labels.size(); i++) {
+//            colors.add(Category.getCategoryColor(labels.get(i)));
+//        }
 
         chart = findViewById(R.id.DashboardPieChart);
         chart.setDrawHoleEnabled(true);
@@ -89,55 +93,16 @@ public class DashboardActivity extends AppCompatActivity
         chart.setDrawEntryLabels(false);
         Legend legend = chart.getLegend();
         legend.setEnabled(false);
-
-        updateChartData();
-        updateLastProduct();
+        chart.invalidate();
     }
 
     private void updateChartData() {
-        ShoppingCart cart = ShoppingCart.getInstance();
-        List<Integer> valueList = cart.getNumberOfProductsPerCategory();
-        float amount = cart.getAmount();
-        String amountString = getResources().getString(R.string.currency) + String.format("%.2f", amount);
-
-        ArrayList<PieEntry> yValues = new ArrayList<>();
-        PieEntry newEntry;
-        for (int i = 0; i < valueList.size(); i++) {
-            newEntry = new PieEntry(valueList.get(i), i);
-            newEntry.setLabel(labels.get(i));
-            yValues.add(newEntry);
-        }
-
-        PieDataSet dataset = new PieDataSet(yValues, "Categories");
-        dataset.setSliceSpace(3);
-        dataset.setSelectionShift(4);
-        dataset.setColors(colors);
-        dataset.setDrawValues(false);
-        PieData data = new PieData(dataset);
-        chart.setData(data);
-        chart.setCenterText(amountString);
-        chart.invalidate();
+        new UpdateChartDataTask().execute();
     }
 
 
     private void updateLastProduct () {
-        CardView card = findViewById(R.id.dashboardCardView);
-        try {
-            Product lastProduct = ShoppingCart.getInstance().getLastProduct();
-            String name = lastProduct.getName();
-            String price = lastProduct.getPrice() + getResources().getString(R.string.currency);
-            int imageID = lastProduct.getImageID();
-            card.setVisibility(View.VISIBLE);
-            ImageView imageView = findViewById(R.id.dashboardProdImage);
-            TextView nameText = findViewById(R.id.dashboardProdName);
-            TextView priceText = findViewById(R.id.dashboardProdDetails);
-            nameText.setText(name);
-            priceText.setText(price);
-            imageView.setImageResource(imageID);
-        } catch (NoLastProductException e) {
-            card.setVisibility(View.INVISIBLE);
-        }
-
+        new UpdateLastProductTask().execute();
     }
 
 
@@ -166,12 +131,13 @@ public class DashboardActivity extends AppCompatActivity
             }
         } else if (requestCode == getResources().getInteger(R.integer.PRODUCT_REQUEST_CODE)) {
             if(resultCode == Activity.RESULT_OK) {
-                updateChartData();
-                updateLastProduct();
+                //updateChartData();
+                //updateLastProduct();
                 overridePendingTransition(R.transition.slide_in_left, R.transition.slide_out_right);
             }
         }
     }
+
 
     @Override
     protected void onResume() {
@@ -259,6 +225,91 @@ public class DashboardActivity extends AppCompatActivity
             }
             adapter.close();
             return null;
+        }
+    }
+
+    private class UpdateChartDataTask extends AsyncTask<Void, Void, Void> {
+
+        private PieData data;
+        private String amountString;
+
+        @Override
+        protected Void doInBackground(Void... voids) {
+            ShoppingCart cart = ShoppingCart.getInstance();
+
+            // the first time the dashboard is created, sets labels and colors
+            if (labels == null) {
+                labels = cart.getCategoryNames();
+                colors = new ArrayList<>();
+                for (int i = 0; i < labels.size(); i++) {
+                    colors.add(Category.getCategoryColor(labels.get(i)));
+                }
+            }
+
+            List<Integer> valueList = cart.getNumberOfProductsPerCategory();
+            float amount = cart.getAmount();
+            amountString = getResources().getString(R.string.currency) + String.format("%.2f", amount);
+
+            ArrayList<PieEntry> yValues = new ArrayList<>();
+            PieEntry newEntry;
+            for (int i = 0; i < valueList.size(); i++) {
+                newEntry = new PieEntry(valueList.get(i), i);
+                newEntry.setLabel(labels.get(i));
+                yValues.add(newEntry);
+            }
+
+            PieDataSet dataset = new PieDataSet(yValues, "Categories");
+            dataset.setSliceSpace(3);
+            dataset.setSelectionShift(4);
+            dataset.setColors(colors);
+            dataset.setDrawValues(false);
+            data = new PieData(dataset);
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            chart.setData(data);
+            chart.setCenterText(amountString);
+            chart.invalidate();
+        }
+    }
+
+    private class UpdateLastProductTask extends AsyncTask<Void, Void, Boolean> {
+
+        private String name;
+        private String price;
+        private int imageID;
+
+        @Override
+        protected Boolean doInBackground(Void... voids) {
+            boolean lastProductExists = true;
+            Product lastProduct = null;
+            try {
+                lastProduct = ShoppingCart.getInstance().getLastProduct();
+                name = lastProduct.getName();
+                price = lastProduct.getPrice() + getResources().getString(R.string.currency);
+                imageID = lastProduct.getImageID();
+            } catch (NoLastProductException e) {
+                lastProductExists = false;
+            }
+            return lastProductExists;
+        }
+
+        @Override
+        protected void onPostExecute(Boolean lastProductExists) {
+            CardView card = findViewById(R.id.dashboardCardView);
+            if (lastProductExists) {
+                card.setVisibility(View.VISIBLE);
+                ImageView imageView = findViewById(R.id.dashboardProdImage);
+                TextView nameText = findViewById(R.id.dashboardProdName);
+                TextView priceText = findViewById(R.id.dashboardProdDetails);
+                nameText.setText(name);
+                priceText.setText(price);
+                imageView.setImageResource(imageID);
+            } else {
+                card.setVisibility(View.INVISIBLE);
+            }
         }
     }
 }
