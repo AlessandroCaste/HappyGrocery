@@ -36,7 +36,6 @@ import com.google.zxing.integration.android.IntentIntegrator;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
 
 import static com.google.zxing.integration.android.IntentIntegrator.REQUEST_CODE;
 
@@ -261,4 +260,79 @@ public class DashboardActivity extends AppCompatActivity
             return null;
         }
     }
+
+    /*private class UpdateChartDataTask extends AsyncTask<Void, Void, Void> {
+
+        private PieData data;
+        private String amountString;
+
+        @Override
+        protected Void doInBackground(Void... voids) {
+            ShoppingCart cart = ShoppingCart.getInstance();
+            List<Integer> valueList = cart.getNumberOfProductsPerCategory();
+            float amount = cart.getAmount();
+            amountString = getResources().getString(R.string.currency) + String.format("%.2f", amount);
+
+            ArrayList<PieEntry> yValues = new ArrayList<>();
+            PieEntry newEntry;
+            for (int i = 0; i < valueList.size(); i++) {
+                newEntry = new PieEntry(valueList.get(i), i);
+                newEntry.setLabel(labels.get(i));
+                yValues.add(newEntry);
+            }
+
+            PieDataSet dataset = new PieDataSet(yValues, "Categories");
+            dataset.setSliceSpace(3);
+            dataset.setSelectionShift(4);
+            dataset.setColors(colors);
+            dataset.setDrawValues(false);
+            data = new PieData(dataset);
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            chart.setData(data);
+            chart.setCenterText(amountString);
+            chart.invalidate();
+        }
+    }
+
+    private class UpdateLastProductTask extends AsyncTask<Void, Void, Boolean> {
+
+        private String name;
+        private String price;
+        private int imageID;
+
+        @Override
+        protected Boolean doInBackground(Void... voids) {
+            boolean lastProductExists = true;
+            Product lastProduct = null;
+            try {
+                lastProduct = ShoppingCart.getInstance().getLastProduct();
+                name = lastProduct.getName();
+                price = lastProduct.getPrice() + getResources().getString(R.string.currency);
+                imageID = lastProduct.getImageID();
+            } catch (NoLastProductException e) {
+                lastProductExists = false;
+            }
+            return lastProductExists;
+        }
+
+        @Override
+        protected void onPostExecute(Boolean lastProductExists) {
+            CardView card = findViewById(R.id.dashboardCardView);
+            if (lastProductExists) {
+                card.setVisibility(View.VISIBLE);
+                ImageView imageView = findViewById(R.id.dashboardProdImage);
+                TextView nameText = findViewById(R.id.dashboardProdName);
+                TextView priceText = findViewById(R.id.dashboardProdDetails);
+                nameText.setText(name);
+                priceText.setText(price);
+                imageView.setImageResource(imageID);
+            } else {
+                card.setVisibility(View.INVISIBLE);
+            }
+        }
+    }*/
 }
