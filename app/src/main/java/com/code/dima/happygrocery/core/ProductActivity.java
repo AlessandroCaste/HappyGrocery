@@ -96,7 +96,7 @@ public class ProductActivity extends AppCompatActivity {
                     JSONObject reader = jsonArray.getJSONObject(0);
                     Category category = Category.valueOf(reader.getString("category"));
                     String name       = reader.getString("name");
-                    float price       = Float.parseFloat(reader.getString("price") + " €");
+                    float price       = Float.parseFloat(reader.getString("price"));
                     String barcode    = reader.getString("barcode");
                     float weight      = Float.parseFloat(reader.getString("weight"));
                     currentProduct    = new Product(category,name,price,barcode,weight,1,0);
