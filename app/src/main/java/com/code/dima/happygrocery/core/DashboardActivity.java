@@ -29,10 +29,14 @@ import com.code.dima.happygrocery.model.Category;
 import com.code.dima.happygrocery.model.ShoppingCart;
 import com.github.mikephil.charting.charts.PieChart;
 import com.github.mikephil.charting.components.Description;
+import com.github.mikephil.charting.components.IMarker;
 import com.github.mikephil.charting.components.Legend;
+import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.PieEntry;
 import com.github.mikephil.charting.data.PieData;
 import com.github.mikephil.charting.data.PieDataSet;
+import com.github.mikephil.charting.highlight.Highlight;
+import com.github.mikephil.charting.listener.OnChartValueSelectedListener;
 import com.google.zxing.integration.android.IntentIntegrator;
 
 import java.util.ArrayList;
@@ -93,6 +97,9 @@ public class DashboardActivity extends AppCompatActivity
         chart.setDrawEntryLabels(false);
         Legend legend = chart.getLegend();
         legend.setEnabled(false);
+        chart.setTouchEnabled(true);
+        CustomMarkerView marker = new CustomMarkerView(this, R.layout.marker_layout);
+        chart.setMarker(marker);
         chart.invalidate();
     }
 

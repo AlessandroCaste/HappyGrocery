@@ -21,6 +21,7 @@
     <string name="dashboard_default_prod_details">30$</string>
     <string name="last_product_image">Last product image</string>
     <string name="currency">$</string>
+    <string name="marker_text">products in category</string>
 
     <!-- NAMES OF THE CATEGORIES -->
     <string name="category1">Food</string>
