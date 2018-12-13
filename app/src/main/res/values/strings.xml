@@ -22,6 +22,8 @@
     <string name="last_product_image">Last product image</string>
     <string name="currency">$</string>
     <string name="marker_text">products in category</string>
+    <string name="dashboard_empty_card_text1">No products to show</string>
+    <string name="dashboard_empty_card_text2">Tap to add a new product -></string>
 
     <!-- NAMES OF THE CATEGORIES -->
     <string name="category1">Food</string>

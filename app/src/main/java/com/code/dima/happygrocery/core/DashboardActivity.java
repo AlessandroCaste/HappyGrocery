@@ -77,19 +77,10 @@ public class DashboardActivity extends AppCompatActivity
         AddGroceryInDatabase task = new AddGroceryInDatabase(getApplicationContext());
         task.execute();
 
-//        labels = ShoppingCart.getInstance().getCategoryNames();
-//
-//        colors = new ArrayList<>();
-//        for (int i = 0; i < labels.size(); i++) {
-//            colors.add(Category.getCategoryColor(labels.get(i)));
-//        }
-
         chart = findViewById(R.id.DashboardPieChart);
         chart.setDrawHoleEnabled(true);
         chart.setHoleColor(Color.WHITE);
         chart.setHoleRadius(75);
-        //String centerText = getResources().getString(R.string.currency) + "0.00";
-        //chart.setCenterText(centerText);
         chart.setCenterTextSize(36);
         Description desc = new Description();
         desc.setText("");
@@ -307,15 +298,17 @@ public class DashboardActivity extends AppCompatActivity
         protected void onPostExecute(Boolean lastProductExists) {
             CardView card = findViewById(R.id.dashboardCardView);
             if (lastProductExists) {
-                card.setVisibility(View.VISIBLE);
+                findViewById(R.id.dashboard_empty_card_layout).setVisibility(View.INVISIBLE);
                 ImageView imageView = findViewById(R.id.dashboardProdImage);
                 TextView nameText = findViewById(R.id.dashboardProdName);
                 TextView priceText = findViewById(R.id.dashboardProdDetails);
                 nameText.setText(name);
                 priceText.setText(price);
                 imageView.setImageResource(imageID);
+                findViewById(R.id.dashboard_full_card_layout).setVisibility(View.VISIBLE);
             } else {
-                card.setVisibility(View.INVISIBLE);
+                findViewById(R.id.dashboard_empty_card_layout).setVisibility(View.VISIBLE);
+                findViewById(R.id.dashboard_full_card_layout).setVisibility(View.INVISIBLE);
             }
         }
     }
