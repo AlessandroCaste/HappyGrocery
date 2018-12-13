@@ -23,7 +23,6 @@ import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
 import android.util.Log;
 import android.view.View;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.code.dima.happygrocery.R;
@@ -44,28 +43,22 @@ import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FacebookAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
 
 import java.util.ArrayList;
 
-/**
- * Demonstrate Firebase Authentication using a Google ID Token.
- */
+
 public class LoginActivity extends BaseActivity implements
         View.OnClickListener {
 
     private static final String TAG = "GoogleActivity";
     private static final int RC_SIGN_IN = 9001;
 
-    // [START declare_auth]
     private FirebaseAuth mAuth;
-    // [END declare_auth]
 
     private GoogleSignInClient mGoogleSignInClient;
-    private TextView mStatusTextView;
-    private TextView mDetailTextView;
 
+    //Facebook CallBackManager
     private CallbackManager mCallbackManager;
 
     Context context;
@@ -78,9 +71,6 @@ public class LoginActivity extends BaseActivity implements
 
                 setContentView(R.layout.activity_google);
                 context = this;
-                // Views
-                mStatusTextView = findViewById(R.id.status);
-                mDetailTextView = findViewById(R.id.detail);
 
                 // Initialize Facebook Login button
                 mCallbackManager = CallbackManager.Factory.create();
@@ -109,13 +99,11 @@ public class LoginActivity extends BaseActivity implements
             @Override
             public void onCancel() {
                 Log.d(TAG, "facebook:onCancel");
-                updateUI(null);
             }
 
             @Override
             public void onError(FacebookException error) {
                 Log.d(TAG, "facebook:onError", error);
-                updateUI(null);
             }
         });
         loginManager.logInWithReadPermissions(this, getReadPermissions());
@@ -129,7 +117,7 @@ public class LoginActivity extends BaseActivity implements
         return fbPermissions;
     }
 
-    // [START on_start_check_user]
+    // Check if a user is already logged in when activity starts
     @Override
     public void onStart() {
         super.onStart();
@@ -137,9 +125,7 @@ public class LoginActivity extends BaseActivity implements
         if(FirebaseAuth.getInstance().getCurrentUser() != null)
             startActivity(new Intent(this,DashboardActivity.class));
     }
-    // [END on_start_check_user]
 
-    // [START onactivityresult]
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -154,11 +140,7 @@ public class LoginActivity extends BaseActivity implements
                 startActivity(new Intent(context,DashboardActivity.class));
                 overridePendingTransition(R.transition.slide_in_right,R.transition.slide_out_left);
             } catch (ApiException e) {
-                // Google Sign In failed, update UI appropriately
                 Log.w(TAG, "Google sign in failed", e);
-                // [START_EXCLUDE]
-                updateUI(null);
-                // [END_EXCLUDE]
             }
         }
         else {
@@ -177,15 +159,13 @@ public class LoginActivity extends BaseActivity implements
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
-                            // Sign in success, update UI with the signed-in user's information
                             Log.d(TAG, "signInWithCredential:success");
-                            FirebaseUser user = mAuth.getCurrentUser();
-                            updateUI(user);
+                            startActivity(new Intent(context,DashboardActivity.class));
+                            overridePendingTransition(R.transition.slide_in_right,R.transition.slide_out_left);
                         } else {
                             // If sign in fails, display a message to the user.
                             Log.w(TAG, "signInWithCredential:failure", task.getException());
                             Snackbar.make(findViewById(R.id.main_layout), "Authentication Failed.", Snackbar.LENGTH_SHORT).show();
-                            updateUI(null);
                         }
                         hideProgressDialog();
                     }
@@ -202,16 +182,12 @@ public class LoginActivity extends BaseActivity implements
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
-                            // Sign in success, update UI with the signed-in user's information
                             Log.d(TAG, "signInWithCredential:success");
-                            FirebaseUser user = mAuth.getCurrentUser();
-                            updateUI(user);
                         } else {
                             // If sign in fails, display a message to the user.
                             Log.w(TAG, "signInWithCredential:failure", task.getException());
                             Toast.makeText(LoginActivity.this, "Authentication failed.",
                                     Toast.LENGTH_SHORT).show();
-                            updateUI(null);
                         }
 
                         hideProgressDialog();
@@ -220,7 +196,7 @@ public class LoginActivity extends BaseActivity implements
     }
 
 
-    private void signIn() {
+    private void googleLogin() {
         Intent signInIntent = mGoogleSignInClient.getSignInIntent();
         startActivityForResult(signInIntent, RC_SIGN_IN);
     }
@@ -235,13 +211,11 @@ public class LoginActivity extends BaseActivity implements
                     new OnCompleteListener<Void>() {
                         @Override
                         public void onComplete(@NonNull Task<Void> task) {
-                            updateUI(null);
                         }
                     });
         }
         else {
             LoginManager.getInstance().logOut();
-            updateUI(null);
         }
     }
 
@@ -254,34 +228,19 @@ public class LoginActivity extends BaseActivity implements
                 new OnCompleteListener<Void>() {
                     @Override
                     public void onComplete(@NonNull Task<Void> task) {
-                        updateUI(null);
                     }
                 });
-    }
-
-    private void updateUI(FirebaseUser user) {
-        hideProgressDialog();
-        if (user != null) {
-            mStatusTextView.setText(getString(R.string.google_status_fmt, user.getEmail()));
-            mDetailTextView.setText(getString(R.string.firebase_status_fmt, user.getUid()));
-
-            findViewById(R.id.googleButton).setVisibility(View.GONE);
-        } else {
-            mStatusTextView.setText(R.string.signed_out);
-            mDetailTextView.setText(null);
-
-            findViewById(R.id.googleButton).setVisibility(View.VISIBLE);
-        }
     }
 
     @Override
     public void onClick(View v) {
         int i = v.getId();
         if (i == R.id.googleButton) {
-            signIn();
+            googleLogin();
         } else if(i == R.id.buttonFacebookSignout) {
             signOut();
         } else if(i == R.id.facebookButton)
            facebookLogin();
         }
+
 }
