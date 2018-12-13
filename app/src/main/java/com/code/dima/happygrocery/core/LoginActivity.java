@@ -237,8 +237,6 @@ public class LoginActivity extends BaseActivity implements
         int i = v.getId();
         if (i == R.id.googleButton) {
             googleLogin();
-        } else if(i == R.id.buttonFacebookSignout) {
-            signOut();
         } else if(i == R.id.facebookButton)
            facebookLogin();
         }
