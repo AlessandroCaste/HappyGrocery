@@ -8,8 +8,8 @@
     <string name="title_activity_main">Happy Grocery</string>
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
-    <string name="nav_header_title">Android Studio</string>
-    <string name="nav_header_subtitle">android.studio@android.com</string>
+    <string name="nav_header_title">Jack Sparrow</string>
+    <string name="nav_header_subtitle">jack_pirate@gmail.com</string>
     <string name="nav_header_desc">Navigation header</string>
     <string name="action_settings">Settings</string>
     <string name="prompt">Frame your barcode!</string>
@@ -44,5 +44,13 @@
     <string name="signed_out">Signed Out</string>
     <string name="facebook_status_fmt">Facebook user :%s</string>
     <string name="facebook_app_id">738193019859979</string> <string name="fb_login_protocol_scheme">fb738193019859979</string>
+
+    <!-- DRAWER MENU ENTRIES -->
+    <string name="menu_clear_grocery">Clear grocery</string>
+    <string name="menu_payment_history">Payment history</string>
+    <string name="menu_payment_methods">Payment methods</string>
+    <string name="menu_log_out">Log out</string>
+    <string name="menu_contact_us">Contact us</string>
+    <string name="menu_informations">About us</string>
 
 </resources>

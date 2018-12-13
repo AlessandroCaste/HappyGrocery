@@ -1,9 +1,11 @@
 package com.code.dima.happygrocery.core;
 
 import android.content.Context;
+import android.graphics.Canvas;
 import android.widget.TextView;
 
 import com.code.dima.happygrocery.R;
+import com.github.mikephil.charting.charts.PieChart;
 import com.github.mikephil.charting.components.MarkerView;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.PieEntry;
@@ -14,11 +16,13 @@ import com.github.mikephil.charting.utils.MPPointF;
 public class CustomMarkerView extends MarkerView {
 
     private TextView text;
-    private MPPointF mOffset;
+    private MPPointF offset;
 
     public CustomMarkerView(Context context, int layoutResource) {
         super(context, layoutResource);
         text = findViewById(R.id.markerTextView);
+        PieChart chart = findViewById(R.id.DashboardPieChart);
+        setChartView(chart);
     }
 
     @Override
@@ -33,11 +37,11 @@ public class CustomMarkerView extends MarkerView {
     @Override
     public MPPointF getOffset() {
 
-        if(mOffset == null) {
+        if(offset == null) {
             // center the marker horizontally and vertically
-            mOffset = new MPPointF(-(getWidth() / 2), -getHeight());
+            offset = new MPPointF(-(getWidth() / 2), -getHeight() / 2);
         }
 
-        return mOffset;
+        return offset;
     }
 }
