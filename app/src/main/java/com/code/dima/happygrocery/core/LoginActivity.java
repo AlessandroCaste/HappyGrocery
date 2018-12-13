@@ -69,22 +69,22 @@ public class LoginActivity extends BaseActivity implements
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-                setContentView(R.layout.login_activity);
-                context = this;
+        setContentView(R.layout.login_activity);
+        context = this;
 
-                // Initialize Facebook Login button
-                mCallbackManager = CallbackManager.Factory.create();
+        // Initialize Facebook Login button
+        mCallbackManager = CallbackManager.Factory.create();
 
-                // Configure Google Sign In
-                GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-                        .requestIdToken(getString(R.string.default_web_client_id))
-                        .requestEmail()
-                        .build();
+        // Configure Google Sign In
+        GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                .requestIdToken(getString(R.string.default_web_client_id))
+                .requestEmail()
+                .build();
 
-                mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
+        mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
 
-                // Initialize Firebase Auth
-                mAuth = FirebaseAuth.getInstance();
+        // Initialize Firebase Auth
+        mAuth = FirebaseAuth.getInstance();
     }
 
     private void facebookLogin() {
@@ -121,7 +121,7 @@ public class LoginActivity extends BaseActivity implements
     @Override
     public void onStart() {
         super.onStart();
-        // Check if user is signed in (non-null) and update UI accordingly.
+        // Check if user is signed in (non-null)
         if(FirebaseAuth.getInstance().getCurrentUser() != null)
             startActivity(new Intent(this,DashboardActivity.class));
     }
@@ -183,6 +183,8 @@ public class LoginActivity extends BaseActivity implements
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
                             Log.d(TAG, "signInWithCredential:success");
+                            startActivity(new Intent(context,DashboardActivity.class));
+                            overridePendingTransition(R.transition.slide_in_right,R.transition.slide_out_left);
                         } else {
                             // If sign in fails, display a message to the user.
                             Log.w(TAG, "signInWithCredential:failure", task.getException());
@@ -238,7 +240,7 @@ public class LoginActivity extends BaseActivity implements
         if (i == R.id.googleButton) {
             googleLogin();
         } else if(i == R.id.facebookButton)
-           facebookLogin();
-        }
+            facebookLogin();
+    }
 
 }

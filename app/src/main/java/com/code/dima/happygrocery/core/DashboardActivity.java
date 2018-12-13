@@ -37,10 +37,18 @@ import com.github.mikephil.charting.data.PieData;
 import com.github.mikephil.charting.data.PieDataSet;
 import com.github.mikephil.charting.highlight.Highlight;
 import com.github.mikephil.charting.listener.OnChartValueSelectedListener;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseAuthSettings;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.zxing.integration.android.IntentIntegrator;
+import com.squareup.picasso.Picasso;
+
+import org.w3c.dom.Text;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import de.hdodenhof.circleimageview.CircleImageView;
 
 import static com.google.zxing.integration.android.IntentIntegrator.REQUEST_CODE;
 
@@ -51,6 +59,7 @@ public class DashboardActivity extends AppCompatActivity
     private PieChart chart;
     private List<String> labels;
     private List<Integer> colors;
+    Context context;
 
 
     @Override
@@ -92,6 +101,8 @@ public class DashboardActivity extends AppCompatActivity
         CustomMarkerView marker = new CustomMarkerView(this, R.layout.marker_layout);
         chart.setMarker(marker);
         chart.invalidate();
+
+        context = this;
     }
 
     private void updateChartData() {
@@ -136,6 +147,19 @@ public class DashboardActivity extends AppCompatActivity
         }
     }
 
+    @Override
+    protected void onStart() {
+        super.onStart();
+        NavigationView nav_header = findViewById(R.id.nav_view);
+        TextView profileName = nav_header.getHeaderView(0).findViewById(R.id.profileName);
+        TextView profileMail = nav_header.getHeaderView(0).findViewById(R.id.profileMail);
+        CircleImageView profilePicture = nav_header.getHeaderView(0).findViewById(R.id.profilePicture);
+
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        Picasso.get().load(user.getPhotoUrl()).into(profilePicture);
+        profileName.setText(user.getDisplayName());
+        profileMail.setText(user.getEmail());
+    }
 
     @Override
     protected void onResume() {
