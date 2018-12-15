@@ -16,17 +16,16 @@
 
 package com.code.dima.happygrocery.core;
 
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.annotation.VisibleForTesting;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.code.dima.happygrocery.R;
@@ -65,8 +64,8 @@ public class LoginActivity extends AppCompatActivity implements
     //Facebook CallBackManager
     private CallbackManager mCallbackManager;
 
-    @VisibleForTesting
-    public ProgressDialog mProgressDialog;
+    final ProgressBar progressbar = new ProgressBar(LoginActivity.this,null,android.R.attr.progressBarStyleLarge);
+
     Context context;
 
     boolean google = true;
@@ -156,7 +155,7 @@ public class LoginActivity extends AppCompatActivity implements
 
     private void firebaseAuthWithGoogle(GoogleSignInAccount acct) {
         Log.d(TAG, "firebaseAuthWithGoogle:" + acct.getId());
-        showProgressDialog();
+        progressbar.setVisibility(View.VISIBLE);
 
         AuthCredential credential = GoogleAuthProvider.getCredential(acct.getIdToken(), null);
         mAuth.signInWithCredential(credential)
@@ -172,14 +171,14 @@ public class LoginActivity extends AppCompatActivity implements
                             Log.w(TAG, "signInWithCredential:failure", task.getException());
                             Snackbar.make(findViewById(R.id.main_layout), "Authentication Failed.", Snackbar.LENGTH_SHORT).show();
                         }
-                        hideProgressDialog();
+                        progressbar.setVisibility(View.GONE);
                     }
                 });
     }
 
     private void handleFacebookAccessToken(AccessToken token) {
         Log.d(TAG, "handleFacebookAccessToken:" + token);
-        showProgressDialog();
+        progressbar.setVisibility(View.VISIBLE);
 
         AuthCredential credential = FacebookAuthProvider.getCredential(token.getToken());
         mAuth.signInWithCredential(credential)
@@ -197,7 +196,7 @@ public class LoginActivity extends AppCompatActivity implements
                                     Toast.LENGTH_SHORT).show();
                         }
 
-                        hideProgressDialog();
+                        progressbar.setVisibility(View.INVISIBLE);
                     }
                 });
     }
@@ -206,22 +205,6 @@ public class LoginActivity extends AppCompatActivity implements
     private void googleLogin() {
         Intent signInIntent = mGoogleSignInClient.getSignInIntent();
         startActivityForResult(signInIntent, RC_SIGN_IN);
-    }
-
-    public void showProgressDialog() {
-        if (mProgressDialog == null) {
-            mProgressDialog = new ProgressDialog(this);
-            mProgressDialog.setMessage(getString(R.string.loading));
-            mProgressDialog.setIndeterminate(true);
-        }
-
-        mProgressDialog.show();
-    }
-
-    public void hideProgressDialog() {
-        if (mProgressDialog != null && mProgressDialog.isShowing()) {
-            mProgressDialog.dismiss();
-        }
     }
 
     public void hideKeyboard(View view) {
@@ -234,7 +217,7 @@ public class LoginActivity extends AppCompatActivity implements
     @Override
     public void onStop() {
         super.onStop();
-        hideProgressDialog();
+        progressbar.setVisibility(View.INVISIBLE);
     }
 
     @Override
