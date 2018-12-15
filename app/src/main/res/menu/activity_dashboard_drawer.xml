@@ -23,7 +23,7 @@
             android:onClick="onDrawerButtonClick"/>
     </group>
 
-    <item android:title="Others">
+    <item android:title="@string/menu_category_others">
         <menu>
             <item
                 android:id="@+id/about_us"

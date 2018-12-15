@@ -51,6 +51,7 @@
     <string name="menu_log_out">Log out</string>
     <string name="menu_contact_us">Contact us</string>
     <string name="menu_informations">About us</string>
+    <string name="menu_category_others">Others</string>
 
     <!-- ALERT NOTIFICATIONS -->
     <string name="log_out_title">Logging out!</string>
