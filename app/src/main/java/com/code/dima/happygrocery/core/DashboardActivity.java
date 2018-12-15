@@ -356,6 +356,13 @@ public class DashboardActivity extends AppCompatActivity
             alert.setNegativeButton(R.string.CANCEL,null);
             alert.setCancelable(false);
             alert.show();
+
+        } else if (id == R.id.payment_history) {
+
+            Intent i = new Intent(context, PaymentHistoryActivity.class);
+            startActivity(i);
+            overridePendingTransition(R.transition.slide_in_left,R.transition.slide_out_right);
+
         }
 
     }
