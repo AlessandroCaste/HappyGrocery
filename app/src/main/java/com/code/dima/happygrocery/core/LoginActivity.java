@@ -64,7 +64,7 @@ public class LoginActivity extends AppCompatActivity implements
     //Facebook CallBackManager
     private CallbackManager mCallbackManager;
 
-    final ProgressBar progressbar = new ProgressBar(LoginActivity.this,null,android.R.attr.progressBarStyleLarge);
+    ProgressBar progressbar;
 
     Context context;
 
@@ -74,6 +74,8 @@ public class LoginActivity extends AppCompatActivity implements
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.login_activity);
+
+        progressbar = findViewById(R.id.progressBar);
         context = this;
 
         // Initialize Facebook Login button
