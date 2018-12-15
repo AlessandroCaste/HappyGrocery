@@ -16,13 +16,17 @@
 
 package com.code.dima.happygrocery.core;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.annotation.VisibleForTesting;
 import android.support.design.widget.Snackbar;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Toast;
 
 import com.code.dima.happygrocery.R;
@@ -48,7 +52,7 @@ import com.google.firebase.auth.GoogleAuthProvider;
 import java.util.ArrayList;
 
 
-public class LoginActivity extends BaseActivity implements
+public class LoginActivity extends AppCompatActivity implements
         View.OnClickListener {
 
     private static final String TAG = "GoogleActivity";
@@ -61,11 +65,12 @@ public class LoginActivity extends BaseActivity implements
     //Facebook CallBackManager
     private CallbackManager mCallbackManager;
 
+    @VisibleForTesting
+    public ProgressDialog mProgressDialog;
     Context context;
 
     boolean google = true;
 
-    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
@@ -203,43 +208,41 @@ public class LoginActivity extends BaseActivity implements
         startActivityForResult(signInIntent, RC_SIGN_IN);
     }
 
-    private void signOut() {
-        // Firebase sign out
-        mAuth.signOut();
-
-        if(google) {
-            // Google sign out
-            mGoogleSignInClient.signOut().addOnCompleteListener(this,
-                    new OnCompleteListener<Void>() {
-                        @Override
-                        public void onComplete(@NonNull Task<Void> task) {
-                        }
-                    });
+    public void showProgressDialog() {
+        if (mProgressDialog == null) {
+            mProgressDialog = new ProgressDialog(this);
+            mProgressDialog.setMessage(getString(R.string.loading));
+            mProgressDialog.setIndeterminate(true);
         }
-        else {
-            LoginManager.getInstance().logOut();
+
+        mProgressDialog.show();
+    }
+
+    public void hideProgressDialog() {
+        if (mProgressDialog != null && mProgressDialog.isShowing()) {
+            mProgressDialog.dismiss();
         }
     }
 
-    private void revokeAccess() {
-        // Firebase sign out
-        mAuth.signOut();
+    public void hideKeyboard(View view) {
+        final InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+        if (imm != null) {
+            imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+        }
+    }
 
-        // Google revoke access
-        mGoogleSignInClient.revokeAccess().addOnCompleteListener(this,
-                new OnCompleteListener<Void>() {
-                    @Override
-                    public void onComplete(@NonNull Task<Void> task) {
-                    }
-                });
+    @Override
+    public void onStop() {
+        super.onStop();
+        hideProgressDialog();
     }
 
     @Override
     public void onClick(View v) {
-        int i = v.getId();
-        if (i == R.id.googleButton) {
+        int id = v.getId();
+        if (id == R.id.googleButton) {
             googleLogin();
-        } else if(i == R.id.facebookButton)
+        } else if(id == R.id.facebookButton)
             facebookLogin();
     }
 

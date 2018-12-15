@@ -1,12 +1,16 @@
 package com.code.dima.happygrocery.core;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
+import android.support.annotation.NonNull;
 import android.support.v7.widget.CardView;
 import android.util.Log;
 import android.view.View;
@@ -29,21 +33,14 @@ import com.code.dima.happygrocery.model.Category;
 import com.code.dima.happygrocery.model.ShoppingCart;
 import com.github.mikephil.charting.charts.PieChart;
 import com.github.mikephil.charting.components.Description;
-import com.github.mikephil.charting.components.IMarker;
 import com.github.mikephil.charting.components.Legend;
-import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.PieEntry;
 import com.github.mikephil.charting.data.PieData;
 import com.github.mikephil.charting.data.PieDataSet;
-import com.github.mikephil.charting.highlight.Highlight;
-import com.github.mikephil.charting.listener.OnChartValueSelectedListener;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseAuthSettings;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.zxing.integration.android.IntentIntegrator;
 import com.squareup.picasso.Picasso;
-
-import org.w3c.dom.Text;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -59,6 +56,7 @@ public class DashboardActivity extends AppCompatActivity
     private PieChart chart;
     private List<String> labels;
     private List<Integer> colors;
+    FirebaseUser user;
     Context context;
 
 
@@ -103,6 +101,7 @@ public class DashboardActivity extends AppCompatActivity
         chart.invalidate();
 
         context = this;
+
     }
 
     private void updateChartData() {
@@ -113,7 +112,6 @@ public class DashboardActivity extends AppCompatActivity
     private void updateLastProduct () {
         new UpdateLastProductTask().execute();
     }
-
 
     public void onButtonClick(View view){
         IntentIntegrator integrator = new IntentIntegrator(this);
@@ -155,7 +153,7 @@ public class DashboardActivity extends AppCompatActivity
         TextView profileMail = nav_header.getHeaderView(0).findViewById(R.id.profileMail);
         CircleImageView profilePicture = nav_header.getHeaderView(0).findViewById(R.id.profilePicture);
 
-        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        user = FirebaseAuth.getInstance().getCurrentUser();
         Picasso.get().load(user.getPhotoUrl()).into(profilePicture);
         profileName.setText(user.getDisplayName());
         profileMail.setText(user.getEmail());
@@ -336,4 +334,30 @@ public class DashboardActivity extends AppCompatActivity
             }
         }
     }
+
+    public void onDrawerButtonClick (MenuItem menuItem){
+        int id = menuItem.getItemId();
+
+        if  (id == R.id.log_out) {
+
+            AlertDialog.Builder alert = new AlertDialog.Builder(DashboardActivity.this);
+            alert.setTitle(R.string.log_out_title);
+            alert.setMessage(R.string.log_out_message);
+            alert.setPositiveButton(R.string.OK, new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    FirebaseAuth mAuth = FirebaseAuth.getInstance();
+                    mAuth.signOut();
+                    Intent i = new Intent(context, LoginActivity.class);
+                    startActivity(i);
+                    overridePendingTransition(R.transition.slide_in_left,R.transition.slide_out_right);
+                }
+            });
+            alert.setNegativeButton(R.string.CANCEL,null);
+            alert.setCancelable(false);
+            alert.show();
+        }
+
+    }
+
 }

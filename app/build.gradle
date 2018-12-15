@@ -52,6 +52,10 @@ dependencies {
     //Required for Facbook Login
     implementation 'com.facebook.android:facebook-login:4.38.1'
     implementation 'com.android.support:customtabs:28.0.0'
+
+    //Picasso image Loading
+    implementation 'com.squareup.picasso:picasso:2.71828'
+
 }
 
 apply plugin: 'com.google.gms.google-services'

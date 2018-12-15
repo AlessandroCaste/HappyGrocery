@@ -11,10 +11,12 @@
         <item name="android:navigationBarColor">@color/colorPrimary</item>
         <item name="android:colorControlHighlight">#FFB74D</item>
         <item name="android:colorAccent">@color/colorPrimary</item>
+        <item name="android:alertDialogTheme">@style/Theme.AppCompat.Light.Dialog.Alert</item>
     </style>
 
     <style name="AppThemeProduct" parent="AppTheme">
         <item name="windowNoTitle">true</item>
+        <item name="android:alertDialogTheme">@style/Theme.AppCompat.Light.Dialog.Alert</item>
     </style>
 
     <style name="AppTheme.NoActionBar">

@@ -5,7 +5,6 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.os.AsyncTask;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -20,19 +19,15 @@ import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonArrayRequest;
-import com.android.volley.toolbox.JsonObjectRequest;
-import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.cepheuen.elegantnumberbutton.view.ElegantNumberButton;
 import com.code.dima.happygrocery.R;
-import com.code.dima.happygrocery.database.DatabaseAdapter;
 import com.code.dima.happygrocery.database.InsertProductInDBTask;
 import com.code.dima.happygrocery.database.UpdateProductQuantityInDBTask;
 import com.code.dima.happygrocery.exception.NoSuchProductException;
 import com.code.dima.happygrocery.model.Category;
 import com.code.dima.happygrocery.model.Product;
 import com.code.dima.happygrocery.model.ShoppingCart;
-import com.google.gson.JsonArray;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -118,34 +113,35 @@ public class ProductActivity extends AppCompatActivity {
                     weightView.setText(Float.toString(currentProduct.getWeight()) + "g");
 
                 } catch (JSONException e) {
-                    AlertDialog.Builder builder = new AlertDialog.Builder(context, android.R.style.Theme_DeviceDefault_Dialog_Alert);
-                    e.printStackTrace();
-                    builder.setTitle("Barcode not recognized!")
-                            .setMessage("Barcode not found!\nAsk shopping assistants!")
-                            .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
-                                public void onClick(DialogInterface dialog, int which) {
-                                    finish();
-                                }
-                            })
-                            .setIcon(R.drawable.ic_error_white_dp)
-                            .show();
+                    AlertDialog.Builder alert = new AlertDialog.Builder(ProductActivity.this);
+                    alert.setTitle(R.string.error_barcode_title);
+                    alert.setMessage(R.string.error_barcode_message);
+                    alert.setPositiveButton(R.string.OK, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            finish();
+                        }
+                    });
+                    alert.setCancelable(false);
+                    alert.show();
                     }
+
             }
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
                 Log.e("ERROR", "Error occured", error);
-                AlertDialog.Builder builder = new AlertDialog.Builder(context, android.R.style.Theme_DeviceDefault_Dialog_Alert);
-                builder.setTitle("Server Problem!")
-                        .setMessage("Service unavailable\nTry again later!")
-                        .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int which) {
-                                finish();
-                            }
-                        })
-                        .setIcon(R.drawable.ic_error_white_dp)
-                        .show();
-                finish();
+                AlertDialog.Builder alert = new AlertDialog.Builder(ProductActivity.this);
+                alert.setTitle(R.string.error_connecting_title);
+                alert.setMessage(R.string.error_connecting_message);
+                alert.setPositiveButton(R.string.OK, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                      finish();
+                    }
+                });
+                alert.setCancelable(false);
+                alert.show();
             }
         });
         queue.add(request);
