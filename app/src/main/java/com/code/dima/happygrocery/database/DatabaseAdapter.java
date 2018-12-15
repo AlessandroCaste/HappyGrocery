@@ -9,8 +9,10 @@ import android.provider.ContactsContract;
 
 import com.code.dima.happygrocery.exception.NoSuchProductException;
 import com.code.dima.happygrocery.model.Category;
+import com.code.dima.happygrocery.model.GroceryDetails;
 import com.code.dima.happygrocery.model.Product;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -246,6 +248,21 @@ public class DatabaseAdapter {
             cursor.close();
         }
         return products;
+    }
+
+    public List<GroceryDetails> queryGroceries() {
+        ArrayList<GroceryDetails> groceries = new ArrayList<>();
+        if (database != null) {
+            Cursor cursor = database.rawQuery(DatabaseConstants.QUERY_GROCERIES, null);
+            while (cursor.moveToNext()) {
+                float amount = cursor.getFloat(cursor.getColumnIndex(DatabaseConstants.HISTORY_AMOUNT));
+                String supermarket = cursor.getString(cursor.getColumnIndex(DatabaseConstants.HISTORY_MARKET));
+                String date = cursor.getString(cursor.getColumnIndex(DatabaseConstants.HISTORY_DATE));
+                groceries.add(new GroceryDetails(amount, supermarket, date));
+            }
+            cursor.close();
+        }
+        return groceries;
     }
 
     public Cursor querySQL(String sql) {

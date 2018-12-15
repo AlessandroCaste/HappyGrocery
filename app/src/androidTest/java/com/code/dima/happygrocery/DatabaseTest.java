@@ -11,6 +11,7 @@ import android.util.Log;
 import com.code.dima.happygrocery.database.DatabaseAdapter;
 import com.code.dima.happygrocery.database.DatabaseConstants;
 import com.code.dima.happygrocery.model.Category;
+import com.code.dima.happygrocery.model.GroceryDetails;
 import com.code.dima.happygrocery.model.Product;
 
 import org.junit.Before;
@@ -289,6 +290,30 @@ public class DatabaseTest {
             cursor.close();
             if (count == 1 && quantity == 2)
                 answer = true;
+            adapter.finishGrocery();
+            adapter.close();
+            assertTrue(answer);
+        } catch (SQLException e) {
+            fail(e.getMessage());
+        }
+    }
+
+    @Test
+    public void databaseGroceryQueryTest() {
+        // Context of the app under test.
+        Context appContext = InstrumentationRegistry.getTargetContext();
+        boolean answer = false;
+
+        try {
+            DatabaseAdapter adapter = DatabaseAdapter.openInWriteMode(appContext);
+            adapter.insertNewGrocery("11/12/2018", "Carrefour");
+            adapter.insertNewGrocery("12/08/2017", "Esselunga");
+
+            List<GroceryDetails> groceries = adapter.queryGroceries();
+            int count = groceries.size();
+            if (count == 2)
+                answer = true;
+            adapter.finishGrocery();
             adapter.finishGrocery();
             adapter.close();
             assertTrue(answer);
