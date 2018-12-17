@@ -64,8 +64,6 @@ public class LoginActivity extends AppCompatActivity implements
     //Facebook CallBackManager
     private CallbackManager mCallbackManager;
 
-    final ProgressBar progressbar = new ProgressBar(LoginActivity.this,null,android.R.attr.progressBarStyleLarge);
-
     Context context;
 
     boolean google = true;
@@ -74,6 +72,7 @@ public class LoginActivity extends AppCompatActivity implements
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.login_activity);
+
         context = this;
 
         // Initialize Facebook Login button
@@ -89,6 +88,21 @@ public class LoginActivity extends AppCompatActivity implements
 
         // Initialize Firebase Auth
         mAuth = FirebaseAuth.getInstance();
+    }
+
+
+    @Override
+    public void onClick(View v) {
+        int id = v.getId();
+        if (id == R.id.googleButton) {
+            googleLogin();
+        } else if(id == R.id.facebookButton)
+            facebookLogin();
+    }
+
+    private void googleLogin() {
+        Intent signInIntent = mGoogleSignInClient.getSignInIntent();
+        startActivityForResult(signInIntent, RC_SIGN_IN);
     }
 
     private void facebookLogin() {
@@ -141,21 +155,18 @@ public class LoginActivity extends AppCompatActivity implements
                 // Google Sign In was successful, authenticate with Firebase
                 GoogleSignInAccount account = task.getResult(ApiException.class);
                 firebaseAuthWithGoogle(account);
-                startActivity(new Intent(context,DashboardActivity.class));
-                overridePendingTransition(R.transition.slide_in_right,R.transition.slide_out_left);
             } catch (ApiException e) {
                 Log.w(TAG, "Google sign in failed", e);
             }
         }
         else {
-            mCallbackManager.onActivityResult(requestCode, resultCode, data);
+           mCallbackManager.onActivityResult(requestCode, resultCode, data);
             google = false;
         }
     }
 
     private void firebaseAuthWithGoogle(GoogleSignInAccount acct) {
         Log.d(TAG, "firebaseAuthWithGoogle:" + acct.getId());
-        progressbar.setVisibility(View.VISIBLE);
 
         AuthCredential credential = GoogleAuthProvider.getCredential(acct.getIdToken(), null);
         mAuth.signInWithCredential(credential)
@@ -166,19 +177,18 @@ public class LoginActivity extends AppCompatActivity implements
                             Log.d(TAG, "signInWithCredential:success");
                             startActivity(new Intent(context,DashboardActivity.class));
                             overridePendingTransition(R.transition.slide_in_right,R.transition.slide_out_left);
+
                         } else {
                             // If sign in fails, display a message to the user.
                             Log.w(TAG, "signInWithCredential:failure", task.getException());
                             Snackbar.make(findViewById(R.id.main_layout), "Authentication Failed.", Snackbar.LENGTH_SHORT).show();
                         }
-                        progressbar.setVisibility(View.GONE);
                     }
                 });
     }
 
     private void handleFacebookAccessToken(AccessToken token) {
         Log.d(TAG, "handleFacebookAccessToken:" + token);
-        progressbar.setVisibility(View.VISIBLE);
 
         AuthCredential credential = FacebookAuthProvider.getCredential(token.getToken());
         mAuth.signInWithCredential(credential)
@@ -195,16 +205,8 @@ public class LoginActivity extends AppCompatActivity implements
                             Toast.makeText(LoginActivity.this, "Authentication failed.",
                                     Toast.LENGTH_SHORT).show();
                         }
-
-                        progressbar.setVisibility(View.INVISIBLE);
                     }
                 });
-    }
-
-
-    private void googleLogin() {
-        Intent signInIntent = mGoogleSignInClient.getSignInIntent();
-        startActivityForResult(signInIntent, RC_SIGN_IN);
     }
 
     public void hideKeyboard(View view) {
@@ -217,16 +219,7 @@ public class LoginActivity extends AppCompatActivity implements
     @Override
     public void onStop() {
         super.onStop();
-        progressbar.setVisibility(View.INVISIBLE);
     }
 
-    @Override
-    public void onClick(View v) {
-        int id = v.getId();
-        if (id == R.id.googleButton) {
-            googleLogin();
-        } else if(id == R.id.facebookButton)
-            facebookLogin();
-    }
 
 }
