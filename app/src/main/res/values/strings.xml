@@ -42,7 +42,8 @@
     <!-- SERVICE STRINGS -->
     <string name="loading">Load in progress</string>
     <string name="signed_out">Signed Out</string>
-    <string name="facebook_app_id">738193019859979</string> <string name="fb_login_protocol_scheme">fb738193019859979</string>
+    <string name="facebook_app_id">738193019859979</string>
+    <string name="fb_login_protocol_scheme">fb738193019859979</string>
 
     <!-- DRAWER MENU ENTRIES -->
     <string name="menu_clear_grocery">Clear grocery</string>

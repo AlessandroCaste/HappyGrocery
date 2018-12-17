@@ -70,4 +70,7 @@ public class DatabaseConstants {
             "SELECT * FROM "
                     + LIST_TABLE + " JOIN " + PRODUCT_TABLE + " ON " + LIST_PID + " = " + PRODUCT_ID
                     + " WHERE " + LIST_HID + " = ?";
+
+    public static final String QUERY_GROCERIES =
+            "SELECT * FROM " + HISTORY_TABLE;
 }
