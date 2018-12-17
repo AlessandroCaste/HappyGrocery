@@ -207,17 +207,32 @@ public class DashboardActivity extends AppCompatActivity
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
-        if (id == R.id.nav_camera) {
-            // Handle the camera action
-        } else if (id == R.id.nav_gallery) {
+        if (id == R.id.clear_grocery) {
 
-        } else if (id == R.id.nav_slideshow) {
+        } else if (id == R.id.payment_history) {
+            Intent i = new Intent(context, PaymentHistoryActivity.class);
+            startActivity(i);
+            overridePendingTransition(R.transition.slide_in_left,R.transition.slide_out_right);
+        } else if (id == R.id.payment_methods) {
 
-        } else if (id == R.id.nav_manage) {
-
-        } else if (id == R.id.nav_share) {
-
-        } else if (id == R.id.nav_send) {
+        } else if (id == R.id.log_out) {
+            /*AlertDialog.Builder alert = new AlertDialog.Builder(DashboardActivity.this);
+            alert.setTitle(R.string.log_out_title);
+            alert.setMessage(R.string.log_out_message);
+            alert.setPositiveButton(R.string.OK, new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    FirebaseAuth mAuth = FirebaseAuth.getInstance();
+                    mAuth.signOut();
+                    Intent i = new Intent(context, LoginActivity.class);
+                    startActivity(i);
+                    overridePendingTransition(R.transition.slide_in_left,R.transition.slide_out_right);
+                }
+            });
+            alert.setNegativeButton(R.string.CANCEL,null);
+            alert.setCancelable(false);
+            alert.show();*/
+        } else if (id == R.id.about_us) {
 
         }
 
@@ -359,9 +374,9 @@ public class DashboardActivity extends AppCompatActivity
 
         } else if (id == R.id.payment_history) {
 
-            Intent i = new Intent(context, PaymentHistoryActivity.class);
+            /*Intent i = new Intent(context, PaymentHistoryActivity.class);
             startActivity(i);
-            overridePendingTransition(R.transition.slide_in_left,R.transition.slide_out_right);
+            overridePendingTransition(R.transition.slide_in_left,R.transition.slide_out_right)*/;
 
         }
 
