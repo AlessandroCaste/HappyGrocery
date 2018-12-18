@@ -81,10 +81,6 @@ public class DashboardActivity extends AppCompatActivity
         NavigationView navigationView = findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
-        // workaround to add a new active grocery to database
-        AddGroceryInDBTask task = new AddGroceryInDBTask(getApplicationContext());
-        task.execute();
-
         chart = findViewById(R.id.DashboardPieChart);
         chart.setDrawHoleEnabled(true);
         chart.setHoleColor(Color.WHITE);
@@ -250,7 +246,9 @@ public class DashboardActivity extends AppCompatActivity
             alert.show();
 
         } else if (id == R.id.payment_history) {
-
+//            Intent i = new Intent(context, PaymentHistoryActivity.class);
+//            startActivity(i);
+//            overridePendingTransition(R.transition.slide_in_left,R.transition.slide_out_right);
         }
 
     }

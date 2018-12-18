@@ -114,6 +114,21 @@ public class DatabaseAdapter {
         return cursor;
     }
 
+    private void updateGroceryAmount() {
+        long groceryID = queryGroceryID();
+        Cursor cursor = database.rawQuery("SELECT SUM("
+                + DatabaseConstants.LIST_QUANTITY + "*" + DatabaseConstants.LIST_PRICE + ")"
+                + " FROM " + DatabaseConstants.LIST_TABLE
+                + " WHERE " + DatabaseConstants.LIST_HID + " = " + groceryID, null);
+        if(cursor.moveToNext()) {
+            float amount = cursor.getFloat(0);
+            ContentValues values = new ContentValues();
+            values.put(DatabaseConstants.HISTORY_AMOUNT, amount);
+            database.update(DatabaseConstants.HISTORY_TABLE, values,
+                    DatabaseConstants.HISTORY_ID + " = " + groceryID, null);
+        }
+    }
+
 
     public void insertNewGrocery(String date, String market) {
         if (database != null) {
@@ -148,6 +163,7 @@ public class DatabaseAdapter {
                 database.insert(DatabaseConstants.LIST_TABLE, null, values);
             }
             cursor.close();
+            updateGroceryAmount();
         }
     }
 
@@ -160,6 +176,7 @@ public class DatabaseAdapter {
                 database.delete(DatabaseConstants.LIST_TABLE,
                         DatabaseConstants.LIST_HID + " = " + groceryID
                                 + " AND " + DatabaseConstants.LIST_PID + " = " + productID, null);
+                updateGroceryAmount();
             } catch (NoSuchProductException e) {
                 e.printStackTrace();
             }
@@ -178,6 +195,7 @@ public class DatabaseAdapter {
                         DatabaseConstants.LIST_HID + " = ? AND "
                          + DatabaseConstants.LIST_PID + " = ?",
                         new String[] {String.valueOf(groceryID), String.valueOf(productID)});
+                updateGroceryAmount();
             } catch (NoSuchProductException e) {
                 e.printStackTrace();
             }
@@ -263,6 +281,15 @@ public class DatabaseAdapter {
             cursor.close();
         }
         return groceries;
+    }
+
+    public void clearGrocery() {
+        if (database != null) {
+            long groceryID = queryGroceryID();
+            database.delete(DatabaseConstants.LIST_TABLE,
+                    DatabaseConstants.LIST_HID + " = " + groceryID, null);
+            updateGroceryAmount();
+        }
     }
 
     public Cursor querySQL(String sql) {

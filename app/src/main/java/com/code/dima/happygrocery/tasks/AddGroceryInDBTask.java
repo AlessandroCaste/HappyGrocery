@@ -21,6 +21,8 @@ public class AddGroceryInDBTask extends AsyncTask<Void, Void, Void> {
         Cursor c = adapter.querySQL("SELECT * FROM grocery_history WHERE active = 1");
         if (c.getCount() == 0) {
             adapter.insertNewGrocery("11/07/2018", "Esselungone");
+        } else {
+            adapter.clearGrocery();
         }
         adapter.close();
         return null;
