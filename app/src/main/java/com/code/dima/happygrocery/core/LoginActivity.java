@@ -1,225 +1,243 @@
-/**
- * Copyright 2016 Google Inc. All Rights Reserved.
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-
 package com.code.dima.happygrocery.core;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.design.widget.Snackbar;
+import android.support.design.widget.NavigationView;
+import android.support.v4.view.GravityCompat;
+import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
+import android.support.v7.widget.Toolbar;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
-import android.view.inputmethod.InputMethodManager;
-import android.widget.ProgressBar;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.code.dima.happygrocery.R;
-import com.facebook.AccessToken;
-import com.facebook.CallbackManager;
-import com.facebook.FacebookCallback;
-import com.facebook.FacebookException;
-import com.facebook.login.LoginManager;
-import com.facebook.login.LoginResult;
-import com.google.android.gms.auth.api.signin.GoogleSignIn;
-import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
-import com.google.android.gms.auth.api.signin.GoogleSignInClient;
-import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
-import com.google.android.gms.common.api.ApiException;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.auth.AuthCredential;
-import com.google.firebase.auth.AuthResult;
-import com.google.firebase.auth.FacebookAuthProvider;
+import com.firebase.ui.auth.AuthMethodPickerLayout;
+import com.firebase.ui.auth.AuthUI;
+import com.github.mikephil.charting.charts.PieChart;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.GoogleAuthProvider;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.zxing.integration.android.IntentIntegrator;
+import com.google.zxing.integration.android.IntentResult;
 
-import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
+import de.hdodenhof.circleimageview.CircleImageView;
 
 
-public class LoginActivity extends AppCompatActivity implements
-        View.OnClickListener {
+public class LoginActivity extends AppCompatActivity
+        implements NavigationView.OnNavigationItemSelectedListener {
 
-    private static final String TAG = "GoogleActivity";
-    private static final int RC_SIGN_IN = 9001;
-
-    private FirebaseAuth mAuth;
-
-    private GoogleSignInClient mGoogleSignInClient;
-
-    //Facebook CallBackManager
-    private CallbackManager mCallbackManager;
-
+    private PieChart chart;
+    private List<String> labels;
+    private List<Integer> colors;
+    FirebaseUser user;
     Context context;
 
-    boolean google = true;
+    private FirebaseAuth mAuth;
+    private FirebaseAuth.AuthStateListener mAuthStateListener;
+    private final static int RC_SIGN_IN = 9001;
 
+
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        setContentView(R.layout.login_activity);
+        setContentView(R.layout.login_activity_main);
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+
+        DrawerLayout drawer = findViewById(R.id.drawer_layout);
+        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
+                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+        drawer.addDrawerListener(toggle);
+        toggle.syncState();
+
+        NavigationView navigationView = findViewById(R.id.nav_view);
+        navigationView.setNavigationItemSelectedListener(this);
 
         context = this;
 
-        // Initialize Facebook Login button
-        mCallbackManager = CallbackManager.Factory.create();
-
-        // Configure Google Sign In
-        GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-                .requestIdToken(getString(R.string.default_web_client_id))
-                .requestEmail()
-                .build();
-
-        mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
-
-        // Initialize Firebase Auth
         mAuth = FirebaseAuth.getInstance();
+        mAuthStateListener = new FirebaseAuth.AuthStateListener() {
+            @Override
+            public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
+                FirebaseUser user = firebaseAuth.getCurrentUser();
+                if (user != null) {
+                    getSupportActionBar().setTitle(getResources().getString(R.string.HappyGrocery));
+                } else {
+
+                     AuthMethodPickerLayout customLayout = new AuthMethodPickerLayout
+                            .Builder(R.layout.login)
+                            .setPhoneButtonId(R.id.phoneButton)
+                            //.setTosAndPrivacyPolicyId(R.id.baz)
+                            .build();
+
+                    startActivityForResult(
+                            AuthUI.getInstance().createSignInIntentBuilder()
+                                    .setIsSmartLockEnabled(true)
+                                    .setAuthMethodPickerLayout(customLayout)
+                                    .setAlwaysShowSignInMethodScreen(true)
+                                    .setTheme(R.style.CustomTheme)
+                                    .setAvailableProviders(Arrays.asList(
+                                            new AuthUI.IdpConfig.PhoneBuilder().build()))
+                                    .build(),
+                            9001);
+                }
+            }
+        };
+
     }
 
+    public void onButtonClick(View view){
+        IntentIntegrator integrator = new IntentIntegrator(this);
+        integrator.setDesiredBarcodeFormats(IntentIntegrator.EAN_13);
+        integrator.setBeepEnabled(true);
+        integrator.setPrompt(getResources().getString(R.string.prompt));
+        integrator.initiateScan();
+        overridePendingTransition(R.transition.slide_in_right,R.transition.slide_out_left);
+    }
 
     @Override
-    public void onClick(View v) {
-        int id = v.getId();
-        if (id == R.id.googleButton) {
-            googleLogin();
-        } else if(id == R.id.facebookButton)
-            facebookLogin();
-    }
-
-    private void googleLogin() {
-        Intent signInIntent = mGoogleSignInClient.getSignInIntent();
-        startActivityForResult(signInIntent, RC_SIGN_IN);
-    }
-
-    private void facebookLogin() {
-        LoginManager loginManager = LoginManager.getInstance();
-        loginManager.registerCallback(mCallbackManager, new FacebookCallback<LoginResult>() {
-            @Override
-            public void onSuccess(LoginResult loginResult) {
-                Log.d(TAG, "facebook:onSuccess:" + loginResult);
-                handleFacebookAccessToken(loginResult.getAccessToken());
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        IntentResult result = IntentIntegrator.parseActivityResult(requestCode,resultCode,data);
+        if ( result != null) {
+            if (((IntentResult) result).getContents() == null) {
+                Toast.makeText(this, "Cancelled", Toast.LENGTH_LONG).show();
+            } else {
+                Intent i = new Intent(this, DashboardActivity.class);
+                startActivity(i);
+               overridePendingTransition(R.transition.slide_in_left, R.transition.slide_out_right);
             }
-
-            @Override
-            public void onCancel() {
-                Log.d(TAG, "facebook:onCancel");
-            }
-
-            @Override
-            public void onError(FacebookException error) {
-                Log.d(TAG, "facebook:onError", error);
-            }
-        });
-        loginManager.logInWithReadPermissions(this, getReadPermissions());
-
+        } else {
+            super.onActivityResult(requestCode,resultCode,data);
+        }
     }
 
-    private ArrayList<String> getReadPermissions() {
-        ArrayList<String> fbPermissions = new ArrayList<String>();
-        fbPermissions.add("public_profile");
-        fbPermissions.add("email");
-        return fbPermissions;
-    }
-
-    // Check if a user is already logged in when activity starts
     @Override
-    public void onStart() {
+    protected void onStart() {
         super.onStart();
-        // Check if user is signed in (non-null)
-        if(FirebaseAuth.getInstance().getCurrentUser() != null)
-            startActivity(new Intent(this,DashboardActivity.class));
+        NavigationView nav_header = findViewById(R.id.nav_view);
+        TextView profileName = nav_header.getHeaderView(0).findViewById(R.id.profileName);
+        TextView profileMail = nav_header.getHeaderView(0).findViewById(R.id.profileMail);
+        CircleImageView profilePicture = nav_header.getHeaderView(0).findViewById(R.id.profilePicture);
+
+        user = FirebaseAuth.getInstance().getCurrentUser();
+    //    Picasso.get().load(user.getPhotoUrl()).into(profilePicture);
+         //profileName.setText(user.getDisplayName());
+         //profileMail.setText(user.getEmail());
     }
 
     @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-
-        // Result returned from launching the Intent from GoogleSignInApi.getSignInIntent(...);
-        if (requestCode == RC_SIGN_IN) {
-            Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(data);
-            try {
-                // Google Sign In was successful, authenticate with Firebase
-                GoogleSignInAccount account = task.getResult(ApiException.class);
-                firebaseAuthWithGoogle(account);
-            } catch (ApiException e) {
-                Log.w(TAG, "Google sign in failed", e);
-            }
-        }
-        else {
-           mCallbackManager.onActivityResult(requestCode, resultCode, data);
-            google = false;
-        }
+    protected void onResume() {
+        super.onResume();
+        mAuth.addAuthStateListener(mAuthStateListener);
     }
 
-    private void firebaseAuthWithGoogle(GoogleSignInAccount acct) {
-        Log.d(TAG, "firebaseAuthWithGoogle:" + acct.getId());
 
-        AuthCredential credential = GoogleAuthProvider.getCredential(acct.getIdToken(), null);
-        mAuth.signInWithCredential(credential)
-                .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
-                    @Override
-                    public void onComplete(@NonNull Task<AuthResult> task) {
-                        if (task.isSuccessful()) {
-                            Log.d(TAG, "signInWithCredential:success");
-                            startActivity(new Intent(context,DashboardActivity.class));
-                            overridePendingTransition(R.transition.slide_in_right,R.transition.slide_out_left);
-
-                        } else {
-                            // If sign in fails, display a message to the user.
-                            Log.w(TAG, "signInWithCredential:failure", task.getException());
-                            Snackbar.make(findViewById(R.id.main_layout), "Authentication Failed.", Snackbar.LENGTH_SHORT).show();
-                        }
-                    }
-                });
-    }
-
-    private void handleFacebookAccessToken(AccessToken token) {
-        Log.d(TAG, "handleFacebookAccessToken:" + token);
-
-        AuthCredential credential = FacebookAuthProvider.getCredential(token.getToken());
-        mAuth.signInWithCredential(credential)
-                .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
-                    @Override
-                    public void onComplete(@NonNull Task<AuthResult> task) {
-                        if (task.isSuccessful()) {
-                            Log.d(TAG, "signInWithCredential:success");
-                            startActivity(new Intent(context,DashboardActivity.class));
-                            overridePendingTransition(R.transition.slide_in_right,R.transition.slide_out_left);
-                        } else {
-                            // If sign in fails, display a message to the user.
-                            Log.w(TAG, "signInWithCredential:failure", task.getException());
-                            Toast.makeText(LoginActivity.this, "Authentication failed.",
-                                    Toast.LENGTH_SHORT).show();
-                        }
-                    }
-                });
-    }
-
-    public void hideKeyboard(View view) {
-        final InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-        if (imm != null) {
-            imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+    @Override
+    public void onBackPressed() {
+        DrawerLayout drawer = findViewById(R.id.drawer_layout);
+        if (drawer.isDrawerOpen(GravityCompat.START)) {
+            drawer.closeDrawer(GravityCompat.START);
+        } else {
+            super.onBackPressed();
         }
     }
 
     @Override
-    public void onStop() {
-        super.onStop();
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.dashboard, menu);
+        return true;
     }
 
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle action bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so long
+        // as you specify a parent activity in AndroidManifest.xml.
+        int id = item.getItemId();
+
+        //noinspection SimplifiableIfStatement
+        if (id == R.id.shopping_cart) {
+            Intent i = new Intent(this,ShoppingCartActivity.class);
+            startActivity(i);
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
+
+
+    @SuppressWarnings("StatementWithEmptyBody")
+    @Override
+    public boolean onNavigationItemSelected(MenuItem item) {
+        // Handle navigation view item clicks here.
+        int id = item.getItemId();
+
+        if (id == R.id.nav_camera) {
+            // Handle the camera action
+        } else if (id == R.id.nav_gallery) {
+
+        } else if (id == R.id.nav_slideshow) {
+
+        } else if (id == R.id.nav_manage) {
+
+        } else if (id == R.id.nav_share) {
+
+        } else if (id == R.id.nav_send) {
+
+        }
+
+        DrawerLayout drawer = findViewById(R.id.drawer_layout);
+        drawer.closeDrawer(GravityCompat.START);
+        return true;
+    }
+
+
+
+    public void onDrawerButtonClick (MenuItem menuItem){
+        int id = menuItem.getItemId();
+
+        if  (id == R.id.log_out) {
+
+            AlertDialog.Builder alert = new AlertDialog.Builder(LoginActivity.this);
+            alert.setTitle(R.string.log_out_title);
+            alert.setMessage(R.string.log_out_message);
+            alert.setPositiveButton(R.string.OK, new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    mAuth.signOut();
+                }
+            });
+            alert.setNegativeButton(R.string.CANCEL,null);
+            alert.setCancelable(false);
+            alert.show();
+        }
+
+    }
+
+    @Override
+    protected void onPause(){
+        super.onPause();
+        mAuth.removeAuthStateListener(mAuthStateListener);
+    }
+
+    public void newShoppingClick(View view) {
+        IntentIntegrator integrator = new IntentIntegrator(this);
+        integrator.setDesiredBarcodeFormats(IntentIntegrator.QR_CODE);
+        integrator.setPrompt(getResources().getString(R.string.prompt));
+        integrator.setBeepEnabled(false);
+        integrator.initiateScan();
+        overridePendingTransition(R.transition.slide_in_right, R.transition.slide_out_left);
+    }
 
 }

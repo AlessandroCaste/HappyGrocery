@@ -154,9 +154,9 @@ public class DashboardActivity extends AppCompatActivity
         CircleImageView profilePicture = nav_header.getHeaderView(0).findViewById(R.id.profilePicture);
 
         user = FirebaseAuth.getInstance().getCurrentUser();
-       // Picasso.get().load(user.getPhotoUrl()).into(profilePicture);
-        profileName.setText(user.getDisplayName());
-        profileMail.setText(user.getEmail());
+        //Picasso.get().load(user.getPhotoUrl()).into(profilePicture);
+       // profileName.setText(user.getDisplayName());
+       // profileMail.setText(user.getEmail());
     }
 
     @Override
@@ -380,5 +380,7 @@ public class DashboardActivity extends AppCompatActivity
         }
 
     }
+
+
 
 }

@@ -4,4 +4,10 @@
     <integer name="animation_fall_down">650</integer>
     <integer name="PRODUCT_REQUEST_CODE">100</integer>
     <integer name="CART_REQUEST_CODE">101</integer>
+
+    <!-- Activities Navigation -->
+    <integer name="REQUEST_CODE">9001</integer>
+    <integer name="DASHBOARD_ACTIVITY_CODE">9005</integer>
+
+
 </resources>
