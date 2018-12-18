@@ -19,6 +19,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.code.dima.happygrocery.R;
+import com.code.dima.happygrocery.tasks.AddGroceryInDBTask;
 import com.firebase.ui.auth.AuthMethodPickerLayout;
 import com.firebase.ui.auth.AuthUI;
 import com.github.mikephil.charting.charts.PieChart;
@@ -168,11 +169,6 @@ public class LoginActivity extends AppCompatActivity
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.shopping_cart) {
-            Intent i = new Intent(this,ShoppingCartActivity.class);
-            startActivity(i);
-        }
-
         return super.onOptionsItemSelected(item);
     }
 
@@ -238,6 +234,8 @@ public class LoginActivity extends AppCompatActivity
         integrator.setBeepEnabled(false);
         integrator.initiateScan();
         overridePendingTransition(R.transition.slide_in_right, R.transition.slide_out_left);
+        AddGroceryInDBTask task = new AddGroceryInDBTask(getApplicationContext());
+        task.execute();
     }
 
 }
