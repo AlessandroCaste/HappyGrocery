@@ -15,6 +15,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.code.dima.happygrocery.R;
@@ -28,6 +29,8 @@ import com.google.zxing.integration.android.IntentResult;
 
 import java.util.Arrays;
 import java.util.List;
+
+import de.hdodenhof.circleimageview.CircleImageView;
 
 
 public class LoginActivity extends AppCompatActivity
@@ -112,7 +115,7 @@ public class LoginActivity extends AppCompatActivity
             } else {
                 Intent i = new Intent(this, DashboardActivity.class);
                 startActivity(i);
-                overridePendingTransition(R.transition.slide_in_right, R.transition.slide_out_left);
+               overridePendingTransition(R.transition.slide_in_left, R.transition.slide_out_right);
             }
         } else {
             super.onActivityResult(requestCode,resultCode,data);
@@ -123,13 +126,14 @@ public class LoginActivity extends AppCompatActivity
     protected void onStart() {
         super.onStart();
         NavigationView nav_header = findViewById(R.id.nav_view);
-        //TextView profileName = nav_header.getHeaderView(0).findViewById(R.id.profileName);
-        //TextView profileMail = nav_header.getHeaderView(0).findViewById(R.id.profileMail);
+        TextView profileName = nav_header.getHeaderView(0).findViewById(R.id.profileName);
+        TextView profileMail = nav_header.getHeaderView(0).findViewById(R.id.profileMail);
+        CircleImageView profilePicture = nav_header.getHeaderView(0).findViewById(R.id.profilePicture);
 
         user = FirebaseAuth.getInstance().getCurrentUser();
     //    Picasso.get().load(user.getPhotoUrl()).into(profilePicture);
-        // profileName.setText(user.getDisplayName());
-        //profileMail.setText(user.getEmail());
+         //profileName.setText(user.getDisplayName());
+         //profileMail.setText(user.getEmail());
     }
 
     @Override
@@ -233,6 +237,7 @@ public class LoginActivity extends AppCompatActivity
         integrator.setPrompt(getResources().getString(R.string.prompt));
         integrator.setBeepEnabled(false);
         integrator.initiateScan();
+        overridePendingTransition(R.transition.slide_in_right, R.transition.slide_out_left);
     }
 
 }

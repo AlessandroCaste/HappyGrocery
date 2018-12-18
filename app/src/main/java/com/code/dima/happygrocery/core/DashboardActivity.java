@@ -154,9 +154,9 @@ public class DashboardActivity extends AppCompatActivity
         CircleImageView profilePicture = nav_header.getHeaderView(0).findViewById(R.id.profilePicture);
 
         user = FirebaseAuth.getInstance().getCurrentUser();
-        Picasso.get().load(user.getPhotoUrl()).into(profilePicture);
-        profileName.setText(user.getDisplayName());
-        profileMail.setText(user.getEmail());
+        //Picasso.get().load(user.getPhotoUrl()).into(profilePicture);
+       // profileName.setText(user.getDisplayName());
+       // profileMail.setText(user.getEmail());
     }
 
     @Override
@@ -346,8 +346,9 @@ public class DashboardActivity extends AppCompatActivity
             alert.setPositiveButton(R.string.OK, new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
+                    FirebaseAuth mAuth = FirebaseAuth.getInstance();
+                    mAuth.signOut();
                     finish();
-                    setResult(RESULT_OK);
                     overridePendingTransition(R.transition.slide_in_left,R.transition.slide_out_right);
                 }
             });
