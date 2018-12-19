@@ -74,6 +74,7 @@ public class DashboardActivity extends AppCompatActivity
             shopName = getIntent().getStringExtra("name");
             toolbar.setTitle(shopName);
         }
+        getSupportActionBar().setTitle(shopName);
 
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(

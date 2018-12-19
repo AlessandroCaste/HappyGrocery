@@ -34,7 +34,6 @@ import com.github.mikephil.charting.charts.PieChart;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.zxing.integration.android.IntentIntegrator;
-import com.google.zxing.integration.android.IntentResult;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -128,9 +127,7 @@ public class LoginActivity extends AppCompatActivity
             if (resultCode == Activity.RESULT_OK && data != null) {
                 String url = data.getStringExtra("SCAN_RESULT");
                 Intent i = new Intent(this, DashboardActivity.class);
-                parseJson(url, i);
-                startActivity(i);
-                overridePendingTransition(R.transition.slide_in_left, R.transition.slide_out_right);
+                parseAndLaunch(url, i);
             } else {
                 Toast.makeText(this, "Cancelled", Toast.LENGTH_LONG).show();
             }
@@ -154,7 +151,7 @@ public class LoginActivity extends AppCompatActivity
          //profileMail.setText(user.getEmail());
     }
 
-    private void parseJson(String url, final Intent i) {
+    private void parseAndLaunch(String url, final Intent i) {
         RequestQueue queue = Volley.newRequestQueue(this);
 
         JsonArrayRequest request = new JsonArrayRequest(Request.Method.GET, url, null, new Response.Listener<JSONArray>() {
@@ -169,7 +166,8 @@ public class LoginActivity extends AppCompatActivity
                     String url = reader.getString("url");
                     i.putExtra("name",name);
                     i.putExtra("url",url);
-
+                    startActivity(i);
+                    overridePendingTransition(R.transition.slide_in_left, R.transition.slide_out_right);
                 } catch (JSONException e) {
                     AlertDialog.Builder alert = new AlertDialog.Builder(LoginActivity.this);
                     alert.setTitle(R.string.error_qr_store_title);
