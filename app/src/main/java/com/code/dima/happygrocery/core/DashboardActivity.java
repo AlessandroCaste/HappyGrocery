@@ -5,14 +5,10 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.database.Cursor;
 import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.Handler;
-import android.support.annotation.NonNull;
 import android.support.v7.widget.CardView;
-import android.util.Log;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -26,7 +22,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.code.dima.happygrocery.R;
-import com.code.dima.happygrocery.database.DatabaseAdapter;
 import com.code.dima.happygrocery.exception.NoLastProductException;
 import com.code.dima.happygrocery.model.Product;
 import com.code.dima.happygrocery.model.Category;
@@ -41,7 +36,6 @@ import com.github.mikephil.charting.data.PieDataSet;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.zxing.integration.android.IntentIntegrator;
-import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -60,10 +54,13 @@ public class DashboardActivity extends AppCompatActivity
     FirebaseUser user;
     Context context;
 
+    String url = new String();
+    String shopName = new String();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
 
         updateChartData();
         updateLastProduct();
@@ -71,6 +68,12 @@ public class DashboardActivity extends AppCompatActivity
         setContentView(R.layout.activity_dashboard);
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
+        if(url.isEmpty() || shopName.isEmpty()) {
+            url = getIntent().getStringExtra("url");
+            shopName = getIntent().getStringExtra("name");
+            toolbar.setTitle(shopName);
+        }
 
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
