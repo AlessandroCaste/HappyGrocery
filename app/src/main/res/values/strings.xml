@@ -70,6 +70,11 @@
     <string name="error_connecting_title">Unavailable Service</string>
     <string name="error_connecting_message">HappyGrocery can\'t reach the required service!</string>
 
+    <string name="about_us_title">HAPPY GROCERY EVERYONE!</string>
+    <string name="about_us_message">Hi! We are Alessandro Castellani and Fabio Castello,
+        students from Politecnico di Milano. This is our project for the course
+        Design and Implementation of Mobile Applications. Feel free to contact us at:
+        castellani.alessandro@mail.polimi.it</string>
 
     <!-- Buttons Options -->
     <string name="OK">OK</string>

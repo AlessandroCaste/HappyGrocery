@@ -122,7 +122,7 @@ public class LoginActivity extends AppCompatActivity
     Checks whether there's an active grocery in the db to be restored
      */
     private boolean checkActiveGrocery() {
-        DatabaseAdapter adapter = DatabaseAdapter.openInWriteMode(getApplicationContext());
+        DatabaseAdapter adapter = DatabaseAdapter.openInWriteMode(LoginActivity.this);
         boolean answer = adapter.queryActiveGrocery();
         adapter.close();
         return answer;
@@ -255,8 +255,11 @@ public class LoginActivity extends AppCompatActivity
             AlertDialog.Builder alert = new AlertDialog.Builder(context);
             alert.setTitle(R.string.clear_grocery_login_title);
             alert.setMessage(R.string.clear_grocery_login_message);
-            alert.setPositiveButton(R.string.OK, null);
-            //alert.setNegativeButton(R.string.CANCEL,null);
+            alert.setPositiveButton(R.string.OK, new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int which) {
+                    dialog.cancel();
+                }
+            });
             alert.setCancelable(false);
             alert.show();
         } else if (id == R.id.payment_history) {
@@ -266,7 +269,7 @@ public class LoginActivity extends AppCompatActivity
         } else if (id == R.id.payment_methods) {
 
         } else if (id == R.id.log_out) {
-            AlertDialog.Builder alert = new AlertDialog.Builder(getApplicationContext());
+            AlertDialog.Builder alert = new AlertDialog.Builder(LoginActivity.this);
             alert.setTitle(R.string.log_out_title);
             alert.setMessage(R.string.log_out_message);
             alert.setPositiveButton(R.string.OK, new DialogInterface.OnClickListener() {
@@ -282,7 +285,16 @@ public class LoginActivity extends AppCompatActivity
             alert.setCancelable(false);
             alert.show();
         } else if (id == R.id.about_us) {
-
+            AlertDialog.Builder alert = new AlertDialog.Builder(LoginActivity.this);
+            alert.setTitle(R.string.about_us_title);
+            alert.setMessage(R.string.about_us_message);
+            alert.setPositiveButton(R.string.OK, new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int which) {
+                    dialog.cancel();
+                }
+            });
+            alert.setCancelable(false);
+            alert.show();
         }
 
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
@@ -304,7 +316,7 @@ public class LoginActivity extends AppCompatActivity
         integrator.setBeepEnabled(false);
         integrator.initiateScan();
         overridePendingTransition(R.transition.slide_in_right, R.transition.slide_out_left);
-        AddGroceryInDBTask task = new AddGroceryInDBTask(getApplicationContext());
+        AddGroceryInDBTask task = new AddGroceryInDBTask(LoginActivity.this);
         task.execute();
     }
 

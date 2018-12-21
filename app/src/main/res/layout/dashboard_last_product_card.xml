@@ -6,7 +6,7 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <ImageView
-        android:id="@+id/dashboardProdImage"
+        android:id="@+id/dashboard_last_product_image"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_marginStart="16dp"
@@ -20,25 +20,25 @@
         tools:src="@tools:sample/avatars[0]" />
 
     <TextView
-        android:id="@+id/dashboardProdName"
+        android:id="@+id/dashboard_last_product_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
         android:layout_marginBottom="32dp"
         android:text="@string/dashboard_default_prod_name"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/dashboardProdImage"
+        app:layout_constraintStart_toEndOf="@+id/dashboard_last_product_image"
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
-        android:id="@+id/dashboardProdDetails"
+        android:id="@+id/dashboard_last_product_price"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
         android:layout_marginTop="32dp"
         android:text="@string/dashboard_default_prod_details"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/dashboardProdImage"
+        app:layout_constraintStart_toEndOf="@+id/dashboard_last_product_image"
         app:layout_constraintTop_toTopOf="parent" />
 
     <android.support.constraint.Guideline

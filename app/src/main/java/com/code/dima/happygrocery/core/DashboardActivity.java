@@ -8,7 +8,6 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.v7.widget.CardView;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -87,7 +86,7 @@ public class DashboardActivity extends AppCompatActivity
         navigationView.setNavigationItemSelectedListener(this);
 
         // workaround to add a new active grocery to database
-        AddGroceryInDBTask task = new AddGroceryInDBTask(getApplicationContext());
+        AddGroceryInDBTask task = new AddGroceryInDBTask(DashboardActivity.this);
         task.execute();
 
         chart = findViewById(R.id.DashboardPieChart);
@@ -222,7 +221,7 @@ public class DashboardActivity extends AppCompatActivity
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
                     ShoppingCart.getInstance().clearShoppingCart();
-                    ClearGroceryTask task = new ClearGroceryTask(getApplicationContext());
+                    ClearGroceryTask task = new ClearGroceryTask(DashboardActivity.this);
                     task.execute();
                     finish();
                     overridePendingTransition(R.transition.slide_in_left,R.transition.slide_out_right);
@@ -254,7 +253,16 @@ public class DashboardActivity extends AppCompatActivity
             alert.setCancelable(false);
             alert.show();
         } else if (id == R.id.about_us) {
-
+            AlertDialog.Builder alert = new AlertDialog.Builder(DashboardActivity.this);
+            alert.setTitle(R.string.about_us_title);
+            alert.setMessage(R.string.about_us_message);
+            alert.setPositiveButton(R.string.OK, new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int which) {
+                    dialog.cancel();
+                }
+            });
+            alert.setCancelable(false);
+            alert.show();
         }
 
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
@@ -319,7 +327,7 @@ public class DashboardActivity extends AppCompatActivity
         @Override
         protected Boolean doInBackground(Void... voids) {
             boolean lastProductExists = true;
-            Product lastProduct = null;
+            Product lastProduct;
             try {
                 lastProduct = ShoppingCart.getInstance().getLastProduct();
                 name = lastProduct.getName();
@@ -333,16 +341,18 @@ public class DashboardActivity extends AppCompatActivity
 
         @Override
         protected void onPostExecute(Boolean lastProductExists) {
-            CardView card = findViewById(R.id.dashboardCardView);
             if (lastProductExists) {
                 findViewById(R.id.dashboard_empty_card_layout).setVisibility(View.INVISIBLE);
-                ImageView imageView = findViewById(R.id.dashboardProdImage);
-                TextView nameText = findViewById(R.id.dashboardProdName);
-                TextView priceText = findViewById(R.id.dashboardProdDetails);
+                findViewById(R.id.dashboard_full_card_layout).setVisibility(View.VISIBLE);
+                ImageView imageView = findViewById(R.id.dashboard_last_product_image);
+                TextView nameText = findViewById(R.id.dashboard_last_product_name);
+                TextView priceText = findViewById(R.id.dashboard_last_product_price);
                 nameText.setText(name);
                 priceText.setText(price);
                 imageView.setImageResource(imageID);
-                findViewById(R.id.dashboard_full_card_layout).setVisibility(View.VISIBLE);
+                nameText.invalidate();
+                priceText.invalidate();
+                imageView.invalidate();
             } else {
                 findViewById(R.id.dashboard_empty_card_layout).setVisibility(View.VISIBLE);
                 findViewById(R.id.dashboard_full_card_layout).setVisibility(View.INVISIBLE);
