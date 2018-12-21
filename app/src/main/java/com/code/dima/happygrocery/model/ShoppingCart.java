@@ -131,14 +131,11 @@ public class ShoppingCart {
         return lastProduct;
     }
 
-    public void setLastProduct(Product lastProduct) {
-        this.lastProduct = lastProduct;
-    }
-
 
     public float getAmount() {
         return amount;
     }
+
 
     public Product getProductWithBarcode(String barcode) {
         Product product = null;
@@ -178,5 +175,14 @@ public class ShoppingCart {
         if (productInCart == null)
             throw new NoSuchProductException();
         return productInCart;
+    }
+
+    public void clearShoppingCart() {
+        for (ArrayList<Product> products: shoppingCart) {
+            products.clear();
+        }
+        shoppingCart.clear();
+        amount = 0f;
+        lastProduct = null;
     }
 }

@@ -188,12 +188,7 @@ public class LoginActivity extends AppCompatActivity
                     AlertDialog.Builder alert = new AlertDialog.Builder(LoginActivity.this);
                     alert.setTitle(R.string.error_qr_store_title);
                     alert.setMessage(R.string.error_qr_store_message);
-                    alert.setPositiveButton(R.string.OK, new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            finish();
-                        }
-                    });
+                    alert.setPositiveButton(R.string.OK, null);
                     alert.setCancelable(false);
                     alert.show();
                 }
@@ -206,12 +201,7 @@ public class LoginActivity extends AppCompatActivity
                 AlertDialog.Builder alert = new AlertDialog.Builder(LoginActivity.this);
                 alert.setTitle(R.string.error_connecting_title);
                 alert.setMessage(R.string.error_connecting_message);
-                alert.setPositiveButton(R.string.OK, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        finish();
-                    }
-                });
+                alert.setPositiveButton(R.string.OK, null);
                 alert.setCancelable(false);
                 alert.show();
             }
@@ -262,7 +252,13 @@ public class LoginActivity extends AppCompatActivity
         int id = item.getItemId();
 
         if (id == R.id.clear_grocery) {
-
+            AlertDialog.Builder alert = new AlertDialog.Builder(context);
+            alert.setTitle(R.string.clear_grocery_login_title);
+            alert.setMessage(R.string.clear_grocery_login_message);
+            alert.setPositiveButton(R.string.OK, null);
+            //alert.setNegativeButton(R.string.CANCEL,null);
+            alert.setCancelable(false);
+            alert.show();
         } else if (id == R.id.payment_history) {
             Intent i = new Intent(context, PaymentHistoryActivity.class);
             startActivity(i);

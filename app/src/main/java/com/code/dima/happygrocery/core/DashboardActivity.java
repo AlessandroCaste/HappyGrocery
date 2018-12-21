@@ -27,6 +27,7 @@ import com.code.dima.happygrocery.model.Product;
 import com.code.dima.happygrocery.model.Category;
 import com.code.dima.happygrocery.model.ShoppingCart;
 import com.code.dima.happygrocery.tasks.AddGroceryInDBTask;
+import com.code.dima.happygrocery.tasks.ClearGroceryTask;
 import com.github.mikephil.charting.charts.PieChart;
 import com.github.mikephil.charting.components.Description;
 import com.github.mikephil.charting.components.Legend;
@@ -214,7 +215,22 @@ public class DashboardActivity extends AppCompatActivity
         int id = item.getItemId();
 
         if (id == R.id.clear_grocery) {
-
+            AlertDialog.Builder alert = new AlertDialog.Builder(context);
+            alert.setTitle(R.string.clear_grocery_title);
+            alert.setMessage(R.string.clear_grocery_message);
+            alert.setPositiveButton(R.string.OK, new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    ShoppingCart.getInstance().clearShoppingCart();
+                    ClearGroceryTask task = new ClearGroceryTask(getApplicationContext());
+                    task.execute();
+                    finish();
+                    overridePendingTransition(R.transition.slide_in_left,R.transition.slide_out_right);
+                }
+            });
+            alert.setNegativeButton(R.string.CANCEL,null);
+            alert.setCancelable(false);
+            alert.show();
         } else if (id == R.id.payment_history) {
             Intent i = new Intent(context, PaymentHistoryActivity.class);
             startActivity(i);

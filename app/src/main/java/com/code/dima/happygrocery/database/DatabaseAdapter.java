@@ -301,7 +301,8 @@ public class DatabaseAdapter {
             long groceryID = queryGroceryID();
             database.delete(DatabaseConstants.LIST_TABLE,
                     DatabaseConstants.LIST_HID + " = " + groceryID, null);
-            updateGroceryAmount();
+            database.delete(DatabaseConstants.HISTORY_TABLE,
+                    DatabaseConstants.HISTORY_ID + " = " + groceryID,null);
         }
     }
 

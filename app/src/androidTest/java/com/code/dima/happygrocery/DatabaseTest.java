@@ -342,4 +342,25 @@ public class DatabaseTest {
 
     }
 
+    @Test
+    public void databaseClearGroceryTest() {
+        // Context of the app under test.
+        Context appContext = InstrumentationRegistry.getTargetContext();
+        boolean answer = false;
+
+        try {
+            DatabaseAdapter adapter = DatabaseAdapter.openInWriteMode(appContext);
+            adapter.insertNewGrocery("11/12/2018", "Carrefour");
+            adapter.clearGrocery();
+            List<GroceryDetails> groceries = adapter.queryGroceries();
+            if (groceries.size() == 0)
+                answer = true;
+            adapter.close();
+            assertTrue(answer);
+        } catch (SQLException e) {
+            fail(e.getMessage());
+        }
+
+    }
+
 }
