@@ -5,14 +5,10 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.database.Cursor;
 import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.Handler;
-import android.support.annotation.NonNull;
 import android.support.v7.widget.CardView;
-import android.util.Log;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -26,7 +22,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.code.dima.happygrocery.R;
-import com.code.dima.happygrocery.database.DatabaseAdapter;
 import com.code.dima.happygrocery.exception.NoLastProductException;
 import com.code.dima.happygrocery.model.Product;
 import com.code.dima.happygrocery.model.Category;
@@ -41,7 +36,6 @@ import com.github.mikephil.charting.data.PieDataSet;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.zxing.integration.android.IntentIntegrator;
-import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -60,10 +54,13 @@ public class DashboardActivity extends AppCompatActivity
     FirebaseUser user;
     Context context;
 
+    String url = new String();
+    String shopName = new String();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
 
         updateChartData();
         updateLastProduct();
@@ -71,6 +68,13 @@ public class DashboardActivity extends AppCompatActivity
         setContentView(R.layout.activity_dashboard);
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
+        if(url.isEmpty() || shopName.isEmpty()) {
+            url = getIntent().getStringExtra("url");
+            shopName = getIntent().getStringExtra("name");
+            toolbar.setTitle(shopName);
+        }
+        getSupportActionBar().setTitle(shopName);
 
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -80,6 +84,10 @@ public class DashboardActivity extends AppCompatActivity
 
         NavigationView navigationView = findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+
+        // workaround to add a new active grocery to database
+        AddGroceryInDBTask task = new AddGroceryInDBTask(getApplicationContext());
+        task.execute();
 
         chart = findViewById(R.id.DashboardPieChart);
         chart.setDrawHoleEnabled(true);
@@ -128,6 +136,7 @@ public class DashboardActivity extends AppCompatActivity
                 String contents = data.getStringExtra("SCAN_RESULT");
                 String formatName = data.getStringExtra("SCAN_RESULT_FORMAT");
                 Intent i = new Intent(this, ProductActivity.class);
+                i.putExtra("queryUrl", url);
                 i.putExtra("barcode", contents);
                 i.putExtra("activityName", "DashboardActivity");
                 startActivityForResult(i, getResources().getInteger(R.integer.PRODUCT_REQUEST_CODE));
@@ -152,8 +161,8 @@ public class DashboardActivity extends AppCompatActivity
 
         user = FirebaseAuth.getInstance().getCurrentUser();
         //Picasso.get().load(user.getPhotoUrl()).into(profilePicture);
-       // profileName.setText(user.getDisplayName());
-       // profileMail.setText(user.getEmail());
+        // profileName.setText(user.getDisplayName());
+        // profileMail.setText(user.getEmail());
     }
 
     @Override
@@ -246,9 +255,7 @@ public class DashboardActivity extends AppCompatActivity
             alert.show();
 
         } else if (id == R.id.payment_history) {
-//            Intent i = new Intent(context, PaymentHistoryActivity.class);
-//            startActivity(i);
-//            overridePendingTransition(R.transition.slide_in_left,R.transition.slide_out_right);
+
         }
 
     }
@@ -311,7 +318,7 @@ public class DashboardActivity extends AppCompatActivity
         @Override
         protected Boolean doInBackground(Void... voids) {
             boolean lastProductExists = true;
-            Product lastProduct;
+            Product lastProduct = null;
             try {
                 lastProduct = ShoppingCart.getInstance().getLastProduct();
                 name = lastProduct.getName();
@@ -325,15 +332,16 @@ public class DashboardActivity extends AppCompatActivity
 
         @Override
         protected void onPostExecute(Boolean lastProductExists) {
+            CardView card = findViewById(R.id.dashboardCardView);
             if (lastProductExists) {
                 findViewById(R.id.dashboard_empty_card_layout).setVisibility(View.INVISIBLE);
-                findViewById(R.id.dashboard_full_card_layout).setVisibility(View.VISIBLE);
                 ImageView imageView = findViewById(R.id.dashboardProdImage);
                 TextView nameText = findViewById(R.id.dashboardProdName);
                 TextView priceText = findViewById(R.id.dashboardProdDetails);
                 nameText.setText(name);
                 priceText.setText(price);
                 imageView.setImageResource(imageID);
+                findViewById(R.id.dashboard_full_card_layout).setVisibility(View.VISIBLE);
             } else {
                 findViewById(R.id.dashboard_empty_card_layout).setVisibility(View.VISIBLE);
                 findViewById(R.id.dashboard_full_card_layout).setVisibility(View.INVISIBLE);
