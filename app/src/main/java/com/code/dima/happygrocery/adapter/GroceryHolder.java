@@ -25,7 +25,7 @@ public class GroceryHolder extends RecyclerView.ViewHolder {
     }
 
     public void setDetails(GroceryDetails grocery) {
-        String amount = grocery.getAmount() + currency;
+        String amount = String.format("%.2f", grocery.getAmount()) + currency;
         groceryAmount.setText(amount);
         grocerySupermarket.setText(grocery.getSupermarket());
         groceryDate.setText(grocery.getDate());

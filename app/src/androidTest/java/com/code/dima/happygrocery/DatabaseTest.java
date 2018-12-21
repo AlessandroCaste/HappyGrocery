@@ -3,7 +3,6 @@ package com.code.dima.happygrocery;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.SQLException;
-import android.provider.ContactsContract;
 import android.support.test.InstrumentationRegistry;
 import android.support.test.runner.AndroidJUnit4;
 import android.util.Log;
@@ -21,6 +20,7 @@ import org.junit.runner.RunWith;
 import java.util.ArrayList;
 import java.util.List;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
@@ -33,7 +33,7 @@ import static org.junit.Assert.fail;
 public class DatabaseTest {
 
     @Before
-    public void setUp() throws Exception {
+    public void setUp() {
         InstrumentationRegistry.getTargetContext().deleteDatabase(DatabaseConstants.DB_NAME);
     }
 
@@ -147,7 +147,7 @@ public class DatabaseTest {
             }
             adapter.finishGrocery();
             adapter.close();
-            assertTrue(2 == qty);
+            assertEquals(2, qty);
         } catch (SQLException e) {
             fail(e.getMessage());
         }
@@ -320,6 +320,26 @@ public class DatabaseTest {
         } catch (SQLException e) {
             fail(e.getMessage());
         }
+
+    }
+
+    @Test
+    public void databaseActiveGroceryTest() {
+        // Context of the app under test.
+        Context appContext = InstrumentationRegistry.getTargetContext();
+        boolean answer;
+
+        try {
+            DatabaseAdapter adapter = DatabaseAdapter.openInWriteMode(appContext);
+            adapter.insertNewGrocery("11/12/2018", "Carrefour");
+            answer = adapter.queryActiveGrocery();
+            adapter.finishGrocery();
+            adapter.close();
+            assertTrue(answer);
+        } catch (SQLException e) {
+            fail(e.getMessage());
+        }
+
     }
 
 }

@@ -13,15 +13,12 @@ public class DatabaseTest {
 
     @Test
     public void queries_areCorrect() {
-        String createHistoryQuery = DatabaseConstants.CREATE_GROCERY_HISTORY_TABLE;
-        System.out.println("HISTORY TABLE CREATION QUERY:");
-        System.out.println(createHistoryQuery);
-        String createProductQuery = DatabaseConstants.CREATE_PRODUCT_TABLE;
-        System.out.println("\nPRODUCT TABLE CREATION QUERY:");
-        System.out.println(createProductQuery);
-        String createProductListQuery = DatabaseConstants.CREATE_PRODUCT_LIST_TABLE;
-        System.out.println("\nPRODUCT LIST TABLE CREATION QUERY:");
-        System.out.println(createProductListQuery);
+        String ciao = "SELECT SUM("
+                + DatabaseConstants.LIST_QUANTITY + "*" + DatabaseConstants.LIST_PRICE + ")"
+                + " FROM " + DatabaseConstants.LIST_TABLE
+                + " WHERE " + DatabaseConstants.LIST_HID + " = 829291199";
+
+        System.out.println(ciao);
 
         assertEquals(4, 2 + 2);
     }

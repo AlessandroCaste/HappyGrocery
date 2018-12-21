@@ -27,7 +27,9 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.Volley;
 import com.code.dima.happygrocery.R;
+import com.code.dima.happygrocery.database.DatabaseAdapter;
 import com.code.dima.happygrocery.tasks.AddGroceryInDBTask;
+import com.code.dima.happygrocery.tasks.RestoreActiveGroceryTask;
 import com.firebase.ui.auth.AuthMethodPickerLayout;
 import com.firebase.ui.auth.AuthUI;
 import com.github.mikephil.charting.charts.PieChart;
@@ -87,6 +89,13 @@ public class LoginActivity extends AppCompatActivity
                 FirebaseUser user = firebaseAuth.getCurrentUser();
                 if (user != null) {
                     getSupportActionBar().setTitle(getResources().getString(R.string.HappyGrocery));
+                    boolean restoreNeeded = checkActiveGrocery();
+                    if (restoreNeeded) {
+                        RestoreActiveGroceryTask task = new RestoreActiveGroceryTask(getApplicationContext());
+                        task.execute();
+                        Intent callDashboard = new Intent(getApplicationContext(), DashboardActivity.class);
+                        startActivity(callDashboard);
+                    }
                 } else {
 
                      AuthMethodPickerLayout customLayout = new AuthMethodPickerLayout
@@ -109,6 +118,16 @@ public class LoginActivity extends AppCompatActivity
             }
         };
 
+    }
+
+    /*
+    Checks whether there's an active grocery in the db to be restored
+     */
+    private boolean checkActiveGrocery() {
+        DatabaseAdapter adapter = DatabaseAdapter.openInWriteMode(getApplicationContext());
+        boolean answer = adapter.queryActiveGrocery();
+        adapter.close();
+        return answer;
     }
 
     public void onButtonClick(View view){

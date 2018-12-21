@@ -188,6 +188,7 @@ public class ProductActivity extends AppCompatActivity {
             }
             // update in database
             UpdateProductQuantityInDBTask task = new UpdateProductQuantityInDBTask(getApplicationContext(), currentProduct, newQuantity);
+            task.execute();
             setResult(Activity.RESULT_OK,returnIntent);
             finish();
         }
