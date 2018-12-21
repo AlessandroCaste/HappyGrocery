@@ -1,5 +1,6 @@
 package com.code.dima.happygrocery.core;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -12,12 +13,19 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonArrayRequest;
+import com.android.volley.toolbox.Volley;
 import com.code.dima.happygrocery.R;
 import com.code.dima.happygrocery.database.DatabaseAdapter;
 import com.code.dima.happygrocery.tasks.AddGroceryInDBTask;
@@ -30,10 +38,16 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.zxing.integration.android.IntentResult;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.util.Arrays;
 import java.util.List;
 
 import de.hdodenhof.circleimageview.CircleImageView;
+
+import static com.google.zxing.integration.android.IntentIntegrator.REQUEST_CODE;
 
 
 public class LoginActivity extends AppCompatActivity
@@ -128,17 +142,17 @@ public class LoginActivity extends AppCompatActivity
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        IntentResult result = IntentIntegrator.parseActivityResult(requestCode,resultCode,data);
-        if ( result != null) {
-            if (((IntentResult) result).getContents() == null) {
-                Toast.makeText(this, "Cancelled", Toast.LENGTH_LONG).show();
-            } else {
+        if (requestCode == REQUEST_CODE) {
+
+            if (resultCode == Activity.RESULT_OK && data != null) {
+                String url = data.getStringExtra("SCAN_RESULT");
                 Intent i = new Intent(this, DashboardActivity.class);
-                startActivity(i);
-               overridePendingTransition(R.transition.slide_in_left, R.transition.slide_out_right);
+                parseAndLaunch(url, i);
+            } else {
+                Toast.makeText(this, "Cancelled", Toast.LENGTH_LONG).show();
             }
         } else {
-            super.onActivityResult(requestCode,resultCode,data);
+            super.onActivityResult(requestCode, resultCode, data);
         }
     }
 
@@ -154,6 +168,58 @@ public class LoginActivity extends AppCompatActivity
     //    Picasso.get().load(user.getPhotoUrl()).into(profilePicture);
          //profileName.setText(user.getDisplayName());
          //profileMail.setText(user.getEmail());
+    }
+
+    private void parseAndLaunch(String url, final Intent i) {
+        RequestQueue queue = Volley.newRequestQueue(this);
+
+        JsonArrayRequest request = new JsonArrayRequest(Request.Method.GET, url, null, new Response.Listener<JSONArray>() {
+            @Override
+            public void onResponse(JSONArray response) {
+                try {
+
+                    // Info extraction
+                    JSONArray jsonArray = response;
+                    JSONObject reader = jsonArray.getJSONObject(0);
+                    String name = reader.getString("name");
+                    String url = reader.getString("url");
+                    i.putExtra("name",name);
+                    i.putExtra("url",url);
+                    startActivity(i);
+                    overridePendingTransition(R.transition.slide_in_left, R.transition.slide_out_right);
+                } catch (JSONException e) {
+                    AlertDialog.Builder alert = new AlertDialog.Builder(LoginActivity.this);
+                    alert.setTitle(R.string.error_qr_store_title);
+                    alert.setMessage(R.string.error_qr_store_message);
+                    alert.setPositiveButton(R.string.OK, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            finish();
+                        }
+                    });
+                    alert.setCancelable(false);
+                    alert.show();
+                }
+
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.e("ERROR", "Error occured", error);
+                AlertDialog.Builder alert = new AlertDialog.Builder(LoginActivity.this);
+                alert.setTitle(R.string.error_connecting_title);
+                alert.setMessage(R.string.error_connecting_message);
+                alert.setPositiveButton(R.string.OK, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        finish();
+                    }
+                });
+                alert.setCancelable(false);
+                alert.show();
+            }
+        });
+        queue.add(request);
     }
 
     @Override

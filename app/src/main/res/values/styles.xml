@@ -34,13 +34,12 @@
 
     <style name="CustomTheme" parent="AppTheme.NoActionBar">
         <item name="colorPrimary">@color/colorPrimary</item>
-        <item name="android:colorBackground">@color/colorPrimary</item>
-        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
-        <item name="colorAccent">@android:color/white</item>
+        <item name="android:colorBackground">@android:color/background_light</item>
+        <item name="colorAccent">@android:color/darker_gray</item>
         <item name="android:label">@string/Welcome</item>
         <item name="android:windowContentTransitions">true</item>
-        <item name="android:textColorPrimary">@android:color/white</item>
-        <item name="android:textColor">@color/lightGrey</item>
+        <item name="android:textColorPrimary">@android:color/darker_gray</item>
+        <item name="android:textColor">@android:color/white</item>
         <item name="android:navigationBarColor">@color/colorPrimary</item>
         <item name="android:colorControlHighlight">#FFB74D</item>
         <item name="android:colorAccent">@color/colorPrimary</item>
