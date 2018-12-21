@@ -198,17 +198,17 @@ public class LoginActivity extends AppCompatActivity
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
-        if (id == R.id.nav_camera) {
-            // Handle the camera action
-        } else if (id == R.id.nav_gallery) {
+        if (id == R.id.clear_grocery) {
 
-        } else if (id == R.id.nav_slideshow) {
+        } else if (id == R.id.payment_history) {
+            Intent i = new Intent(context, PaymentHistoryActivity.class);
+            startActivity(i);
+            overridePendingTransition(R.transition.slide_in_left,R.transition.slide_out_right);
+        } else if (id == R.id.payment_methods) {
 
-        } else if (id == R.id.nav_manage) {
+        } else if (id == R.id.log_out) {
 
-        } else if (id == R.id.nav_share) {
-
-        } else if (id == R.id.nav_send) {
+        } else if (id == R.id.about_us) {
 
         }
 
