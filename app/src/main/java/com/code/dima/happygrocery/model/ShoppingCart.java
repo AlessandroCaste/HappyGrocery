@@ -53,6 +53,7 @@ public class ShoppingCart {
             int previousQuantity = productInCart.getQuantity();
             productInCart.setQuantity(newQuantity + previousQuantity);
             this.amount += newQuantity * product.getPrice();
+            //this.lastProduct = product;
         } catch (NoSuchProductException e) {
             // the product isn't already in the list -> add it
             int index;
@@ -64,8 +65,9 @@ public class ShoppingCart {
             shoppingCart.get(index).add(product);
             float price = product.getPrice() * newQuantity;
             this.amount += price;
-            this.lastProduct = product;
+            //this.lastProduct = product;
         }
+        this.lastProduct = product;
     }
 
     public void removeProduct(Product product) throws NoSuchProductException {

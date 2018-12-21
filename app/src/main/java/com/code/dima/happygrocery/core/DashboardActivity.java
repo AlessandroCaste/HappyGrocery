@@ -311,7 +311,7 @@ public class DashboardActivity extends AppCompatActivity
         @Override
         protected Boolean doInBackground(Void... voids) {
             boolean lastProductExists = true;
-            Product lastProduct = null;
+            Product lastProduct;
             try {
                 lastProduct = ShoppingCart.getInstance().getLastProduct();
                 name = lastProduct.getName();
@@ -325,16 +325,15 @@ public class DashboardActivity extends AppCompatActivity
 
         @Override
         protected void onPostExecute(Boolean lastProductExists) {
-            CardView card = findViewById(R.id.dashboardCardView);
             if (lastProductExists) {
                 findViewById(R.id.dashboard_empty_card_layout).setVisibility(View.INVISIBLE);
+                findViewById(R.id.dashboard_full_card_layout).setVisibility(View.VISIBLE);
                 ImageView imageView = findViewById(R.id.dashboardProdImage);
                 TextView nameText = findViewById(R.id.dashboardProdName);
                 TextView priceText = findViewById(R.id.dashboardProdDetails);
                 nameText.setText(name);
                 priceText.setText(price);
                 imageView.setImageResource(imageID);
-                findViewById(R.id.dashboard_full_card_layout).setVisibility(View.VISIBLE);
             } else {
                 findViewById(R.id.dashboard_empty_card_layout).setVisibility(View.VISIBLE);
                 findViewById(R.id.dashboard_full_card_layout).setVisibility(View.INVISIBLE);
