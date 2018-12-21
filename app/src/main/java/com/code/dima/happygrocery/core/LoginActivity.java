@@ -58,13 +58,11 @@ public class LoginActivity extends AppCompatActivity
 
     private FirebaseAuth mAuth;
     private FirebaseAuth.AuthStateListener mAuthStateListener;
-    private final static int RC_SIGN_IN = 9001;
-
+    private boolean authFlag = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         setContentView(R.layout.login_activity_main);
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -79,23 +77,25 @@ public class LoginActivity extends AppCompatActivity
         navigationView.setNavigationItemSelectedListener(this);
 
         context = this;
-
         mAuth = FirebaseAuth.getInstance();
         mAuthStateListener = new FirebaseAuth.AuthStateListener() {
             @Override
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
                 FirebaseUser user = firebaseAuth.getCurrentUser();
                 if (user != null) {
-                    getSupportActionBar().setTitle(getResources().getString(R.string.HappyGrocery));
-                    boolean restoreNeeded = checkActiveGrocery();
-                    if (restoreNeeded) {
-                        RestoreActiveGroceryTask task = new RestoreActiveGroceryTask(getApplicationContext());
-                        task.execute();
-                        Intent callDashboard = new Intent(getApplicationContext(), DashboardActivity.class);
-                        startActivity(callDashboard);
+                    if(authFlag == false) {
+                        authFlag = true;
+                        getSupportActionBar().setTitle(getResources().getString(R.string.HappyGrocery));
+                        boolean restoreNeeded = checkActiveGrocery();
+                        if (restoreNeeded) {
+                            RestoreActiveGroceryTask task = new RestoreActiveGroceryTask(getApplicationContext());
+                            task.execute();
+                            Intent callDashboard = new Intent(getApplicationContext(), DashboardActivity.class);
+                            startActivity(callDashboard);
+                        }
                     }
                 } else {
-
+                    authFlag = false;
                      AuthMethodPickerLayout customLayout = new AuthMethodPickerLayout
                             .Builder(R.layout.login)
                             .setPhoneButtonId(R.id.phoneButton)
@@ -152,6 +152,18 @@ public class LoginActivity extends AppCompatActivity
             super.onActivityResult(requestCode, resultCode, data);
         }
     }
+
+    /*Override
+    protected void onDestroy() {
+        authFlag = false;
+        super.onDestroy();
+    }
+
+    @Override
+    protected void onStop(){
+        authFlag = false;
+        super.onStop();
+    }*/
 
     @Override
     protected void onStart() {
@@ -312,7 +324,7 @@ public class LoginActivity extends AppCompatActivity
     public void newShoppingClick(View view) {
         IntentIntegrator integrator = new IntentIntegrator(this);
         integrator.setDesiredBarcodeFormats(IntentIntegrator.QR_CODE);
-        integrator.setPrompt(getResources().getString(R.string.prompt));
+        integrator.setPrompt(getResources().getString(R.string.qr_prompt));
         integrator.setBeepEnabled(false);
         integrator.initiateScan();
         overridePendingTransition(R.transition.slide_in_right, R.transition.slide_out_left);
