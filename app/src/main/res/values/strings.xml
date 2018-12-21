@@ -13,6 +13,7 @@
     <string name="nav_header_desc">Navigation header</string>
     <string name="action_settings">Settings</string>
     <string name="prompt">Frame your barcode!</string>
+    <string name="qr_prompt">Frame the store QR!</string>
     <string name="long_search">Try a shorter search!</string>
 
     <!-- RELATIVE TO DASHBOARD ACTIVITY -->

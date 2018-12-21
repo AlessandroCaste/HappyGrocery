@@ -121,7 +121,7 @@ public class LoginActivity extends AppCompatActivity
         IntentIntegrator integrator = new IntentIntegrator(this);
         integrator.setDesiredBarcodeFormats(IntentIntegrator.EAN_13);
         integrator.setBeepEnabled(true);
-        integrator.setPrompt(getResources().getString(R.string.prompt));
+        integrator.setPrompt(getResources().getString(R.string.qr_prompt));
         integrator.initiateScan();
         overridePendingTransition(R.transition.slide_in_right,R.transition.slide_out_left);
     }
