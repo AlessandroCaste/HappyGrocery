@@ -13,6 +13,7 @@
     <string name="nav_header_desc">Navigation header</string>
     <string name="action_settings">Settings</string>
     <string name="prompt">Frame your barcode!</string>
+    <string name="qr_prompt">Frame the store QR!</string>
     <string name="long_search">Try a shorter search!</string>
 
     <!-- RELATIVE TO DASHBOARD ACTIVITY -->
@@ -58,10 +59,13 @@
     <!-- ALERT NOTIFICATIONS -->
     <string name="log_out_title">Logging out!</string>
     <string name="log_out_message">Are you sure to log out?</string>
+    <string name="error_qr_store_title">QR not recognized</string>
+    <string name="error_qr_store_message">The scanned QR is wrong! Ask the shopping assistants</string>
     <string name="error_barcode_title">Barcode not recognized!</string>
     <string name="error_barcode_message">Barcode not found!\nAsk shopping assistants!</string>
     <string name="error_connecting_title">Unavailable Service</string>
     <string name="error_connecting_message">HappyGrocery can\'t reach the required service!</string>
+
 
     <!-- Buttons Options -->
     <string name="OK">OK</string>

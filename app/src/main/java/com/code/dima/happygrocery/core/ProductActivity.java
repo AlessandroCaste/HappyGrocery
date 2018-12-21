@@ -43,6 +43,7 @@ public class ProductActivity extends AppCompatActivity {
     CardView cardView;
     FloatingActionButton cancel;
     FloatingActionButton accept;
+    String url;
     String barcode;
 
     @Override
@@ -59,7 +60,7 @@ public class ProductActivity extends AppCompatActivity {
         accept = findViewById(R.id.acceptButton);
 
         previousActivityName = getIntent().getStringExtra("activityName");
-        barcode = getIntent().getStringExtra("barcode");
+
 
         findViewById(R.id.loadingPanel).bringToFront();
 
@@ -68,7 +69,8 @@ public class ProductActivity extends AppCompatActivity {
             quantityButton.setVisibility(View.INVISIBLE);
             cancel.hide();
             accept.hide();
-
+            url = getIntent().getStringExtra("queryUrl");
+            barcode = getIntent().getStringExtra("barcode");
             jsonParse(this);
         }
         // Instantiate the RequestQueue.
@@ -79,9 +81,9 @@ public class ProductActivity extends AppCompatActivity {
     private void jsonParse(final Context context) {
         RequestQueue queue = Volley.newRequestQueue(this);
 
-        String url =getResources().getString(R.string.server_url)+barcode;
+        String urlQuery =url+barcode;
 
-        JsonArrayRequest request = new JsonArrayRequest(Request.Method.GET, url, null, new Response.Listener<JSONArray>() {
+        JsonArrayRequest request = new JsonArrayRequest(Request.Method.GET, urlQuery, null, new Response.Listener<JSONArray>() {
             @Override
             public void onResponse(JSONArray response) {
                 try {
@@ -94,6 +96,8 @@ public class ProductActivity extends AppCompatActivity {
                     float price       = Float.parseFloat(reader.getString("price"));
                     String barcode    = reader.getString("barcode");
                     float weight      = Float.parseFloat(reader.getString("weight"));
+                    float discount    = Float.parseFloat(reader.getString("discount"));
+                    price = price - price*discount;
                     currentProduct    = new Product(category,name,price,barcode,weight,1,0);
 
                     //Visibility settings
@@ -124,7 +128,7 @@ public class ProductActivity extends AppCompatActivity {
                     });
                     alert.setCancelable(false);
                     alert.show();
-                    }
+                }
 
             }
         }, new Response.ErrorListener() {
@@ -137,7 +141,7 @@ public class ProductActivity extends AppCompatActivity {
                 alert.setPositiveButton(R.string.OK, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                      finish();
+                        finish();
                     }
                 });
                 alert.setCancelable(false);
@@ -188,7 +192,6 @@ public class ProductActivity extends AppCompatActivity {
             }
             // update in database
             UpdateProductQuantityInDBTask task = new UpdateProductQuantityInDBTask(getApplicationContext(), currentProduct, newQuantity);
-            task.execute();
             setResult(Activity.RESULT_OK,returnIntent);
             finish();
         }
