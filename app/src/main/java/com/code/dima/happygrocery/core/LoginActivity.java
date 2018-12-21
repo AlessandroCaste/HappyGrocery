@@ -53,9 +53,6 @@ import static com.google.zxing.integration.android.IntentIntegrator.REQUEST_CODE
 public class LoginActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
-    private PieChart chart;
-    private List<String> labels;
-    private List<Integer> colors;
     FirebaseUser user;
     Context context;
 
@@ -273,7 +270,21 @@ public class LoginActivity extends AppCompatActivity
         } else if (id == R.id.payment_methods) {
 
         } else if (id == R.id.log_out) {
-
+            AlertDialog.Builder alert = new AlertDialog.Builder(getApplicationContext());
+            alert.setTitle(R.string.log_out_title);
+            alert.setMessage(R.string.log_out_message);
+            alert.setPositiveButton(R.string.OK, new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    FirebaseAuth mAuth = FirebaseAuth.getInstance();
+                    mAuth.signOut();
+                    finish();
+                    overridePendingTransition(R.transition.slide_in_left,R.transition.slide_out_right);
+                }
+            });
+            alert.setNegativeButton(R.string.CANCEL,null);
+            alert.setCancelable(false);
+            alert.show();
         } else if (id == R.id.about_us) {
 
         }
@@ -283,28 +294,6 @@ public class LoginActivity extends AppCompatActivity
         return true;
     }
 
-
-
-    public void onDrawerButtonClick (MenuItem menuItem){
-        int id = menuItem.getItemId();
-
-        if  (id == R.id.log_out) {
-
-            AlertDialog.Builder alert = new AlertDialog.Builder(LoginActivity.this);
-            alert.setTitle(R.string.log_out_title);
-            alert.setMessage(R.string.log_out_message);
-            alert.setPositiveButton(R.string.OK, new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialog, int which) {
-                    mAuth.signOut();
-                }
-            });
-            alert.setNegativeButton(R.string.CANCEL,null);
-            alert.setCancelable(false);
-            alert.show();
-        }
-
-    }
 
     @Override
     protected void onPause(){

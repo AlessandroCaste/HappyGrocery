@@ -222,23 +222,7 @@ public class DashboardActivity extends AppCompatActivity
         } else if (id == R.id.payment_methods) {
 
         } else if (id == R.id.log_out) {
-
-        } else if (id == R.id.about_us) {
-
-        }
-
-        DrawerLayout drawer = findViewById(R.id.drawer_layout);
-        drawer.closeDrawer(GravityCompat.START);
-        return true;
-    }
-
-
-    public void onDrawerButtonClick (MenuItem menuItem){
-        int id = menuItem.getItemId();
-
-        if  (id == R.id.log_out) {
-
-            AlertDialog.Builder alert = new AlertDialog.Builder(DashboardActivity.this);
+            AlertDialog.Builder alert = new AlertDialog.Builder(context);
             alert.setTitle(R.string.log_out_title);
             alert.setMessage(R.string.log_out_message);
             alert.setPositiveButton(R.string.OK, new DialogInterface.OnClickListener() {
@@ -253,13 +237,14 @@ public class DashboardActivity extends AppCompatActivity
             alert.setNegativeButton(R.string.CANCEL,null);
             alert.setCancelable(false);
             alert.show();
-
-        } else if (id == R.id.payment_history) {
+        } else if (id == R.id.about_us) {
 
         }
 
+        DrawerLayout drawer = findViewById(R.id.drawer_layout);
+        drawer.closeDrawer(GravityCompat.START);
+        return true;
     }
-
 
 
     private class UpdateChartDataTask extends AsyncTask<Void, Void, Void> {
