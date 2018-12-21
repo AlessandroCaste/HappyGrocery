@@ -58,10 +58,13 @@
     <!-- ALERT NOTIFICATIONS -->
     <string name="log_out_title">Logging out!</string>
     <string name="log_out_message">Are you sure to log out?</string>
+    <string name="error_qr_store_title">QR not recognized</string>
+    <string name="error_qr_store_message">The scanned QR is wrong! Ask the shopping assistants</string>
     <string name="error_barcode_title">Barcode not recognized!</string>
     <string name="error_barcode_message">Barcode not found!\nAsk shopping assistants!</string>
     <string name="error_connecting_title">Unavailable Service</string>
     <string name="error_connecting_message">HappyGrocery can\'t reach the required service!</string>
+
 
     <!-- Buttons Options -->
     <string name="OK">OK</string>
