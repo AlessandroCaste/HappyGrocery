@@ -85,10 +85,13 @@ public class DatabaseAdapter {
     private long queryGroceryID() {
         if (actualGroceryID < 0) {
             if (database != null) {
-                Cursor cursor = database.rawQuery("SELECT * FROM " + DatabaseConstants.HISTORY_TABLE
-                        + " WHERE " + DatabaseConstants.HISTORY_ACTIVE + " = 1", null);
-                cursor.moveToNext();
-                actualGroceryID = cursor.getLong(cursor.getColumnIndex(DatabaseConstants.HISTORY_ID));
+                Cursor cursor = database.rawQuery("SELECT " + DatabaseConstants.HISTORY_ID +
+                        " FROM " + DatabaseConstants.HISTORY_TABLE +
+                        " WHERE " + DatabaseConstants.HISTORY_ACTIVE + " = 1", null);
+                //gets the most recent active grocery
+                while (cursor.moveToNext()) {
+                    actualGroceryID = cursor.getLong(0);
+                }
                 cursor.close();
             }
         }
@@ -281,6 +284,16 @@ public class DatabaseAdapter {
             cursor.close();
         }
         return groceries;
+    }
+
+    public boolean queryActiveGrocery() {
+        boolean answer = false;
+        if (database != null) {
+            long groceryID = queryGroceryID();
+            if (groceryID != -1)
+                answer = true;
+        }
+        return answer;
     }
 
     public void clearGrocery() {
