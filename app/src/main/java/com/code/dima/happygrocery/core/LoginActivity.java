@@ -195,7 +195,7 @@ public class LoginActivity extends AppCompatActivity
                     i.putExtra("name",name);
                     i.putExtra("url",url);
                     startActivity(i);
-                    overridePendingTransition(R.transition.slide_in_left, R.transition.slide_out_right);
+                    overridePendingTransition(R.transition.slide_in_right, R.transition.slide_out_left);
                 } catch (JSONException e) {
                     AlertDialog.Builder alert = new AlertDialog.Builder(LoginActivity.this);
                     alert.setTitle(R.string.error_qr_store_title);
