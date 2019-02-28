@@ -179,7 +179,22 @@ public class DashboardActivity extends AppCompatActivity
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
         } else {
-            super.onBackPressed();
+            AlertDialog.Builder alert = new AlertDialog.Builder(context);
+            alert.setTitle(R.string.clear_grocery_title);
+            alert.setMessage(R.string.clear_grocery_message);
+            alert.setPositiveButton(R.string.OK, new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    ShoppingCart.getInstance().clearShoppingCart();
+                    ClearGroceryTask task = new ClearGroceryTask(DashboardActivity.this);
+                    task.execute();
+                    finish();
+                    overridePendingTransition(R.transition.slide_in_left,R.transition.slide_out_right);
+                }
+            });
+            alert.setNegativeButton(R.string.CANCEL,null);
+            alert.setCancelable(false);
+            alert.show();
         }
     }
 

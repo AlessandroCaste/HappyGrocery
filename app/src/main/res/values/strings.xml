@@ -58,7 +58,7 @@
 
     <!-- ALERT NOTIFICATIONS -->
     <string name="log_out_title">Logging out!</string>
-    <string name="log_out_message">Are you sure to log out?</string>
+    <string name="log_out_message">Are you sure to log out? Shopping cart will be emptied!</string>
     <string name="clear_grocery_title">Clearing the shopping cart!</string>
     <string name="clear_grocery_message">Are you sure to clear the shopping cart? This cannot be undone</string>
     <string name="clear_grocery_login_title">No grocery to be cleared!</string>
