@@ -26,6 +26,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.Volley;
+import com.code.dima.happygrocery.BuildConfig;
 import com.code.dima.happygrocery.R;
 import com.code.dima.happygrocery.database.DatabaseAdapter;
 import com.code.dima.happygrocery.tasks.AddGroceryInDBTask;
@@ -63,6 +64,12 @@ public class LoginActivity extends AppCompatActivity
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        if(BuildConfig.DEBUG) {
+            Intent callDashboard = new Intent(getApplicationContext(), DashboardActivity.class);
+            startActivity(callDashboard);
+        }
+
         setContentView(R.layout.login_activity_main);
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -224,7 +231,8 @@ public class LoginActivity extends AppCompatActivity
     @Override
     protected void onResume() {
         super.onResume();
-        mAuth.addAuthStateListener(mAuthStateListener);
+        if(!BuildConfig.DEBUG)
+            mAuth.addAuthStateListener(mAuthStateListener);
     }
 
 
