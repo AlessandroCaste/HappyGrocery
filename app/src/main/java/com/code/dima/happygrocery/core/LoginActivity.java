@@ -64,12 +64,7 @@ public class LoginActivity extends AppCompatActivity
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        if(BuildConfig.DEBUG) {
-            Intent callDashboard = new Intent(getApplicationContext(), DashboardActivity.class);
-            startActivity(callDashboard);
-        }
-
+        
         setContentView(R.layout.login_activity_main);
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
