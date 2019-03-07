@@ -69,13 +69,6 @@ public class DashboardActivity extends AppCompatActivity
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        if(url.isEmpty() || shopName.isEmpty()) {
-            url = getIntent().getStringExtra("url");
-            shopName = getIntent().getStringExtra("name");
-            toolbar.setTitle(shopName);
-        }
-        getSupportActionBar().setTitle(shopName);
-
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
@@ -85,9 +78,12 @@ public class DashboardActivity extends AppCompatActivity
         NavigationView navigationView = findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
-        // workaround to add a new active grocery to database
-        AddGroceryInDBTask task = new AddGroceryInDBTask(DashboardActivity.this);
-        task.execute();
+        if(url.isEmpty() || shopName.isEmpty()) {
+            url = getIntent().getStringExtra("url");
+            shopName = getIntent().getStringExtra("name");
+            toolbar.setTitle(shopName);
+        }
+        getSupportActionBar().setTitle(shopName);
 
         chart = findViewById(R.id.DashboardPieChart);
         chart.setDrawHoleEnabled(true);

@@ -130,14 +130,14 @@ public class LoginActivity extends AppCompatActivity
         return answer;
     }
 
-    public void onButtonClick(View view){
-        IntentIntegrator integrator = new IntentIntegrator(this);
-        integrator.setDesiredBarcodeFormats(IntentIntegrator.EAN_13);
-        integrator.setBeepEnabled(true);
-        integrator.setPrompt(getResources().getString(R.string.qr_prompt));
-        integrator.initiateScan();
-        overridePendingTransition(R.transition.slide_in_right,R.transition.slide_out_left);
-    }
+//    public void onButtonClick(View view){
+//        IntentIntegrator integrator = new IntentIntegrator(this);
+//        integrator.setDesiredBarcodeFormats(IntentIntegrator.EAN_13);
+//        integrator.setBeepEnabled(true);
+//        integrator.setPrompt(getResources().getString(R.string.qr_prompt));
+//        integrator.initiateScan();
+//        overridePendingTransition(R.transition.slide_in_right,R.transition.slide_out_left);
+//    }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -196,6 +196,9 @@ public class LoginActivity extends AppCompatActivity
                     String url = reader.getString("url");
                     i.putExtra("name",name);
                     i.putExtra("url",url);
+                    // insert a new entry in the db for the grocery
+                    AddGroceryInDBTask task = new AddGroceryInDBTask(LoginActivity.this, name);
+                    task.execute();
                     startActivity(i);
                     overridePendingTransition(R.transition.slide_in_right, R.transition.slide_out_left);
                 } catch (JSONException e) {
@@ -331,8 +334,6 @@ public class LoginActivity extends AppCompatActivity
         integrator.setBeepEnabled(false);
         integrator.initiateScan();
         overridePendingTransition(R.transition.slide_in_right, R.transition.slide_out_left);
-        AddGroceryInDBTask task = new AddGroceryInDBTask(LoginActivity.this);
-        task.execute();
     }
 
 }
