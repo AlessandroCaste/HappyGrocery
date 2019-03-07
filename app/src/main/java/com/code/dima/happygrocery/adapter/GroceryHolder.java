@@ -15,6 +15,7 @@ public class GroceryHolder extends RecyclerView.ViewHolder {
     private TextView grocerySupermarket;
     private TextView groceryDate;
     private String currency;
+    private TextView groceryClosed;
 
     public GroceryHolder(@NonNull View itemView) {
         super(itemView);
@@ -22,6 +23,7 @@ public class GroceryHolder extends RecyclerView.ViewHolder {
         grocerySupermarket = itemView.findViewById(R.id.grocery_supermarket);
         groceryDate = itemView.findViewById(R.id.grocery_date);
         currency = itemView.getResources().getString(R.string.currency);
+        groceryClosed = itemView.findViewById(R.id.grocery_closed);
     }
 
     public void setDetails(GroceryDetails grocery) {
@@ -29,5 +31,10 @@ public class GroceryHolder extends RecyclerView.ViewHolder {
         groceryAmount.setText(amount);
         grocerySupermarket.setText(grocery.getSupermarket());
         groceryDate.setText(grocery.getDate());
+        if (grocery.getClosed()) {
+            groceryClosed.setText(R.string.closed_grocery);
+        } else {
+            groceryClosed.setText("");
+        }
     }
 }

@@ -279,7 +279,9 @@ public class DatabaseAdapter {
                 float amount = cursor.getFloat(cursor.getColumnIndex(DatabaseConstants.HISTORY_AMOUNT));
                 String supermarket = cursor.getString(cursor.getColumnIndex(DatabaseConstants.HISTORY_MARKET));
                 String date = cursor.getString(cursor.getColumnIndex(DatabaseConstants.HISTORY_DATE));
-                groceries.add(new GroceryDetails(amount, supermarket, date));
+                int active = cursor.getInt(cursor.getColumnIndex(DatabaseConstants.HISTORY_ACTIVE));
+                boolean closed = (active == 0);
+                groceries.add(new GroceryDetails(amount, supermarket, date, closed));
             }
             cursor.close();
         }

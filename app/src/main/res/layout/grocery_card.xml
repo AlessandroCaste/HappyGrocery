@@ -62,6 +62,19 @@
             card_view:layout_constraintStart_toStartOf="parent"
             card_view:layout_constraintTop_toBottomOf="@+id/grocery_amount" />
 
+        <TextView
+            android:id="@+id/grocery_closed"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="32dp"
+            android:layout_marginBottom="8dp"
+            android:maxLines="1"
+            android:text="Closed"
+            android:textColor="@android:color/background_dark"
+            android:textSize="20sp"
+            card_view:layout_constraintBottom_toBottomOf="parent"
+            card_view:layout_constraintEnd_toEndOf="parent" />
+
 
     </android.support.constraint.ConstraintLayout>
 
