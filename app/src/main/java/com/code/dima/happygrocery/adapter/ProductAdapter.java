@@ -86,7 +86,6 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductHolder> {
                 holder.editButton.setOnClickListener(new View.OnClickListener() {
                     public void onClick(View v) {
                         Intent i = new Intent(context,ProductActivity.class);
-                        //i.putExtra("position",position);
                         i.putExtra("barcode", product.getBarcode());
                         i.putExtra("activityName","ShoppingCartActivity");
                         ((Activity) context).startActivityForResult(i,context.getResources().getInteger(R.integer.CART_REQUEST_CODE));
