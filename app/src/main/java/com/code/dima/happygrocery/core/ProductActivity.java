@@ -184,10 +184,8 @@ public class ProductActivity extends AppCompatActivity {
             //int recyclerPosition = getIntent().getIntExtra("position",1);
             Intent returnIntent = new Intent();
             currentProduct = ShoppingCart.getInstance().getProductWithBarcode(barcode);
-            System.out.println("Product to be modified " + currentProduct);
             returnIntent.putExtra("category", currentProduct.getCategory().name());
             int newQuantity = Integer.parseInt(quantityButton.getNumber());
-            System.out.println("Quantity " + newQuantity);
             try {
                 ShoppingCart.getInstance().updateQuantity(currentProduct, newQuantity);
             } catch (NoSuchProductException e) {

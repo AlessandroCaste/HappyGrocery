@@ -90,7 +90,7 @@ public class LoginActivity extends AppCompatActivity
                         getSupportActionBar().setTitle(getResources().getString(R.string.HappyGrocery));
                         boolean restoreNeeded = checkActiveGrocery();
                         if (restoreNeeded) {
-                            RestoreActiveGroceryTask task = new RestoreActiveGroceryTask(getApplicationContext());
+                            RestoreActiveGroceryTask task = new RestoreActiveGroceryTask(LoginActivity.this);
                             task.execute();
                             Intent callDashboard = new Intent(getApplicationContext(), DashboardActivity.class);
                             startActivity(callDashboard);
