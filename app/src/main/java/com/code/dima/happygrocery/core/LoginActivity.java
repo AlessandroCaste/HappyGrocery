@@ -33,18 +33,15 @@ import com.code.dima.happygrocery.tasks.AddGroceryInDBTask;
 import com.code.dima.happygrocery.tasks.RestoreActiveGroceryTask;
 import com.firebase.ui.auth.AuthMethodPickerLayout;
 import com.firebase.ui.auth.AuthUI;
-import com.github.mikephil.charting.charts.PieChart;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.zxing.integration.android.IntentIntegrator;
-import com.google.zxing.integration.android.IntentResult;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.Arrays;
-import java.util.List;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
@@ -85,7 +82,7 @@ public class LoginActivity extends AppCompatActivity
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
                 FirebaseUser user = firebaseAuth.getCurrentUser();
                 if (user != null) {
-                    if(authFlag == false) {
+                    if(!authFlag) {
                         authFlag = true;
                         getSupportActionBar().setTitle(getResources().getString(R.string.HappyGrocery));
                         boolean restoreNeeded = checkActiveGrocery();

@@ -25,7 +25,6 @@ import com.code.dima.happygrocery.exception.NoLastProductException;
 import com.code.dima.happygrocery.model.Product;
 import com.code.dima.happygrocery.model.Category;
 import com.code.dima.happygrocery.model.ShoppingCart;
-import com.code.dima.happygrocery.tasks.AddGroceryInDBTask;
 import com.code.dima.happygrocery.tasks.ClearGroceryTask;
 import com.github.mikephil.charting.charts.PieChart;
 import com.github.mikephil.charting.components.Description;
@@ -37,6 +36,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.zxing.integration.android.IntentIntegrator;
 
+import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -54,8 +54,8 @@ public class DashboardActivity extends AppCompatActivity
     FirebaseUser user;
     Context context;
 
-    String url = new String();
-    String shopName = new String();
+    String url = "";
+    String shopName = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -111,7 +111,7 @@ public class DashboardActivity extends AppCompatActivity
 
 
     private void updateLastProduct () {
-        new UpdateLastProductTask().execute();
+        new UpdateLastProductTask(DashboardActivity.this).execute();
     }
 
     public void onButtonClick(View view){
@@ -329,11 +329,16 @@ public class DashboardActivity extends AppCompatActivity
         }
     }
 
-    private class UpdateLastProductTask extends AsyncTask<Void, Void, Boolean> {
+    private static class UpdateLastProductTask extends AsyncTask<Void, Void, Boolean> {
 
         private String name;
         private String price;
         private int imageID;
+        private WeakReference<DashboardActivity> context;
+
+        UpdateLastProductTask(DashboardActivity context) {
+            this.context = new WeakReference<>(context);
+        }
 
         @Override
         protected Boolean doInBackground(Void... voids) {
@@ -342,7 +347,7 @@ public class DashboardActivity extends AppCompatActivity
             try {
                 lastProduct = ShoppingCart.getInstance().getLastProduct();
                 name = lastProduct.getName();
-                price = lastProduct.getPrice() + getResources().getString(R.string.currency);
+                price = lastProduct.getPrice() + context.get().getResources().getString(R.string.currency);
                 imageID = lastProduct.getImageID();
             } catch (NoLastProductException e) {
                 lastProductExists = false;
@@ -353,11 +358,11 @@ public class DashboardActivity extends AppCompatActivity
         @Override
         protected void onPostExecute(Boolean lastProductExists) {
             if (lastProductExists) {
-                findViewById(R.id.dashboard_empty_card_layout).setVisibility(View.INVISIBLE);
-                findViewById(R.id.dashboard_full_card_layout).setVisibility(View.VISIBLE);
-                ImageView imageView = findViewById(R.id.dashboard_last_product_image);
-                TextView nameText = findViewById(R.id.dashboard_last_product_name);
-                TextView priceText = findViewById(R.id.dashboard_last_product_price);
+                context.get().findViewById(R.id.dashboard_empty_card_layout).setVisibility(View.INVISIBLE);
+                context.get().findViewById(R.id.dashboard_full_card_layout).setVisibility(View.VISIBLE);
+                ImageView imageView = context.get().findViewById(R.id.dashboard_last_product_image);
+                TextView nameText = context.get().findViewById(R.id.dashboard_last_product_name);
+                TextView priceText = context.get().findViewById(R.id.dashboard_last_product_price);
                 nameText.setText(name);
                 priceText.setText(price);
                 imageView.setImageResource(imageID);
@@ -365,8 +370,8 @@ public class DashboardActivity extends AppCompatActivity
                 priceText.invalidate();
                 imageView.invalidate();
             } else {
-                findViewById(R.id.dashboard_empty_card_layout).setVisibility(View.VISIBLE);
-                findViewById(R.id.dashboard_full_card_layout).setVisibility(View.INVISIBLE);
+                context.get().findViewById(R.id.dashboard_empty_card_layout).setVisibility(View.VISIBLE);
+                context.get().findViewById(R.id.dashboard_full_card_layout).setVisibility(View.INVISIBLE);
             }
         }
     }

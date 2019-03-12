@@ -5,18 +5,20 @@ import android.os.AsyncTask;
 
 import com.code.dima.happygrocery.database.DatabaseAdapter;
 
+import java.lang.ref.WeakReference;
+
 
 public class ClearGroceryTask extends AsyncTask<Void, Void, Void> {
 
-    private Context context;
+    private WeakReference<Context> context;
 
     public ClearGroceryTask(Context context) {
-        this.context = context;
+        this.context = new WeakReference<>(context);
     }
 
     @Override
     protected Void doInBackground(Void... voids) {
-        DatabaseAdapter adapter = DatabaseAdapter.openInWriteMode(context);
+        DatabaseAdapter adapter = DatabaseAdapter.openInWriteMode(context.get());
         adapter.clearGrocery();
         adapter.close();
         return null;
