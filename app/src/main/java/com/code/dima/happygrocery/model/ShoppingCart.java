@@ -182,7 +182,9 @@ public class ShoppingCart {
             products.clear();
         }
         shoppingCart.clear();
+        categoryNames.clear();
         amount = 0f;
         lastProduct = null;
+        instance = null;
     }
 }
