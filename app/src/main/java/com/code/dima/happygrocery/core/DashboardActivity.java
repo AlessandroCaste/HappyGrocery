@@ -2,7 +2,6 @@ package com.code.dima.happygrocery.core;
 
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
@@ -36,7 +35,6 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.zxing.integration.android.IntentIntegrator;
 
-import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -52,7 +50,6 @@ public class DashboardActivity extends AppCompatActivity
     private List<String> labels;
     private List<Integer> colors;
     FirebaseUser user;
-    Context context;
 
     String url = "";
     String shopName = "";
@@ -60,10 +57,6 @@ public class DashboardActivity extends AppCompatActivity
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-
-        updateChartData();
-        updateLastProduct();
 
         setContentView(R.layout.activity_dashboard);
         Toolbar toolbar = findViewById(R.id.toolbar);
@@ -85,6 +78,8 @@ public class DashboardActivity extends AppCompatActivity
         }
         getSupportActionBar().setTitle(shopName);
 
+        updateChartData();
+
         chart = findViewById(R.id.DashboardPieChart);
         chart.setDrawHoleEnabled(true);
         chart.setHoleColor(Color.WHITE);
@@ -101,8 +96,7 @@ public class DashboardActivity extends AppCompatActivity
         chart.setMarker(marker);
         chart.invalidate();
 
-        context = this;
-
+        updateLastProduct();
     }
 
     private void updateChartData() {
@@ -111,7 +105,26 @@ public class DashboardActivity extends AppCompatActivity
 
 
     private void updateLastProduct () {
-        new UpdateLastProductTask(DashboardActivity.this).execute();
+        //new UpdateLastProductTask(DashboardActivity.this).execute();
+        try {
+            Product lastProduct = ShoppingCart.getInstance().getLastProduct();
+            String name = lastProduct.getName();
+            String price = lastProduct.getPrice() + getResources().getString(R.string.currency);
+            int imageID = lastProduct.getImageID();
+            findViewById(R.id.dashboard_empty_card_layout).setVisibility(View.INVISIBLE);
+            ImageView imageView = findViewById(R.id.dashboard_last_product_image);
+            TextView nameText = findViewById(R.id.dashboard_last_product_name);
+            TextView priceText = findViewById(R.id.dashboard_last_product_price);
+            nameText.setText(name);
+            priceText.setText(price);
+            imageView.setImageResource(imageID);
+            findViewById(R.id.dashboard_full_card_layout).setVisibility(View.VISIBLE);
+        } catch (NoLastProductException e) {
+            View emptyCard = findViewById(R.id.dashboard_empty_card_layout);
+            View fullCard = findViewById(R.id.dashboard_full_card_layout);
+            emptyCard.setVisibility(View.VISIBLE);
+            fullCard.setVisibility(View.INVISIBLE);
+        }
     }
 
     public void onButtonClick(View view){
@@ -130,7 +143,7 @@ public class DashboardActivity extends AppCompatActivity
 
             if (resultCode == Activity.RESULT_OK) {
                 String contents = data.getStringExtra("SCAN_RESULT");
-                String formatName = data.getStringExtra("SCAN_RESULT_FORMAT");
+                //String formatName = data.getStringExtra("SCAN_RESULT_FORMAT");
                 Intent i = new Intent(this, ProductActivity.class);
                 i.putExtra("queryUrl", url);
                 i.putExtra("barcode", contents);
@@ -175,7 +188,7 @@ public class DashboardActivity extends AppCompatActivity
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
         } else {
-            AlertDialog.Builder alert = new AlertDialog.Builder(context);
+            AlertDialog.Builder alert = new AlertDialog.Builder(DashboardActivity.this);
             alert.setTitle(R.string.clear_grocery_title);
             alert.setMessage(R.string.clear_grocery_message);
             alert.setPositiveButton(R.string.OK, new DialogInterface.OnClickListener() {
@@ -225,7 +238,7 @@ public class DashboardActivity extends AppCompatActivity
         int id = item.getItemId();
 
         if (id == R.id.clear_grocery) {
-            AlertDialog.Builder alert = new AlertDialog.Builder(context);
+            AlertDialog.Builder alert = new AlertDialog.Builder(DashboardActivity.this);
             alert.setTitle(R.string.clear_grocery_title);
             alert.setMessage(R.string.clear_grocery_message);
             alert.setPositiveButton(R.string.OK, new DialogInterface.OnClickListener() {
@@ -242,13 +255,13 @@ public class DashboardActivity extends AppCompatActivity
             alert.setCancelable(false);
             alert.show();
         } else if (id == R.id.payment_history) {
-            Intent i = new Intent(context, PaymentHistoryActivity.class);
+            Intent i = new Intent(this, PaymentHistoryActivity.class);
             startActivity(i);
             overridePendingTransition(R.transition.slide_in_left,R.transition.slide_out_right);
         } else if (id == R.id.payment_methods) {
 
         } else if (id == R.id.log_out) {
-            AlertDialog.Builder alert = new AlertDialog.Builder(context);
+            AlertDialog.Builder alert = new AlertDialog.Builder(this);
             alert.setTitle(R.string.log_out_title);
             alert.setMessage(R.string.log_out_message);
             alert.setPositiveButton(R.string.OK, new DialogInterface.OnClickListener() {
@@ -326,53 +339,6 @@ public class DashboardActivity extends AppCompatActivity
             chart.setData(data);
             chart.setCenterText(amountString);
             chart.invalidate();
-        }
-    }
-
-    private static class UpdateLastProductTask extends AsyncTask<Void, Void, Boolean> {
-
-        private String name;
-        private String price;
-        private int imageID;
-        private WeakReference<DashboardActivity> context;
-
-        UpdateLastProductTask(DashboardActivity context) {
-            this.context = new WeakReference<>(context);
-        }
-
-        @Override
-        protected Boolean doInBackground(Void... voids) {
-            boolean lastProductExists = true;
-            Product lastProduct;
-            try {
-                lastProduct = ShoppingCart.getInstance().getLastProduct();
-                name = lastProduct.getName();
-                price = lastProduct.getPrice() + context.get().getResources().getString(R.string.currency);
-                imageID = lastProduct.getImageID();
-            } catch (NoLastProductException e) {
-                lastProductExists = false;
-            }
-            return lastProductExists;
-        }
-
-        @Override
-        protected void onPostExecute(Boolean lastProductExists) {
-            if (lastProductExists) {
-                context.get().findViewById(R.id.dashboard_empty_card_layout).setVisibility(View.INVISIBLE);
-                context.get().findViewById(R.id.dashboard_full_card_layout).setVisibility(View.VISIBLE);
-                ImageView imageView = context.get().findViewById(R.id.dashboard_last_product_image);
-                TextView nameText = context.get().findViewById(R.id.dashboard_last_product_name);
-                TextView priceText = context.get().findViewById(R.id.dashboard_last_product_price);
-                nameText.setText(name);
-                priceText.setText(price);
-                imageView.setImageResource(imageID);
-                nameText.invalidate();
-                priceText.invalidate();
-                imageView.invalidate();
-            } else {
-                context.get().findViewById(R.id.dashboard_empty_card_layout).setVisibility(View.VISIBLE);
-                context.get().findViewById(R.id.dashboard_full_card_layout).setVisibility(View.INVISIBLE);
-            }
         }
     }
 }
