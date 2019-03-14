@@ -13,20 +13,22 @@ public class ShoppingCart {
 
     private ArrayList<String> categoryNames;
     private ArrayList<ArrayList<Product>> shoppingCart;
+    private ArrayList<Product> lastProductList;
 
-    private Product lastProduct;
+    //private Product lastProduct;
     private float amount;
 
 
     private ShoppingCart() {
         shoppingCart = new ArrayList<>();
         categoryNames = new ArrayList<>();
+        lastProductList = new ArrayList<>();
         for (Category category : Category.values()) {
             ArrayList<Product> initialList = new ArrayList<>();
             shoppingCart.add(initialList);
             categoryNames.add(category.name());
         }
-        lastProduct = null;
+        //lastProduct = null;
         amount = 0f;
     }
 
@@ -53,7 +55,6 @@ public class ShoppingCart {
             int previousQuantity = productInCart.getQuantity();
             productInCart.setQuantity(newQuantity + previousQuantity);
             this.amount += newQuantity * product.getPrice();
-            //this.lastProduct = product;
         } catch (NoSuchProductException e) {
             // the product isn't already in the list -> add it
             int index;
@@ -65,9 +66,9 @@ public class ShoppingCart {
             shoppingCart.get(index).add(product);
             float price = product.getPrice() * newQuantity;
             this.amount += price;
-            //this.lastProduct = product;
         }
-        this.lastProduct = product;
+        for (int i = 0; i < newQuantity; i ++)
+            lastProductList.add(product);
     }
 
     public void removeProduct(Product product) throws NoSuchProductException {
@@ -77,16 +78,13 @@ public class ShoppingCart {
         } catch (NoSuchCategoryException e) {
             index = categoryNames.indexOf(Category.OTHER.name());
         }
-
         if (shoppingCart.get(index).contains(product)) {
-            shoppingCart.remove(product);
+            shoppingCart.get(index).remove(product);
             float price = product.getPrice() * product.getQuantity();
             this.amount -= price;
+            lastProductList.remove(product);
         } else
             throw new NoSuchProductException();
-        if (lastProduct == product) {
-            lastProduct = null;
-        }
     }
 
 
@@ -126,9 +124,9 @@ public class ShoppingCart {
 
 
     public Product getLastProduct() throws NoLastProductException {
-        if (lastProduct == null)
+        if (lastProductList.isEmpty())
             throw new NoLastProductException();
-        return lastProduct;
+        return lastProductList.get(lastProductList.size() - 1);
     }
 
 
@@ -156,6 +154,24 @@ public class ShoppingCart {
         productInCart.setQuantity(newQuantity);
         int delta = newQuantity - previousQuantity;
         this.amount += delta * product.getPrice();
+        updateLastProductList(product, previousQuantity, newQuantity);
+    }
+
+    private void updateLastProductList(Product product, int oldQuantity, int newQuantity) {
+        int occurrences = oldQuantity - newQuantity;
+        if (occurrences > 0) {
+            // I must remove some entries
+            while(occurrences > 0) {
+                lastProductList.remove(lastProductList.lastIndexOf(product));
+                occurrences --;
+            }
+        } else {
+            // I must add some entries
+            while(occurrences < 0) {
+                lastProductList.add(product);
+                occurrences ++;
+            }
+        }
     }
 
     private Product getProductInCartCorrespondentTo(Product product) throws NoSuchProductException {
@@ -184,7 +200,7 @@ public class ShoppingCart {
         shoppingCart.clear();
         categoryNames.clear();
         amount = 0f;
-        lastProduct = null;
+        lastProductList.clear();
         instance = null;
     }
 }
