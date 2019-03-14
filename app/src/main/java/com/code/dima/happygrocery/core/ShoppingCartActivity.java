@@ -22,10 +22,13 @@ import android.view.animation.LayoutAnimationController;
 import android.widget.Toast;
 
 import com.code.dima.happygrocery.R;
+import com.code.dima.happygrocery.exception.NoLastProductException;
 import com.code.dima.happygrocery.exception.NoSuchCategoryException;
 import com.code.dima.happygrocery.adapter.ProductAdapter;
 import com.code.dima.happygrocery.model.ShoppingCart;
 
+
+import java.lang.ref.WeakReference;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
@@ -35,7 +38,6 @@ public class ShoppingCartActivity extends AppCompatActivity
 
     private RecyclerView recyclerView;
     private ProductAdapter adapter;
-    private ShoppingCart shoppingCart;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,21 +54,23 @@ public class ShoppingCartActivity extends AppCompatActivity
             }
         });
 
-        shoppingCart = ShoppingCart.getInstance();
-        try {
-            initializeRecycler();
-        } catch (NoSuchCategoryException e) {
-            e.printStackTrace();
-        }
+
+        initializeRecycler();
         initializeButtons();
-        //createDummyData();
 
     }
 
-    private void initializeRecycler() throws NoSuchCategoryException {
+    private void initializeRecycler() {
         recyclerView = findViewById(R.id.recyclerView);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        adapter = new ProductAdapter(this, shoppingCart.getProductsInCategory("FOOD"));
+        String category;
+        try {
+            category = ShoppingCart.getInstance().getLastProduct().getCategory().name();
+        } catch (NoLastProductException e) {
+            category = "FOOD";
+        }
+        adapter = new ProductAdapter(this, ShoppingCart.getInstance().getProductsInCategory(category));
+        setTitle("Shopping cart");
         DividerItemDecoration decoration = new DividerItemDecoration(getApplicationContext(), DividerItemDecoration.VERTICAL);
         decoration.setDrawable(getResources().getDrawable(R.drawable.rectangle));
         recyclerView.addItemDecoration(decoration);
@@ -113,18 +117,6 @@ public class ShoppingCartActivity extends AppCompatActivity
         return true;
     }
 
-
-    /*private void createDummyData() {
-        for(int i= 0; i < 2; i++)
-        shoppingCart.addProduct(new Product());
-        for(int i= 0; i < 2; i++)
-            shoppingCart.addProduct(new Product());
-        for(int i= 0; i < 2; i++)
-            shoppingCart.addProduct(new Product());
-
-        adapter.notifyDataSetChanged();
-    }*/
-
     @Override
     public boolean onCreateOptionsMenu( Menu menu) {
         getMenuInflater().inflate( R.menu.main_menu, menu);
@@ -153,32 +145,32 @@ public class ShoppingCartActivity extends AppCompatActivity
         switch(v.getId()) {
             case (R.id.food):
                 setTitle("Food");
-                adapter.set(shoppingCart.getProductsInCategory("FOOD"));
+                adapter.set(ShoppingCart.getInstance().getProductsInCategory("FOOD"));
                 updateAnimation(recyclerView);
                 break;
             case (R.id.beverage):
                 setTitle("Beverage");
-                adapter.set(shoppingCart.getProductsInCategory("BEVERAGE"));
+                adapter.set(ShoppingCart.getInstance().getProductsInCategory("BEVERAGE"));
                 updateAnimation(recyclerView);
                 break;
             case (R.id.kids):
                 setTitle("Kids and stationery");
-                adapter.set(shoppingCart.getProductsInCategory("KIDS"));
+                adapter.set(ShoppingCart.getInstance().getProductsInCategory("KIDS"));
                 updateAnimation(recyclerView);
                 break;
             case (R.id.home):
                 setTitle("Home needs");
-                adapter.set(shoppingCart.getProductsInCategory("HOME"));
+                adapter.set(ShoppingCart.getInstance().getProductsInCategory("HOME"));
                 updateAnimation(recyclerView);
                 break;
             case (R.id.clothing):
                 setTitle("Clothing");
-                adapter.set(shoppingCart.getProductsInCategory("CLOTHING"));
+                adapter.set(ShoppingCart.getInstance().getProductsInCategory("CLOTHING"));
                 updateAnimation(recyclerView);
                 break;
             case (R.id.others):
                 setTitle("Other Categories");
-                adapter.set(shoppingCart.getProductsInCategory("OTHER"));
+                adapter.set(ShoppingCart.getInstance().getProductsInCategory("OTHER"));
                 updateAnimation(recyclerView);
                 break;
         }
@@ -191,7 +183,7 @@ public class ShoppingCartActivity extends AppCompatActivity
 
             if (resultCode == Activity.RESULT_OK) {
                 String categoryName = data.getStringExtra("category");
-                adapter.set(shoppingCart.getProductsInCategory(categoryName));
+                adapter.set(ShoppingCart.getInstance().getProductsInCategory(categoryName));
             }
         }
     }
