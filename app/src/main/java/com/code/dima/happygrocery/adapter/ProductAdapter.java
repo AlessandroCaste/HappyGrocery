@@ -72,7 +72,7 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductHolder> {
                                 e.printStackTrace();
                             }
                             int removedPosition = holder.getAdapterPosition();
-                            products.remove(removedPosition);
+                            //products.remove(removedPosition);
                             notifyItemRemoved(removedPosition);
                             DeleteProductFromDBTask task = new DeleteProductFromDBTask(context.get(), product);
                             task.execute();
