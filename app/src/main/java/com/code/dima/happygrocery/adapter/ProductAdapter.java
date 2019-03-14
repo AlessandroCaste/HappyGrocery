@@ -19,22 +19,24 @@ import com.code.dima.happygrocery.database.UpdateProductQuantityInDBTask;
 import com.code.dima.happygrocery.exception.NoSuchProductException;
 import com.code.dima.happygrocery.model.Product;
 import com.code.dima.happygrocery.model.ShoppingCart;
+
+import java.lang.ref.WeakReference;
 import java.util.List;
 
 public class ProductAdapter extends RecyclerView.Adapter<ProductHolder> {
 
-    private Context context;
+    private WeakReference<Context> context;
     private List<Product> products;
-    CustomFilter filter;
+    private CustomFilter filter;
 
     public ProductAdapter(Context context, List<Product> products) {
-        this.context = context;
+        this.context = new WeakReference<>(context);
         this.products = products;
     }
 
     @Override
     public ProductHolder onCreateViewHolder (ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(context).inflate(R.layout.product_card,parent,false);
+        View view = LayoutInflater.from(context.get()).inflate(R.layout.product_card,parent,false);
         Log.w("myApp","Opero nel magico mondo!") ;
         return new ProductHolder(view);
     }
@@ -61,7 +63,7 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductHolder> {
                                 e.printStackTrace();
                             }
                             holder.setDetails(product);
-                            UpdateProductQuantityInDBTask task = new UpdateProductQuantityInDBTask(context, product, newQuantity);
+                            UpdateProductQuantityInDBTask task = new UpdateProductQuantityInDBTask(context.get(), product, newQuantity);
                             task.execute();
                        } else {
                             try {
@@ -72,7 +74,7 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductHolder> {
                             int removedPosition = holder.getAdapterPosition();
                             products.remove(removedPosition);
                             notifyItemRemoved(removedPosition);
-                            DeleteProductFromDBTask task = new DeleteProductFromDBTask(context, product);
+                            DeleteProductFromDBTask task = new DeleteProductFromDBTask(context.get(), product);
                             task.execute();
                         }
                     }
@@ -85,10 +87,10 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductHolder> {
             public void run() {
                 holder.editButton.setOnClickListener(new View.OnClickListener() {
                     public void onClick(View v) {
-                        Intent i = new Intent(context,ProductActivity.class);
+                        Intent i = new Intent(context.get(),ProductActivity.class);
                         i.putExtra("barcode", product.getBarcode());
                         i.putExtra("activityName","ShoppingCartActivity");
-                        ((Activity) context).startActivityForResult(i,context.getResources().getInteger(R.integer.CART_REQUEST_CODE));
+                        ((Activity) context.get()).startActivityForResult(i,context.get().getResources().getInteger(R.integer.CART_REQUEST_CODE));
                     }
                 });
             }
