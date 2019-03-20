@@ -67,7 +67,6 @@ public class ShoppingCartTest {
     }
 
 
-    /*
     @Test
     public void removalTest() throws NoSuchProductException, NoLastProductException {
 
@@ -77,10 +76,14 @@ public class ShoppingCartTest {
         sc.addProduct(dummyProduct2);
         sc.addProduct(dummyProduct3);
 
+        sc.removeProduct(dummyProduct2);
+//        assertEquals(sc.getLastProduct(),dummyProduct3);
+
         sc.removeProduct(dummyProduct3);
-        assertEquals(sc.getLastProduct(),dummyProduct2);
+        assertEquals(sc.getLastProduct(),dummyProduct1);
+
         sc.clearShoppingCart();
-    } */
+    }
 
     @Test
     public void clearing() {
