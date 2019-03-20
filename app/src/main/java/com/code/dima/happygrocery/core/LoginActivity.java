@@ -5,6 +5,7 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
@@ -31,6 +32,7 @@ import com.code.dima.happygrocery.R;
 import com.code.dima.happygrocery.database.DatabaseAdapter;
 import com.code.dima.happygrocery.tasks.AddGroceryInDBTask;
 import com.code.dima.happygrocery.tasks.RestoreActiveGroceryTask;
+import com.facebook.login.Login;
 import com.firebase.ui.auth.AuthMethodPickerLayout;
 import com.firebase.ui.auth.AuthUI;
 import com.google.firebase.auth.FirebaseAuth;
@@ -52,7 +54,7 @@ public class LoginActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
     FirebaseUser user;
-    Context context;
+    //Context context;
 
     private FirebaseAuth mAuth;
     private FirebaseAuth.AuthStateListener mAuthStateListener;
@@ -75,25 +77,19 @@ public class LoginActivity extends AppCompatActivity
         NavigationView navigationView = findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
-        context = this;
         mAuth = FirebaseAuth.getInstance();
         mAuthStateListener = new FirebaseAuth.AuthStateListener() {
             @Override
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
                 FirebaseUser user = firebaseAuth.getCurrentUser();
+                Log.e("LOGIN LISTENER", "Enter the then part");
                 if (user != null) {
                     if(!authFlag) {
                         authFlag = true;
                         getSupportActionBar().setTitle(getResources().getString(R.string.HappyGrocery));
-                        boolean restoreNeeded = checkActiveGrocery();
-                        if (restoreNeeded) {
-                            RestoreActiveGroceryTask task = new RestoreActiveGroceryTask(LoginActivity.this);
-                            task.execute();
-                            Intent callDashboard = new Intent(getApplicationContext(), DashboardActivity.class);
-                            startActivity(callDashboard);
-                        }
                     }
                 } else {
+                    Log.d("LOGIN LISTENER", "Entered the else part");
                     authFlag = false;
                      AuthMethodPickerLayout customLayout = new AuthMethodPickerLayout
                             .Builder(R.layout.login)
@@ -114,7 +110,19 @@ public class LoginActivity extends AppCompatActivity
                 }
             }
         };
-
+        // at start, checks if there's an active grocery to be restored
+        boolean restoreNeeded = checkActiveGrocery();
+        if (restoreNeeded) {
+            RestoreActiveGroceryTask task = new RestoreActiveGroceryTask(LoginActivity.this);
+            task.execute();
+            Intent callDashboard = new Intent(getApplicationContext(), DashboardActivity.class);
+            SharedPreferences sharedPref = getPreferences(Context.MODE_PRIVATE);
+            String url = sharedPref.getString(getString(R.string.shop_url), "");
+            String name = sharedPref.getString(getString(R.string.shop_name), "");
+            callDashboard.putExtra("name",name);
+            callDashboard.putExtra("url",url);
+            startActivity(callDashboard);
+        }
     }
 
     /*
@@ -191,6 +199,11 @@ public class LoginActivity extends AppCompatActivity
                     JSONObject reader = jsonArray.getJSONObject(0);
                     String name = reader.getString("name");
                     String url = reader.getString("url");
+                    SharedPreferences sharedPref = getPreferences(Context.MODE_PRIVATE);
+                    SharedPreferences.Editor editor = sharedPref.edit();
+                    editor.putString(getString(R.string.shop_url), url);
+                    editor.putString(getString(R.string.shop_name), name);
+                    editor.apply();
                     i.putExtra("name",name);
                     i.putExtra("url",url);
                     // insert a new entry in the db for the grocery
@@ -267,7 +280,7 @@ public class LoginActivity extends AppCompatActivity
         int id = item.getItemId();
 
         if (id == R.id.clear_grocery) {
-            AlertDialog.Builder alert = new AlertDialog.Builder(context);
+            AlertDialog.Builder alert = new AlertDialog.Builder(getApplicationContext());
             alert.setTitle(R.string.clear_grocery_login_title);
             alert.setMessage(R.string.clear_grocery_login_message);
             alert.setPositiveButton(R.string.OK, new DialogInterface.OnClickListener() {
@@ -278,7 +291,7 @@ public class LoginActivity extends AppCompatActivity
             alert.setCancelable(false);
             alert.show();
         } else if (id == R.id.payment_history) {
-            Intent i = new Intent(context, PaymentHistoryActivity.class);
+            Intent i = new Intent(LoginActivity.this, PaymentHistoryActivity.class);
             startActivity(i);
             overridePendingTransition(R.transition.slide_in_left,R.transition.slide_out_right);
         } else if (id == R.id.payment_methods) {

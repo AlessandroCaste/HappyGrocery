@@ -84,6 +84,10 @@
     <string name="Welcome">Welcome!</string>
     <string name="HappyGrocery">Happy Grocery</string>
 
+    <!-- SHARED PREFERENCES FOR SHOP NAME AND URL -->
+    <string name="shop_url">SHOP_URL</string>
+    <string name="shop_name">SHOP_NAME</string>
+
 
     <string name="closed_grocery">Closed</string>
 
