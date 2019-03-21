@@ -239,8 +239,7 @@ public class LoginActivity extends AppCompatActivity
     @Override
     protected void onResume() {
         super.onResume();
-        if(!BuildConfig.DEBUG)
-            mAuth.addAuthStateListener(mAuthStateListener);
+        mAuth.addAuthStateListener(mAuthStateListener);
     }
 
 
@@ -305,7 +304,6 @@ public class LoginActivity extends AppCompatActivity
                 public void onClick(DialogInterface dialog, int which) {
                     FirebaseAuth mAuth = FirebaseAuth.getInstance();
                     mAuth.signOut();
-                    finish();
                     overridePendingTransition(R.transition.slide_in_left,R.transition.slide_out_right);
                 }
             });

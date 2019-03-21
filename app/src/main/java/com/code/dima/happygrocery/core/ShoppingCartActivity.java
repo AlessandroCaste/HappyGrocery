@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Vibrator;
+import android.support.annotation.NonNull;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -78,7 +79,7 @@ public class ShoppingCartActivity extends AppCompatActivity
     }
 
     private void initializeButtons() {
-        CircleImageView food =findViewById(R.id.food);
+        CircleImageView food = findViewById(R.id.food);
         CircleImageView beverage = findViewById(R.id.beverage);
         CircleImageView kids = findViewById(R.id.kids);
         CircleImageView home = findViewById(R.id.home);
@@ -92,34 +93,10 @@ public class ShoppingCartActivity extends AppCompatActivity
         others.setOnClickListener(this);
     }
 
-     @SuppressWarnings("StatementWithEmptyBody")
-    @Override
-    public boolean onNavigationItemSelected(MenuItem item) {
-        // Handle navigation view item clicks here.
-        int id = item.getItemId();
-
-        if (id == R.id.nav_camera) {
-            // Handle the camera action
-        } else if (id == R.id.nav_gallery) {
-
-        } else if (id == R.id.nav_slideshow) {
-
-        } else if (id == R.id.nav_manage) {
-
-        } else if (id == R.id.nav_share) {
-
-        } else if (id == R.id.nav_send) {
-
-        }
-
-        DrawerLayout drawer = findViewById(R.id.drawer_layout);
-        drawer.closeDrawer(GravityCompat.START);
-        return true;
-    }
 
     @Override
-    public boolean onCreateOptionsMenu( Menu menu) {
-        getMenuInflater().inflate( R.menu.main_menu, menu);
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.main_menu, menu);
         final MenuItem item = menu.findItem(R.id.action_search);
         final SearchView searchView = (SearchView) item.getActionView();
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
@@ -127,10 +104,13 @@ public class ShoppingCartActivity extends AppCompatActivity
             public boolean onQueryTextSubmit(String query) {
                 return false;
             }
+
             @Override
             public boolean onQueryTextChange(String query) {
                 //FILTER AS YOU TYPE
-                if(query.length() > 15) { Toast.makeText(ShoppingCartActivity.this, getString(R.string.long_search), Toast.LENGTH_SHORT).show(); }
+                if (query.length() > 15) {
+                    Toast.makeText(ShoppingCartActivity.this, getString(R.string.long_search), Toast.LENGTH_SHORT).show();
+                }
                 adapter.getFilter().filter(query);
                 return false;
             }
@@ -139,10 +119,10 @@ public class ShoppingCartActivity extends AppCompatActivity
     }
 
     @Override
-    public void onClick(View v)  {
+    public void onClick(View v) {
         Vibrator myVib = (Vibrator) this.getSystemService(VIBRATOR_SERVICE);
         myVib.vibrate(50);
-        switch(v.getId()) {
+        switch (v.getId()) {
             case (R.id.food):
                 setTitle("Food");
                 adapter.set(ShoppingCart.getInstance().getProductsInCategory("FOOD"));
@@ -177,7 +157,7 @@ public class ShoppingCartActivity extends AppCompatActivity
     }
 
     @Override
-    protected void onActivityResult (int requestCode, int resultCode, Intent data) {
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 
         if (requestCode == getResources().getInteger(R.integer.CART_REQUEST_CODE)) {
 
@@ -199,7 +179,10 @@ public class ShoppingCartActivity extends AppCompatActivity
         recyclerView.scheduleLayoutAnimation();
     }
 
-
+    @Override
+    public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
+        return false;
+    }
 }
 
 
