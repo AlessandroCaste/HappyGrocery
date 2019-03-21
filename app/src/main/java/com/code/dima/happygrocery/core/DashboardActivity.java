@@ -268,6 +268,9 @@ public class DashboardActivity extends AppCompatActivity
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
                     FirebaseAuth mAuth = FirebaseAuth.getInstance();
+                    ShoppingCart.getInstance().clearShoppingCart();
+                    ClearGroceryTask task = new ClearGroceryTask(DashboardActivity.this);
+                    task.execute();
                     mAuth.signOut();
                     finish();
                     overridePendingTransition(R.transition.slide_in_left,R.transition.slide_out_right);
