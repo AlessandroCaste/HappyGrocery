@@ -25,6 +25,7 @@ import com.code.dima.happygrocery.model.Product;
 import com.code.dima.happygrocery.model.Category;
 import com.code.dima.happygrocery.model.ShoppingCart;
 import com.code.dima.happygrocery.tasks.ClearGroceryTask;
+import com.code.dima.happygrocery.tasks.InitializeImageRetrieverTask;
 import com.github.mikephil.charting.charts.PieChart;
 import com.github.mikephil.charting.components.Description;
 import com.github.mikephil.charting.components.Legend;
@@ -97,6 +98,9 @@ public class DashboardActivity extends AppCompatActivity
         chart.invalidate();
 
         updateLastProduct();
+
+        // initialize image retriever
+        new InitializeImageRetrieverTask(DashboardActivity.this).execute();
     }
 
     private void updateChartData() {

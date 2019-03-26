@@ -87,11 +87,12 @@
             </LinearLayout>
 
             <ImageView
+                android:id="@+id/product_activity_image_view"
                 android:layout_width="match_parent"
                 android:layout_height="120dp"
                 android:adjustViewBounds="true"
                 android:scaleType="center"
-                android:src="@drawable/icons8strawberry64" />
+                android:src="@drawable/strawberry" />
 
             <LinearLayout
                 android:layout_width="match_parent"

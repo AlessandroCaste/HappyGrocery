@@ -5,6 +5,7 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.media.Image;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -12,6 +13,7 @@ import android.support.v7.widget.CardView;
 import android.util.Log;
 import android.view.View;
 import android.view.Window;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.android.volley.Request;
@@ -26,6 +28,7 @@ import com.code.dima.happygrocery.database.InsertProductInDBTask;
 import com.code.dima.happygrocery.database.UpdateProductQuantityInDBTask;
 import com.code.dima.happygrocery.exception.NoSuchProductException;
 import com.code.dima.happygrocery.model.Category;
+import com.code.dima.happygrocery.model.ImageRetriever;
 import com.code.dima.happygrocery.model.Product;
 import com.code.dima.happygrocery.model.ShoppingCart;
 
@@ -36,7 +39,6 @@ import org.json.JSONObject;
 
 public class ProductActivity extends AppCompatActivity {
 
-    private String code;
     String previousActivityName;
     Product currentProduct;
     ElegantNumberButton quantityButton;
@@ -99,7 +101,8 @@ public class ProductActivity extends AppCompatActivity {
                     float weight      = Float.parseFloat(reader.getString("weight"));
                     float discount    = Float.parseFloat(reader.getString("discount"));
                     price = price - price*discount;
-                    currentProduct    = new Product(category,name,price,barcode,weight,1,0);
+                    int imageID = ImageRetriever.getInstance(ProductActivity.this).retrieveImageID(name, category);
+                    currentProduct    = new Product(category,name,price,barcode,weight,1,imageID);
 
                     //Visibility settings
                     cardView.setVisibility(View.VISIBLE);
