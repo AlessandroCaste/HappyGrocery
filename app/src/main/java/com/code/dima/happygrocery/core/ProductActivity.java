@@ -26,6 +26,7 @@ import com.code.dima.happygrocery.database.InsertProductInDBTask;
 import com.code.dima.happygrocery.database.UpdateProductQuantityInDBTask;
 import com.code.dima.happygrocery.exception.NoSuchProductException;
 import com.code.dima.happygrocery.model.Category;
+import com.code.dima.happygrocery.model.ImageRetriever;
 import com.code.dima.happygrocery.model.Product;
 import com.code.dima.happygrocery.model.ShoppingCart;
 
@@ -99,7 +100,8 @@ public class ProductActivity extends AppCompatActivity {
                     float weight      = Float.parseFloat(reader.getString("weight"));
                     float discount    = Float.parseFloat(reader.getString("discount"));
                     price = price - price*discount;
-                    currentProduct    = new Product(category,name,price,barcode,weight,1,0);
+                    int imageID = ImageRetriever.getInstance(ProductActivity.this).retrieveImageID(name, category);
+                    currentProduct    = new Product(category,name,price,barcode,weight,1,imageID);
 
                     //Visibility settings
                     cardView.setVisibility(View.VISIBLE);
