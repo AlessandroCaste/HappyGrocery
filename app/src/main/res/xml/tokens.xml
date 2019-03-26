@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<images>
+    <image name="pizza">
+        <token value="pizza"/>
+    </image>
+    <image name="strawberry">
+        <token value="strawberry"/>
+        <token value="fragola"/>
+    </image>
+    <image name="coca_cola">
+        <token value="coca"/>
+        <token value="cola"/>
+    </image>
+    <image name="wine">
+        <token value="wine"/>
+        <token value="vino"/>
+        <token value="chianti"/>
+    </image>
+    <image name="biberon">
+        <token value="biberon"/>
+    </image>
+    <image name="pencil">
+        <token value="pencil"/>
+        <token value="matita"/>
+        <token value="pen"/>
+        <token value="penna"/>
+    </image>
+    <image name="phone_cover">
+        <token value="phone"/>
+        <token value="telefono"/>
+        <token value="mobile"/>
+        <token value="cover"/>
+    </image>
+    <image name="shirts">
+        <token value="shirt"/>
+        <token value="maglia"/>
+        <token value="canottiera"/>
+        <token value="clothing"/>
+    </image>
+</images>
