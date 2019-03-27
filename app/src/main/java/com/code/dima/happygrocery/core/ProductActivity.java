@@ -76,6 +76,8 @@ public class ProductActivity extends AppCompatActivity {
             jsonParse(this);
         } else {
             barcode = getIntent().getStringExtra("barcode");
+            findViewById(R.id.loadingPanel).setVisibility(View.INVISIBLE);
+            restoreSC();
         }
 
 
@@ -114,7 +116,6 @@ public class ProductActivity extends AppCompatActivity {
                     //Items customization
                     TextView nameView = findViewById(R.id.info_name);
                     TextView priceView = findViewById(R.id.info_price);
-                    //TextView producer = findViewById(R.id.info_producer);
                     TextView weightView = findViewById(R.id.info_weight);
                     nameView.setText(currentProduct.getName());
                     priceView.setText(String.valueOf(currentProduct.getPrice()));
@@ -155,6 +156,22 @@ public class ProductActivity extends AppCompatActivity {
         queue.add(request);
     }
 
+
+    private void restoreSC() {
+        Product product = ShoppingCart.getInstance().getProductWithBarcode(barcode);
+        String name = product.getName();
+        float price = product.getPrice();
+        float weight = product.getWeight();
+        int quantity = product.getQuantity();
+        //Items customization
+        TextView nameView = findViewById(R.id.info_name);
+        TextView priceView = findViewById(R.id.info_price);
+        quantityButton.setNumber(Integer.toString(quantity));
+        TextView weightView = findViewById(R.id.info_weight);
+        nameView.setText(name);
+        priceView.setText(String.valueOf(price));
+        weightView.setText(Float.toString(weight) + "g");
+    }
 
     public boolean onSupportNavigateUp() {
         finishAfterTransition();
