@@ -76,6 +76,14 @@
         Design and Implementation of Mobile Applications. Feel free to contact us at:
         castellani.alessandro@mail.polimi.it</string>
 
+    <!-- Titles for Shopping Cart Activity -->
+    <string name="Food_Title">Food</string>
+    <string name="Beverage_Title">Beverage</string>
+    <string name="Kids_Title">Kids and Stationery</string>
+    <string name="Home_Title">Home needs</string>
+    <string name="Clothing_Title">Clothing</string>
+    <string name="Other_Title">Other Categories</string>
+
     <!-- Buttons Options -->
     <string name="OK">OK</string>
     <string name="CANCEL">CANCEL</string>
