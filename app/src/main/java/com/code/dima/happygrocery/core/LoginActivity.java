@@ -79,14 +79,12 @@ public class LoginActivity extends AppCompatActivity
             @Override
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
                 FirebaseUser user = firebaseAuth.getCurrentUser();
-                Log.e("LOGIN LISTENER", "Enter the then part");
                 if (user != null) {
                     if(!authFlag) {
                         authFlag = true;
                         getSupportActionBar().setTitle(getResources().getString(R.string.HappyGrocery));
                     }
                 } else {
-                    Log.d("LOGIN LISTENER", "Entered the else part");
                     authFlag = false;
                      AuthMethodPickerLayout customLayout = new AuthMethodPickerLayout
                             .Builder(R.layout.login)

@@ -88,6 +88,10 @@ public class Product {
         return imageID;
     }
 
+    public void setImageID(int imageID) {
+        this.imageID = imageID;
+    }
+
 
     @Override
     public boolean equals(Object other){

@@ -4,6 +4,7 @@ import android.content.Context;
 import android.os.AsyncTask;
 
 import com.code.dima.happygrocery.database.DatabaseAdapter;
+import com.code.dima.happygrocery.model.ImageRetriever;
 import com.code.dima.happygrocery.model.Product;
 import com.code.dima.happygrocery.model.ShoppingCart;
 
@@ -23,8 +24,13 @@ public class RestoreActiveGroceryTask extends AsyncTask<Void, Void, Void> {
         ShoppingCart cart = ShoppingCart.getInstance();
         DatabaseAdapter adapter = DatabaseAdapter.openInWriteMode(context.get());
         List<Product> productList = adapter.queryProductList();
-        for(Product product: productList)
+        ImageRetriever imageRetriever = ImageRetriever.getInstance(context.get());
+        int id;
+        for(Product product: productList) {
+            id = imageRetriever.retrieveImageID(product.getName(), product.getCategory());
+            product.setImageID(id);
             cart.addProduct(product);
+        }
         adapter.close();
         return null;
     }
