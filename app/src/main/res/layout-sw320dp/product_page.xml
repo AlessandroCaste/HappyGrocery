@@ -74,7 +74,7 @@
                 </LinearLayout>
 
                 <de.hdodenhof.circleimageview.CircleImageView xmlns:app="http://schemas.android.com/apk/res-auto"
-                    android:id="@+id/productType"
+                    android:id="@+id/product_cicle_image_view"
                     android:layout_width="48dp"
                     android:layout_height="48dp"
                     android:layout_gravity="center"
@@ -86,6 +86,7 @@
             </LinearLayout>
 
             <ImageView
+                android:id="@+id/product_activity_image_view"
                 android:layout_width="match_parent"
                 android:layout_height="120dp"
                 android:adjustViewBounds="true"

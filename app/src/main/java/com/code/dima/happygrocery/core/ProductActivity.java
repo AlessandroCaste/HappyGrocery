@@ -36,6 +36,8 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import de.hdodenhof.circleimageview.CircleImageView;
+
 
 public class ProductActivity extends AppCompatActivity {
 
@@ -77,7 +79,7 @@ public class ProductActivity extends AppCompatActivity {
         } else {
             barcode = getIntent().getStringExtra("barcode");
             findViewById(R.id.loadingPanel).setVisibility(View.INVISIBLE);
-            restoreSC();
+            restoreSC(ShoppingCart.getInstance().getProductWithBarcode(barcode));
         }
 
 
@@ -113,13 +115,7 @@ public class ProductActivity extends AppCompatActivity {
                     accept.show();
                     findViewById(R.id.loadingPanel).setVisibility(View.INVISIBLE);
 
-                    //Items customization
-                    TextView nameView = findViewById(R.id.info_name);
-                    TextView priceView = findViewById(R.id.info_price);
-                    TextView weightView = findViewById(R.id.info_weight);
-                    nameView.setText(currentProduct.getName());
-                    priceView.setText(String.valueOf(currentProduct.getPrice()));
-                    weightView.setText(Float.toString(currentProduct.getWeight()) + "g");
+                    restoreSC(currentProduct);
 
                 } catch (JSONException e) {
                     AlertDialog.Builder alert = new AlertDialog.Builder(ProductActivity.this);
@@ -157,20 +153,26 @@ public class ProductActivity extends AppCompatActivity {
     }
 
 
-    private void restoreSC() {
-        Product product = ShoppingCart.getInstance().getProductWithBarcode(barcode);
+    private void restoreSC(Product product) {
         String name = product.getName();
         float price = product.getPrice();
         float weight = product.getWeight();
         int quantity = product.getQuantity();
+        int imageID = product.getImageID();
+        Category category = product.getCategory();
+        int categoryID = ImageRetriever.getInstance(ProductActivity.this).retrieveImageID("", category);
         //Items customization
         TextView nameView = findViewById(R.id.info_name);
         TextView priceView = findViewById(R.id.info_price);
         quantityButton.setNumber(Integer.toString(quantity));
         TextView weightView = findViewById(R.id.info_weight);
+        ImageView imageView = findViewById(R.id.product_activity_image_view);
+        CircleImageView categoryView = findViewById(R.id.product_cicle_image_view);
         nameView.setText(name);
         priceView.setText(String.valueOf(price));
         weightView.setText(Float.toString(weight) + "g");
+        imageView.setImageResource(imageID);
+        categoryView.setImageResource(categoryID);
     }
 
     public boolean onSupportNavigateUp() {
