@@ -5,6 +5,8 @@ import android.os.Bundle;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
+import android.view.View;
 
 import com.code.dima.happygrocery.R;
 import com.code.dima.happygrocery.adapter.GroceryAdapter;
@@ -23,7 +25,18 @@ public class PaymentHistoryActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_payment_history);
+        setContentView(R.layout.payment_history_app_bar);
+
+        Toolbar toolbar = findViewById(R.id.payment_history_toolbar);
+        setSupportActionBar(toolbar);
+        toolbar.setNavigationIcon(R.drawable.ic_arrow_back_white_24dp);
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                finish();
+            }
+        });
+
         recyclerView = findViewById(R.id.paymentHistoryRecyclerView);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         queryDatabase();
