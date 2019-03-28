@@ -37,4 +37,12 @@
         <token value="canottiera"/>
         <token value="clothing"/>
     </image>
+    <image name="meat">
+        <token value="meat"/>
+        <token value="carne"/>
+        <token value="tacchino"/>
+        <token value="turkey"/>
+        <token value="beef"/>
+        <token value="manzo"/>
+    </image>
 </images>
