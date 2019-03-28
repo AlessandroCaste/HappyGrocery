@@ -111,8 +111,13 @@ public class ShoppingCart {
 
     public List<Integer> getNumberOfProductsPerCategory() {
         ArrayList<Integer> productsPerCategory = new ArrayList<>();
+        int n;
         for (int i = 0; i < shoppingCart.size(); i ++) {
-            productsPerCategory.add(shoppingCart.get(i).size());
+            n = 0;
+            for(Product product : shoppingCart.get(i)) {
+                n += product.getQuantity();
+            }
+            productsPerCategory.add(n);
         }
         return productsPerCategory;
     }
