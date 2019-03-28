@@ -12,8 +12,6 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
 import android.support.design.widget.NavigationView;
-import android.support.v4.view.GravityCompat;
-import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -24,12 +22,9 @@ import android.widget.Toast;
 
 import com.code.dima.happygrocery.R;
 import com.code.dima.happygrocery.exception.NoLastProductException;
-import com.code.dima.happygrocery.exception.NoSuchCategoryException;
 import com.code.dima.happygrocery.adapter.ProductAdapter;
 import com.code.dima.happygrocery.model.ShoppingCart;
 
-
-import java.lang.ref.WeakReference;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
@@ -67,11 +62,12 @@ public class ShoppingCartActivity extends AppCompatActivity
         String category;
         try {
             category = ShoppingCart.getInstance().getLastProduct().getCategory().name();
+            categoryToTitle(category);
         } catch (NoLastProductException e) {
             category = "FOOD";
+            categoryToTitle(category);
         }
         adapter = new ProductAdapter(this, ShoppingCart.getInstance().getProductsInCategory(category));
-        setTitle("Shopping cart");
         DividerItemDecoration decoration = new DividerItemDecoration(getApplicationContext(), DividerItemDecoration.VERTICAL);
         decoration.setDrawable(getResources().getDrawable(R.drawable.rectangle));
         recyclerView.addItemDecoration(decoration);
@@ -118,38 +114,57 @@ public class ShoppingCartActivity extends AppCompatActivity
         return true;
     }
 
+
+    public void categoryToTitle(String name) {
+        switch(name){
+            case "FOOD":     setTitle(getString(R.string.Food_Title));
+                break;
+            case "BEVERAGE": setTitle(getString(R.string.Beverage_Title));
+                break;
+            case "KIDS":     setTitle(getString(R.string.Kids_Title));
+                break;
+            case "HOME":     setTitle(getString(R.string.Home_Title));
+                break;
+            case "CLOTHING": setTitle(getString(R.string.Clothing_Title));
+                break;
+            case "OTHER":    setTitle(getString(R.string.Other_Title));
+                break;
+            default:         setTitle(getString(R.string.Food_Title));
+        }
+    }
+
     @Override
     public void onClick(View v) {
         Vibrator myVib = (Vibrator) this.getSystemService(VIBRATOR_SERVICE);
         myVib.vibrate(50);
         switch (v.getId()) {
             case (R.id.food):
-                setTitle("Food");
+                setTitle(getString(R.string.Food_Title));
                 adapter.set(ShoppingCart.getInstance().getProductsInCategory("FOOD"));
                 updateAnimation(recyclerView);
                 break;
             case (R.id.beverage):
-                setTitle("Beverage");
+                setTitle(getString(R.string.Beverage_Title));
                 adapter.set(ShoppingCart.getInstance().getProductsInCategory("BEVERAGE"));
                 updateAnimation(recyclerView);
                 break;
             case (R.id.kids):
-                setTitle("Kids and stationery");
+                setTitle(getString(R.string.Kids_Title));
                 adapter.set(ShoppingCart.getInstance().getProductsInCategory("KIDS"));
                 updateAnimation(recyclerView);
                 break;
             case (R.id.home):
-                setTitle("Home needs");
+                setTitle(getString(R.string.Home_Title));
                 adapter.set(ShoppingCart.getInstance().getProductsInCategory("HOME"));
                 updateAnimation(recyclerView);
                 break;
             case (R.id.clothing):
-                setTitle("Clothing");
+                setTitle(getString(R.string.Clothing_Title));
                 adapter.set(ShoppingCart.getInstance().getProductsInCategory("CLOTHING"));
                 updateAnimation(recyclerView);
                 break;
             case (R.id.others):
-                setTitle("Other Categories");
+                setTitle(getString(R.string.Other_Title));
                 adapter.set(ShoppingCart.getInstance().getProductsInCategory("OTHER"));
                 updateAnimation(recyclerView);
                 break;
