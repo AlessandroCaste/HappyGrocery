@@ -27,12 +27,9 @@ public class ImageRetriever {
         this.names = new ArrayList<>();
         //loads names and tokens and evaluate the ids
         readData(context);
-        Log.d("IMAGE RETRIEVER", "Read a total of " + names.size() + " images");
         for (int i = 0; i < names.size(); i ++) {
-            Log.d("IMAGE RETRIEVER", "Fetching id for " + names.get(i));
             ids.add(context.getResources().getIdentifier(names.get(i), "drawable", context.getPackageName()));
         }
-        Log.d("IMAGE RETRIEVER", "IDs read: " + ids);
     }
 
 
@@ -50,7 +47,6 @@ public class ImageRetriever {
 
 
     private void readData(Context context) {
-        Log.d("IMAGE RETRIEVER", "Reading data");
         try {
             XmlPullParser parser = context.getResources().getXml(R.xml.tokens);
 
@@ -58,16 +54,13 @@ public class ImageRetriever {
                 if(parser.getEventType() == XmlPullParser.START_TAG) {
                     String tagName = parser.getName();
                     if (tagName.equals("image")) {
-                        Log.d("IMAGE RETRIEVER", "New image found");
                         // I add a new name and a new arraylist in tokens
                         String name = parser.getAttributeValue(0);
-                        Log.d("IMAGE RETRIEVER", "Name is: " + name);
                         names.add(name);
                         tokens.add(new ArrayList<String>());
                     } else if (tagName.equals("token")) {
                         // I add a new token in the last arraylist in tokens
                         String token = parser.getAttributeValue(0);
-                        Log.d("IMAGE RETRIEVER", "Associated token: " + token);
                         tokens.get(tokens.size() - 1).add(token);
                     }
                 }

@@ -3,10 +3,12 @@ package com.code.dima.happygrocery.tasks;
 import android.content.Context;
 import android.database.Cursor;
 import android.os.AsyncTask;
+import android.util.Log;
 
 import com.code.dima.happygrocery.database.DatabaseAdapter;
 
 import java.lang.ref.WeakReference;
+import java.util.Calendar;
 
 public class AddGroceryInDBTask extends AsyncTask<Void, Void, Void> {
 
@@ -20,22 +22,35 @@ public class AddGroceryInDBTask extends AsyncTask<Void, Void, Void> {
         this.date = "11/07/2018";
     }
 
-    public AddGroceryInDBTask(Context context, String shop, String date) {
-        this.context = new WeakReference<>(context);
-        this.shopName = shop;
-        this.date = date;
-    }
-
     @Override
     protected Void doInBackground(Void... voids) {
-        // workaround to add a new active grocery to database
+        // finds the actual date
+        Calendar calendar = Calendar.getInstance();
+        String year = String.valueOf(calendar.get(Calendar.YEAR));
+        int m = calendar.get(Calendar.MONTH) + 1;
+        int d = calendar.get(Calendar.DAY_OF_MONTH);
+        String month;
+        String day;
+        if (m < 10) {
+            month = "0" + String.valueOf(m);
+        } else {
+            month = String.valueOf(m);
+        }
+        if (d < 10) {
+            day = "0" + String.valueOf(d);
+        } else {
+            day = String.valueOf(d);
+        }
+        date = day + "/" + month + "/" + year;
+        Log.d("DATABASE", "Adding a new grocery with date: " + date);
+
+        // if other active groceries are found, they are cleared out
         DatabaseAdapter adapter = DatabaseAdapter.openInWriteMode(context.get());
         Cursor c = adapter.querySQL("SELECT * FROM grocery_history WHERE active = 1");
-        if (c.getCount() == 0) {
-            adapter.insertNewGrocery(date, shopName);
-        } else {
+        if (c.getCount() != 0) {
             adapter.clearGrocery();
         }
+        adapter.insertNewGrocery(date, shopName);
         adapter.close();
         return null;
     }
