@@ -3,8 +3,8 @@ package com.code.dima.happygrocery;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.SQLException;
-import android.support.test.InstrumentationRegistry;
-import android.support.test.runner.AndroidJUnit4;
+import androidx.test.InstrumentationRegistry;
+import androidx.test.runner.AndroidJUnit4;
 import android.util.Log;
 
 import com.code.dima.happygrocery.database.DatabaseAdapter;

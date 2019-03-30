@@ -8,8 +8,8 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.support.v7.widget.RecyclerView;
-import android.view.animation.AccelerateInterpolator;
+import androidx.recyclerview.widget.RecyclerView;
+
 import android.widget.Filter;
 
 import com.code.dima.happygrocery.R;

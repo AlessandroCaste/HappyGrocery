@@ -7,13 +7,13 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.design.widget.NavigationView;
-import android.support.v4.view.GravityCompat;
-import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.ActionBarDrawerToggle;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
+import androidx.annotation.NonNull;
+import com.google.android.material.navigation.NavigationView;
+import androidx.core.view.GravityCompat;
+import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.appcompat.app.ActionBarDrawerToggle;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -27,7 +27,6 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.Volley;
-import com.code.dima.happygrocery.BuildConfig;
 import com.code.dima.happygrocery.R;
 import com.code.dima.happygrocery.database.DatabaseAdapter;
 import com.code.dima.happygrocery.tasks.AddGroceryInDBTask;
@@ -64,7 +63,7 @@ public class LoginActivity extends AppCompatActivity
 
         /*
         Enable for debugging purpose
-        
+
         if(BuildConfig.DEBUG) {
             Intent i = new Intent(this, DashboardActivity.class);
             String name = "Esselunga";
