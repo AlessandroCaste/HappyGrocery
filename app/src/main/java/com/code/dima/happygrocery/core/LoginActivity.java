@@ -27,6 +27,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.Volley;
+import com.code.dima.happygrocery.BuildConfig;
 import com.code.dima.happygrocery.R;
 import com.code.dima.happygrocery.database.DatabaseAdapter;
 import com.code.dima.happygrocery.tasks.AddGroceryInDBTask;
@@ -60,7 +61,28 @@ public class LoginActivity extends AppCompatActivity
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        /*
+        Enable for debugging purpose
         
+        if(BuildConfig.DEBUG) {
+            Intent i = new Intent(this, DashboardActivity.class);
+            String name = "Esselunga";
+            String url =  ("https://my-json-server.typicode.com/AlessandroCaste/HappyGroceryShopsDB/stores?id=1");
+            SharedPreferences sharedPref = getPreferences(Context.MODE_PRIVATE);
+            SharedPreferences.Editor editor = sharedPref.edit();
+            editor.putString(getString(R.string.shop_url), url);
+            editor.putString(getString(R.string.shop_name), name);
+            editor.apply();
+            i.putExtra("name",name);
+            i.putExtra("url",url);
+            // insert a new entry in the db for the grocery
+            AddGroceryInDBTask task = new AddGroceryInDBTask(LoginActivity.this, name);
+            task.execute();
+            startActivity(i);
+            overridePendingTransition(R.transition.slide_in_right, R.transition.slide_out_left);
+        }
+        */
         setContentView(R.layout.login_activity_main);
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -234,7 +256,9 @@ public class LoginActivity extends AppCompatActivity
     @Override
     protected void onResume() {
         super.onResume();
-        mAuth.addAuthStateListener(mAuthStateListener);
+        // Enable for debugging purpose
+        // if(!BuildConfig.DEBUG)
+            mAuth.addAuthStateListener(mAuthStateListener);
     }
 
 
@@ -288,7 +312,7 @@ public class LoginActivity extends AppCompatActivity
             Intent i = new Intent(LoginActivity.this, PaymentHistoryActivity.class);
             startActivity(i);
             overridePendingTransition(R.transition.slide_in_left,R.transition.slide_out_right);
-        } else if (id == R.id.end_grocery) {
+        //} else if (id == R.id.end_grocery) {
 
         } else if (id == R.id.log_out) {
             AlertDialog.Builder alert = new AlertDialog.Builder(LoginActivity.this);

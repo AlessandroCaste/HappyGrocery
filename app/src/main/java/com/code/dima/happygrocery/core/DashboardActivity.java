@@ -261,8 +261,8 @@ public class DashboardActivity extends AppCompatActivity
         } else if (id == R.id.payment_history) {
             Intent i = new Intent(this, PaymentHistoryActivity.class);
             startActivity(i);
-            overridePendingTransition(R.transition.slide_in_left,R.transition.slide_out_right);
-        } else if (id == R.id.end_grocery) {
+            overridePendingTransition(R.transition.slide_in_left, R.transition.slide_out_right);
+            // } else if(id == R.id.end_grocery) {
 
         } else if (id == R.id.log_out) {
             AlertDialog.Builder alert = new AlertDialog.Builder(this);
