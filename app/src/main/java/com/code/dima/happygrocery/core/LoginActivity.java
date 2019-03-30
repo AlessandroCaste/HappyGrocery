@@ -288,7 +288,7 @@ public class LoginActivity extends AppCompatActivity
             Intent i = new Intent(LoginActivity.this, PaymentHistoryActivity.class);
             startActivity(i);
             overridePendingTransition(R.transition.slide_in_left,R.transition.slide_out_right);
-        } else if (id == R.id.payment_methods) {
+        } else if (id == R.id.end_grocery) {
 
         } else if (id == R.id.log_out) {
             AlertDialog.Builder alert = new AlertDialog.Builder(LoginActivity.this);

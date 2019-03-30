@@ -13,9 +13,9 @@
             android:icon="@drawable/payment_history"
             android:title="@string/menu_payment_history" />
         <item
-            android:id="@+id/payment_methods"
+            android:id="@+id/end_grocery"
             android:icon="@drawable/payment_methods"
-            android:title="@string/menu_payment_methods" />
+            android:title="@string/end_grocery" />
         <item
             android:id="@+id/log_out"
             android:icon="@drawable/logout1"

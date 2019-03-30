@@ -50,7 +50,7 @@
     <!-- DRAWER MENU ENTRIES -->
     <string name="menu_clear_grocery">Clear grocery</string>
     <string name="menu_payment_history">Payment history</string>
-    <string name="menu_payment_methods">Payment methods</string>
+    <string name="end_grocery">Checkout</string>
     <string name="menu_log_out">Log out</string>
     <string name="menu_contact_us">Contact us</string>
     <string name="menu_informations">About us</string>
