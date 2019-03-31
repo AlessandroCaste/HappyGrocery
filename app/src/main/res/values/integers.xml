@@ -8,6 +8,7 @@
     <!-- Activities Navigation -->
     <integer name="REQUEST_CODE">9001</integer>
     <integer name="DASHBOARD_ACTIVITY_CODE">9005</integer>
+    <integer name="CHECKOUT_CODE">9010</integer>
 
 
 </resources>

@@ -131,13 +131,18 @@ public class DashboardActivity extends AppCompatActivity
         }
     }
 
-    public void onButtonClick(View view){
+    public void addNewProduct(View view){
         IntentIntegrator integrator = new IntentIntegrator(this);
         integrator.setDesiredBarcodeFormats(IntentIntegrator.EAN_13);
         integrator.setBeepEnabled(true);
         integrator.setPrompt(getResources().getString(R.string.prompt));
         integrator.initiateScan();
         overridePendingTransition(R.transition.slide_in_right,R.transition.slide_out_left);
+    }
+
+    public void openCheckout(View view) {
+        Intent i = new Intent(this, CheckoutActivity.class);
+        startActivityForResult(i,getResources().getInteger(R.integer.CHECKOUT_CODE));
     }
 
     @Override
@@ -160,6 +165,11 @@ public class DashboardActivity extends AppCompatActivity
                 //updateChartData();
                 //updateLastProduct();
                 overridePendingTransition(R.transition.slide_in_left, R.transition.slide_out_right);
+            }
+        } else if (requestCode == getResources().getInteger(R.integer.CHECKOUT_CODE)) {
+            if(resultCode == Activity.RESULT_OK) {
+                finish();
+                overridePendingTransition(R.transition.slide_in_left,R.transition.slide_out_right);
             }
         }
     }
@@ -262,8 +272,9 @@ public class DashboardActivity extends AppCompatActivity
             Intent i = new Intent(this, PaymentHistoryActivity.class);
             startActivity(i);
             overridePendingTransition(R.transition.slide_in_left, R.transition.slide_out_right);
-            // } else if(id == R.id.end_grocery) {
-
+        } else if(id == R.id.end_grocery) {
+            Intent i = new Intent(this, CheckoutActivity.class);
+            startActivityForResult(i,getResources().getInteger(R.integer.CHECKOUT_CODE));
         } else if (id == R.id.log_out) {
             AlertDialog.Builder alert = new AlertDialog.Builder(this);
             alert.setTitle(R.string.log_out_title);

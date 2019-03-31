@@ -35,8 +35,9 @@ import static org.hamcrest.Matchers.is;
 
 @LargeTest
 @RunWith(AndroidJUnit4.class)
-public class LoginActivityTest2 {
+public class InsertSingleProductTest {
 
+    // A very basic test: one product of your choice from a store of your choice is added to the shopping cart
     @Rule
     public ActivityTestRule<LoginActivity> mActivityTestRule = new ActivityTestRule<>(LoginActivity.class);
 

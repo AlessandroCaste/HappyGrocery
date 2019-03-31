@@ -208,4 +208,11 @@ public class ShoppingCart {
         lastProductList.clear();
         instance = null;
     }
+
+    public ArrayList<Product> cloneShoppingCart() {
+        ArrayList<Product> cloneList = new ArrayList<>(lastProductList.size());
+        cloneList.addAll(lastProductList);
+        return cloneList;
+    }
+
 }

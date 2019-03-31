@@ -22,7 +22,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".core.RecapActivity"></activity>
+        <activity android:name=".core.CheckoutActivity"></activity>
         <activity
             android:name=".core.PaymentHistoryActivity"
             android:label="@string/title_activity_main"
