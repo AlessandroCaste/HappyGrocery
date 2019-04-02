@@ -297,13 +297,12 @@ public class LoginActivity extends AppCompatActivity
         int id = item.getItemId();
 
         if (id == R.id.clear_grocery) {
-            AlertDialog.Builder alert = new AlertDialog.Builder(getApplicationContext());
+            AlertDialog.Builder alert = new AlertDialog.Builder(this);
             alert.setTitle(R.string.clear_grocery_login_title);
             alert.setMessage(R.string.clear_grocery_login_message);
             alert.setPositiveButton(R.string.OK, new DialogInterface.OnClickListener() {
-                public void onClick(DialogInterface dialog, int which) {
-                    dialog.cancel();
-                }
+                @Override
+                public void onClick(DialogInterface dialog, int which) {}
             });
             alert.setCancelable(false);
             alert.show();
@@ -311,8 +310,16 @@ public class LoginActivity extends AppCompatActivity
             Intent i = new Intent(LoginActivity.this, PaymentHistoryActivity.class);
             startActivity(i);
             overridePendingTransition(R.transition.slide_in_left,R.transition.slide_out_right);
-        //} else if (id == R.id.end_grocery) {
-
+        } else if (id == R.id.end_grocery) {
+            AlertDialog.Builder alert = new AlertDialog.Builder(this);
+            alert.setTitle(R.string.clear_grocery_login_title);
+            alert.setMessage(R.string.clear_grocery_login_message);
+            alert.setPositiveButton(R.string.OK, new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {}
+            });
+            alert.setCancelable(false);
+            alert.show();
         } else if (id == R.id.log_out) {
             AlertDialog.Builder alert = new AlertDialog.Builder(LoginActivity.this);
             alert.setTitle(R.string.log_out_title);

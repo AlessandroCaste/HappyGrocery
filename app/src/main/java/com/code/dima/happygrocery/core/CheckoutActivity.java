@@ -33,6 +33,7 @@ public class CheckoutActivity extends AppCompatActivity {
         recyclerView = findViewById(R.id.recyclerCheckout);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         ArrayList<Product> cart = ShoppingCart.getInstance().cloneShoppingCart();
+
         adapter = new ProductCheckoutAdapter(this, cart);
         DividerItemDecoration decoration = new DividerItemDecoration(getApplicationContext(), DividerItemDecoration.VERTICAL);
         decoration.setDrawable(getResources().getDrawable(R.drawable.rectangle));

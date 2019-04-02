@@ -5,7 +5,9 @@ import com.code.dima.happygrocery.exception.NoSuchCategoryException;
 import com.code.dima.happygrocery.exception.NoSuchProductException;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 public class ShoppingCart {
 
@@ -210,9 +212,11 @@ public class ShoppingCart {
     }
 
     public ArrayList<Product> cloneShoppingCart() {
-        ArrayList<Product> cloneList = new ArrayList<>(lastProductList.size());
-        cloneList.addAll(lastProductList);
-        return cloneList;
+        ArrayList<Product> returnList = new ArrayList<>();
+        for(ArrayList a : shoppingCart)
+            if(!a.isEmpty())
+              returnList.addAll(a);
+        return returnList;
     }
 
 }

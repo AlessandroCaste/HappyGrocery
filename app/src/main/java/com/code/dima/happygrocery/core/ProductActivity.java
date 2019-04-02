@@ -169,7 +169,7 @@ public class ProductActivity extends AppCompatActivity {
         ImageView imageView = findViewById(R.id.product_activity_image_view);
         CircleImageView categoryView = findViewById(R.id.product_cicle_image_view);
         nameView.setText(name);
-        priceView.setText(String.valueOf(price));
+        priceView.setText(String.valueOf(price) + " $");
         weightView.setText(Float.toString(weight) + "g");
         imageView.setImageResource(imageID);
         categoryView.setImageResource(categoryID);
