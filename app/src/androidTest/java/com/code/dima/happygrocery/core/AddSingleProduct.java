@@ -1,11 +1,6 @@
 package com.code.dima.happygrocery.core;
 
 
-import androidx.test.espresso.ViewInteraction;
-import androidx.test.filters.LargeTest;
-import androidx.test.rule.ActivityTestRule;
-import androidx.test.rule.GrantPermissionRule;
-import androidx.test.runner.AndroidJUnit4;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewParent;
@@ -19,12 +14,17 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import androidx.test.espresso.ViewInteraction;
+import androidx.test.filters.LargeTest;
+import androidx.test.rule.ActivityTestRule;
+import androidx.test.rule.GrantPermissionRule;
+import androidx.test.runner.AndroidJUnit4;
+
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.action.ViewActions.click;
 import static androidx.test.espresso.action.ViewActions.closeSoftKeyboard;
 import static androidx.test.espresso.action.ViewActions.replaceText;
 import static androidx.test.espresso.action.ViewActions.scrollTo;
-import static androidx.test.espresso.assertion.ViewAssertions.matches;
 import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.withClassName;
 import static androidx.test.espresso.matcher.ViewMatchers.withContentDescription;
@@ -35,9 +35,9 @@ import static org.hamcrest.Matchers.is;
 
 @LargeTest
 @RunWith(AndroidJUnit4.class)
-public class EditSingleInsertionTest {
+public class AddSingleProduct {
 
-    // This test requires the Esselunga and pencil barcode but actually works with anything
+    // Scannerizzo un negozio, aggiungo un prodotto, clear (Esselunga/Fragole)
     @Rule
     public ActivityTestRule<LoginActivity> mActivityTestRule = new ActivityTestRule<>(LoginActivity.class);
 
@@ -47,7 +47,7 @@ public class EditSingleInsertionTest {
                     "android.permission.CAMERA");
 
     @Test
-    public void editSingleInsertionTest() {
+    public void loginActivityTest2() {
         // Added a sleep statement to match the app's execution delay.
         // The recommended way to handle such scenarios is to use Espresso idling resources:
         // https://google.github.io/android-testing-support-library/docs/espresso/idling-resource/index.html
@@ -84,7 +84,91 @@ public class EditSingleInsertionTest {
                                         withId(R.id.phone_layout),
                                         0),
                                 0)));
-        textInputEditText.perform(scrollTo(), replaceText("3398761494"), closeSoftKeyboard());
+        textInputEditText.perform(scrollTo(), replaceText("3398"), closeSoftKeyboard());
+
+        // Added a sleep statement to match the app's execution delay.
+        // The recommended way to handle such scenarios is to use Espresso idling resources:
+        // https://google.github.io/android-testing-support-library/docs/espresso/idling-resource/index.html
+        try {
+            Thread.sleep(7000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+        ViewInteraction textInputEditText2 = onView(
+                allOf(withId(R.id.phone_number), withText("3398"),
+                        childAtPosition(
+                                childAtPosition(
+                                        withId(R.id.phone_layout),
+                                        0),
+                                0)));
+        textInputEditText2.perform(scrollTo(), replaceText("339876"));
+
+        ViewInteraction textInputEditText3 = onView(
+                allOf(withId(R.id.phone_number), withText("339876"),
+                        childAtPosition(
+                                childAtPosition(
+                                        withId(R.id.phone_layout),
+                                        0),
+                                0),
+                        isDisplayed()));
+        textInputEditText3.perform(closeSoftKeyboard());
+
+        // Added a sleep statement to match the app's execution delay.
+        // The recommended way to handle such scenarios is to use Espresso idling resources:
+        // https://google.github.io/android-testing-support-library/docs/espresso/idling-resource/index.html
+        try {
+            Thread.sleep(7000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+        ViewInteraction textInputEditText4 = onView(
+                allOf(withId(R.id.phone_number), withText("339876"),
+                        childAtPosition(
+                                childAtPosition(
+                                        withId(R.id.phone_layout),
+                                        0),
+                                0)));
+        textInputEditText4.perform(scrollTo(), replaceText("3398761"));
+
+        ViewInteraction textInputEditText5 = onView(
+                allOf(withId(R.id.phone_number), withText("3398761"),
+                        childAtPosition(
+                                childAtPosition(
+                                        withId(R.id.phone_layout),
+                                        0),
+                                0),
+                        isDisplayed()));
+        textInputEditText5.perform(closeSoftKeyboard());
+
+        // Added a sleep statement to match the app's execution delay.
+        // The recommended way to handle such scenarios is to use Espresso idling resources:
+        // https://google.github.io/android-testing-support-library/docs/espresso/idling-resource/index.html
+        try {
+            Thread.sleep(5000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+        ViewInteraction textInputEditText6 = onView(
+                allOf(withId(R.id.phone_number), withText("3398761"),
+                        childAtPosition(
+                                childAtPosition(
+                                        withId(R.id.phone_layout),
+                                        0),
+                                0)));
+        textInputEditText6.perform(scrollTo(), replaceText("3398761494"));
+
+        ViewInteraction textInputEditText7 = onView(
+                allOf(withId(R.id.phone_number), withText("3398761494"),
+                        childAtPosition(
+                                childAtPosition(
+                                        withId(R.id.phone_layout),
+                                        0),
+                                0),
+                        isDisplayed()));
+        textInputEditText7.perform(closeSoftKeyboard());
 
         ViewInteraction appCompatButton = onView(
                 allOf(withId(R.id.send_code), withText("Verifica numero di telefono"),
@@ -108,7 +192,7 @@ public class EditSingleInsertionTest {
                 allOf(withId(R.id.floatingActionButton),
                         childAtPosition(
                                 childAtPosition(
-                                        withClassName(is("android.support.design.widget.CoordinatorLayout")),
+                                        withClassName(is("androidx.coordinatorlayout.widget.CoordinatorLayout")),
                                         1),
                                 1),
                         isDisplayed()));
@@ -138,7 +222,7 @@ public class EditSingleInsertionTest {
                                 childAtPosition(
                                         withId(R.id.drawer_layout),
                                         0),
-                                2),
+                                3),
                         isDisplayed()));
         floatingActionButton2.perform(click());
 
@@ -150,6 +234,17 @@ public class EditSingleInsertionTest {
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
+
+        ViewInteraction appCompatButton2 = onView(
+                allOf(withId(R.id.add_btn), withText("+"),
+                        childAtPosition(
+                                allOf(withId(R.id.layout),
+                                        childAtPosition(
+                                                withId(R.id.quantityButton),
+                                                0)),
+                                2),
+                        isDisplayed()));
+        appCompatButton2.perform(click());
 
         ViewInteraction floatingActionButton3 = onView(
                 allOf(withId(R.id.acceptButton),
@@ -170,149 +265,16 @@ public class EditSingleInsertionTest {
             e.printStackTrace();
         }
 
-        ViewInteraction actionMenuItemView = onView(
-                allOf(withId(R.id.shopping_cart), withContentDescription("Cart"),
-                        childAtPosition(
-                                childAtPosition(
-                                        withId(R.id.toolbar),
-                                        2),
-                                0),
-                        isDisplayed()));
-        actionMenuItemView.perform(click());
-
-        // Added a sleep statement to match the app's execution delay.
-        // The recommended way to handle such scenarios is to use Espresso idling resources:
-        // https://google.github.io/android-testing-support-library/docs/espresso/idling-resource/index.html
-        try {
-            Thread.sleep(7000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-
-        ViewInteraction floatingActionButton4 = onView(
-                allOf(withId(R.id.editButton),
-                        childAtPosition(
-                                childAtPosition(
-                                        withId(R.id.card_view),
-                                        0),
-                                2),
-                        isDisplayed()));
-        floatingActionButton4.perform(click());
-
-        // Added a sleep statement to match the app's execution delay.
-        // The recommended way to handle such scenarios is to use Espresso idling resources:
-        // https://google.github.io/android-testing-support-library/docs/espresso/idling-resource/index.html
-        try {
-            Thread.sleep(7000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-
-        ViewInteraction textView = onView(
-                allOf(withId(R.id.number_counter), withText("1"),
-                        childAtPosition(
-                                allOf(withId(R.id.layout),
-                                        childAtPosition(
-                                                withId(R.id.quantityButton),
-                                                0)),
-                                1),
-                        isDisplayed()));
-        textView.check(matches(withText("1")));
-
-        ViewInteraction appCompatButton2 = onView(
-                allOf(withId(R.id.add_btn), withText("+"),
-                        childAtPosition(
-                                allOf(withId(R.id.layout),
-                                        childAtPosition(
-                                                withId(R.id.quantityButton),
-                                                0)),
-                                2),
-                        isDisplayed()));
-        appCompatButton2.perform(click());
-
-        ViewInteraction appCompatButton3 = onView(
-                allOf(withId(R.id.add_btn), withText("+"),
-                        childAtPosition(
-                                allOf(withId(R.id.layout),
-                                        childAtPosition(
-                                                withId(R.id.quantityButton),
-                                                0)),
-                                2),
-                        isDisplayed()));
-        appCompatButton3.perform(click());
-
-        ViewInteraction appCompatButton4 = onView(
-                allOf(withId(R.id.add_btn), withText("+"),
-                        childAtPosition(
-                                allOf(withId(R.id.layout),
-                                        childAtPosition(
-                                                withId(R.id.quantityButton),
-                                                0)),
-                                2),
-                        isDisplayed()));
-        appCompatButton4.perform(click());
-
-        ViewInteraction textView2= onView(
-                allOf(withId(R.id.number_counter),
-                        childAtPosition(
-                                allOf(withId(R.id.layout),
-                                        childAtPosition(
-                                                withId(R.id.quantityButton),
-                                                0)),
-                                1),
-                        isDisplayed()));
-        textView2.check(matches(withText("4")));
-
-        ViewInteraction floatingActionButton5 = onView(
-                allOf(withId(R.id.acceptButton),
-                        childAtPosition(
-                                childAtPosition(
-                                        withId(android.R.id.content),
-                                        0),
-                                2),
-                        isDisplayed()));
-        floatingActionButton5.perform(click());
-
-        // Added a sleep statement to match the app's execution delay.
-        // The recommended way to handle such scenarios is to use Espresso idling resources:
-        // https://google.github.io/android-testing-support-library/docs/espresso/idling-resource/index.html
-        try {
-            Thread.sleep(7000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-
-
-
         ViewInteraction appCompatImageButton2 = onView(
-                allOf(childAtPosition(
-                        allOf(withId(R.id.toolbar),
-                                childAtPosition(
-                                        withClassName(is("android.support.design.widget.AppBarLayout")),
-                                        0)),
-                        1),
-                        isDisplayed()));
-        appCompatImageButton2.perform(click());
-
-        // Added a sleep statement to match the app's execution delay.
-        // The recommended way to handle such scenarios is to use Espresso idling resources:
-        // https://google.github.io/android-testing-support-library/docs/espresso/idling-resource/index.html
-        try {
-            Thread.sleep(7000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-
-        ViewInteraction appCompatImageButton3 = onView(
                 allOf(withContentDescription("Open navigation drawer"),
                         childAtPosition(
                                 allOf(withId(R.id.toolbar),
                                         childAtPosition(
-                                                withClassName(is("android.support.design.widget.AppBarLayout")),
+                                                withClassName(is("com.google.android.material.appbar.AppBarLayout")),
                                                 0)),
                                 1),
                         isDisplayed()));
-        appCompatImageButton3.perform(click());
+        appCompatImageButton2.perform(click());
 
         ViewInteraction navigationMenuItemView = onView(
                 allOf(childAtPosition(
@@ -324,14 +286,14 @@ public class EditSingleInsertionTest {
                         isDisplayed()));
         navigationMenuItemView.perform(click());
 
-        ViewInteraction appCompatButton5 = onView(
+        ViewInteraction appCompatButton3 = onView(
                 allOf(withId(android.R.id.button1), withText("OK"),
                         childAtPosition(
                                 childAtPosition(
                                         withClassName(is("android.widget.ScrollView")),
                                         0),
                                 3)));
-        appCompatButton5.perform(scrollTo(), click());
+        appCompatButton3.perform(scrollTo(), click());
     }
 
     private static Matcher<View> childAtPosition(
