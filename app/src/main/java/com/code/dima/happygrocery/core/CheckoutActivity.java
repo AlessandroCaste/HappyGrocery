@@ -9,12 +9,19 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.Toast;
 
 import com.code.dima.happygrocery.R;
 import com.code.dima.happygrocery.adapter.ProductCheckoutAdapter;
+import com.code.dima.happygrocery.database.DatabaseAdapter;
+import com.code.dima.happygrocery.model.GroceryDetails;
 import com.code.dima.happygrocery.model.Product;
 import com.code.dima.happygrocery.model.ShoppingCart;
 import com.code.dima.happygrocery.tasks.EndGroceryTask;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.ArrayList;
 
@@ -49,6 +56,22 @@ public class CheckoutActivity extends AppCompatActivity {
         public void acceptCheckout(View view) {
             EndGroceryTask task = new EndGroceryTask(this);
             task.execute();
+
+            //Updating Firebase database
+            DatabaseAdapter db = DatabaseAdapter.openInWriteMode(getApplicationContext());
+            GroceryDetails gd = db.getLastGrocery();
+            if(gd != null) {
+                FirebaseDatabase database = FirebaseDatabase.getInstance();
+                FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
+                String uId = currentUser.getUid();
+                final DatabaseReference myRef = database.getReference("users/" + uId + "/groceries");
+                myRef.push().setValue(gd);
+                Toast.makeText(getApplicationContext(), "Grocery successfuly registered", Toast.LENGTH_SHORT).show();
+            } else {
+                Toast.makeText(getApplicationContext(), "Error in registration!",Toast.LENGTH_SHORT).show();
+            }
+            db.close();
+
             ShoppingCart.getInstance().clearShoppingCart();
             Intent i = new Intent();
             setResult(Activity.RESULT_OK,i);

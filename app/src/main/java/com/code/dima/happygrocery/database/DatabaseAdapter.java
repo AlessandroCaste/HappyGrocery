@@ -288,6 +288,22 @@ public class DatabaseAdapter {
         return groceries;
     }
 
+    public GroceryDetails getLastGrocery() {
+        GroceryDetails gd = new GroceryDetails();
+        if (database != null) {
+            Cursor cursor = database.rawQuery(DatabaseConstants.QUERY_GROCERIES, null);
+            cursor.moveToLast();
+            float amount = cursor.getFloat(cursor.getColumnIndex(DatabaseConstants.HISTORY_AMOUNT));
+            String supermarket = cursor.getString(cursor.getColumnIndex(DatabaseConstants.HISTORY_MARKET));
+            String date = cursor.getString(cursor.getColumnIndex(DatabaseConstants.HISTORY_DATE));
+            int active = cursor.getInt(cursor.getColumnIndex(DatabaseConstants.HISTORY_ACTIVE));
+            boolean closed = (active == 0);
+            gd = new GroceryDetails(amount, supermarket, date, closed);
+            cursor.close();
+        }
+        return gd;
+    }
+
     public boolean queryActiveGrocery() {
         boolean answer = false;
         if (database != null) {

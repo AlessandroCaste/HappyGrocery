@@ -23,6 +23,7 @@
     </com.google.android.material.appbar.AppBarLayout>
 
     <include
+        android:id="@+id/include"
         layout="@layout/activity_payment_history" />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

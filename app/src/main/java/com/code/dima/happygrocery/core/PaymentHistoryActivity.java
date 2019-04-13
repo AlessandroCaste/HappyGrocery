@@ -1,6 +1,7 @@
 package com.code.dima.happygrocery.core;
 
 import androidx.appcompat.app.AppCompatActivity;
+
 import android.os.Bundle;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -9,41 +10,42 @@ import androidx.appcompat.widget.Toolbar;
 
 import android.util.Log;
 import android.view.View;
-import android.widget.Toast;
 
 import com.code.dima.happygrocery.R;
 import com.code.dima.happygrocery.adapter.GroceryAdapter;
-import com.code.dima.happygrocery.database.DatabaseAdapter;
 import com.code.dima.happygrocery.model.GroceryDetails;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.GenericTypeIndicator;
 import com.google.firebase.database.ValueEventListener;
 
-import java.lang.reflect.Array;
+
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
+
 
 public class PaymentHistoryActivity extends AppCompatActivity {
 
     RecyclerView recyclerView;
     List<GroceryDetails> groceries;
     GroceryAdapter adapter;
+    ArrayList<GroceryDetails> taskDesList = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
-        DatabaseAdapter db = DatabaseAdapter.openInWriteMode(getApplicationContext());
-        groceries = db.queryGroceries();
-        db.close();
-
-        final List<GroceryDetails> imported = new ArrayList<>();
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.payment_history_app_bar);
+        findViewById(R.id.loadingPanelActivity).setVisibility(View.VISIBLE);
 
         FirebaseDatabase database = FirebaseDatabase.getInstance();
-        final DatabaseReference myRef = database.getReference("groceries");
+        FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
+        String uId = currentUser.getUid();
+        final DatabaseReference myRef = database.getReference("users/"+ uId+"/groceries");
 
         // Read from the database
         myRef.addValueEventListener(new ValueEventListener() {
@@ -51,10 +53,33 @@ public class PaymentHistoryActivity extends AppCompatActivity {
             public void onDataChange(DataSnapshot dataSnapshot) {
                 // This method is called once with the initial value and again
                 // whenever data at this location is updated.
-                for(DataSnapshot data: dataSnapshot.getChildren()) {
-                    collectEverything((HashMap<String,String>)dataSnapshot.getValue());
+                GenericTypeIndicator<GroceryDetails> genericTypeIndicator = new GenericTypeIndicator<GroceryDetails>() {};
+                for(DataSnapshot dsp : dataSnapshot.getChildren()) {
+                    String userkey = dsp.getKey();
+                    GroceryDetails miao = dataSnapshot.child(userkey).getValue(genericTypeIndicator);
+                    taskDesList.add(miao);
                 }
-                Toast.makeText(getApplicationContext(),"Database updated",Toast.LENGTH_SHORT).show();
+                findViewById(R.id.loadingPanelActivity).setVisibility(View.INVISIBLE);
+
+                Toolbar toolbar = findViewById(R.id.payment_history_toolbar);
+                setSupportActionBar(toolbar);
+                toolbar.setNavigationIcon(R.drawable.ic_arrow_back_white_24dp);
+                toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        finish();
+                    }
+                });
+                // Data has been checked on remote DB
+                recyclerView = findViewById(R.id.paymentHistoryRecyclerView);
+
+                // Setupping the layout and the recycler view
+                recyclerView.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
+                adapter = new GroceryAdapter(getApplicationContext(), taskDesList);
+                DividerItemDecoration decoration = new DividerItemDecoration(getApplicationContext(), DividerItemDecoration.VERTICAL);
+                decoration.setDrawable(getResources().getDrawable(R.drawable.rectangle));
+                recyclerView.addItemDecoration(decoration);
+                recyclerView.setAdapter(adapter);
             }
 
             @Override
@@ -63,35 +88,6 @@ public class PaymentHistoryActivity extends AppCompatActivity {
                 Log.w("Firebase Database error", "Failed to read value.", error.toException());
             }
         });
-
-
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.payment_history_app_bar);
-
-        Toolbar toolbar = findViewById(R.id.payment_history_toolbar);
-        setSupportActionBar(toolbar);
-        toolbar.setNavigationIcon(R.drawable.ic_arrow_back_white_24dp);
-        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                finish();
-            }
-        });
-
-        recyclerView = findViewById(R.id.paymentHistoryRecyclerView);
-        recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        adapter = new GroceryAdapter(this, imported);
-        DividerItemDecoration decoration = new DividerItemDecoration(getApplicationContext(), DividerItemDecoration.VERTICAL);
-        decoration.setDrawable(getResources().getDrawable(R.drawable.rectangle));
-        recyclerView.addItemDecoration(decoration);
-        recyclerView.setAdapter(adapter);
-
-    }
-
-    private void collectEverything(HashMap<String,String> users) {
-        HashMap<String,String> ciao = new HashMap<>();
-
-        System.out.println(users.toString());
     }
 
 }

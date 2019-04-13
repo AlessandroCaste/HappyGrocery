@@ -14,6 +14,8 @@ public class GroceryDetails {
         this.closed = closed;
     }
 
+    public GroceryDetails() {}
+
     public Float getAmount() {
         return amount;
     }
