@@ -5,29 +5,25 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
-import android.provider.ContactsContract;
 
 import com.code.dima.happygrocery.exception.NoSuchProductException;
 import com.code.dima.happygrocery.model.Category;
 import com.code.dima.happygrocery.model.GroceryDetails;
 import com.code.dima.happygrocery.model.Product;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
 public class DatabaseAdapter {
 
-    private Context context;
     private DatabaseHelper helper;
     private SQLiteDatabase database;
 
     private long actualGroceryID;
 
 
-    private DatabaseAdapter(Context context) {
-        this.context = context;
+    private DatabaseAdapter() {
         this.actualGroceryID = -1;
     }
 
@@ -35,7 +31,7 @@ public class DatabaseAdapter {
     public static DatabaseAdapter openInReadMode(Context context) throws SQLException
 
     {
-        DatabaseAdapter adapter = new DatabaseAdapter(context);
+        DatabaseAdapter adapter = new DatabaseAdapter();
         adapter.helper = new DatabaseHelper(context);
         adapter.database = adapter.helper.getReadableDatabase();
         return adapter;
@@ -43,7 +39,7 @@ public class DatabaseAdapter {
 
 
     public static DatabaseAdapter openInWriteMode(Context context) throws SQLException {
-        DatabaseAdapter adapter = new DatabaseAdapter(context);
+        DatabaseAdapter adapter = new DatabaseAdapter();
         adapter.helper = new DatabaseHelper(context);
         adapter.database = adapter.helper.getWritableDatabase();
         return adapter;
@@ -130,6 +126,7 @@ public class DatabaseAdapter {
             database.update(DatabaseConstants.HISTORY_TABLE, values,
                     DatabaseConstants.HISTORY_ID + " = " + groceryID, null);
         }
+        cursor.close();
     }
 
 

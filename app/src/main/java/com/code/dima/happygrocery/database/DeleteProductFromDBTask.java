@@ -5,14 +5,16 @@ import android.os.AsyncTask;
 
 import com.code.dima.happygrocery.model.Product;
 
+import java.lang.ref.WeakReference;
+
 public class DeleteProductFromDBTask extends AsyncTask<Void, Void, Void> {
 
-    private Context context;
+    private WeakReference<Context> context;
     private Product product;
 
 
     public DeleteProductFromDBTask(Context context, Product product) {
-        this.context = context;
+        this.context = new WeakReference<>(context);
         this.product = product;
     }
 
@@ -20,7 +22,7 @@ public class DeleteProductFromDBTask extends AsyncTask<Void, Void, Void> {
     @Override
     protected Void doInBackground(Void... voids) {
         if (product != null) {
-            DatabaseAdapter adapter = DatabaseAdapter.openInWriteMode(context);
+            DatabaseAdapter adapter = DatabaseAdapter.openInWriteMode(context.get());
             adapter.deleteProductFromProductList(product);
             adapter.close();
         }

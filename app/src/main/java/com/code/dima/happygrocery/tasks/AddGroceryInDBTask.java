@@ -32,12 +32,12 @@ public class AddGroceryInDBTask extends AsyncTask<Void, Void, Void> {
         String month;
         String day;
         if (m < 10) {
-            month = "0" + String.valueOf(m);
+            month = "0" + m;
         } else {
             month = String.valueOf(m);
         }
         if (d < 10) {
-            day = "0" + String.valueOf(d);
+            day = "0" + d;
         } else {
             day = String.valueOf(d);
         }
