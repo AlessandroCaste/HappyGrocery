@@ -8,12 +8,10 @@ import android.database.sqlite.SQLiteOpenHelper;
 public class DatabaseHelper extends SQLiteOpenHelper {
 
     private static DatabaseHelper instance = null;
-    private Context context;
 
 
     public DatabaseHelper(Context context) {
         super(context, DatabaseConstants.DB_NAME, null, DatabaseConstants.DB_VERSION);
-        this.context = context;
     }
 
     public static DatabaseHelper getInstance(Context context) {
