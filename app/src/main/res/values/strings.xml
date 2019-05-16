@@ -76,7 +76,7 @@
         Design and Implementation of Mobile Applications. Feel free to contact us at:
         castellani.alessandro@mail.polimi.it</string>
 
-    <!-- Titles for Shopping Cart Activity -->
+    <!-- TITLES FOR SHOPPING CART ACTIVITY -->
     <string name="Food_Title">Food</string>
     <string name="Beverage_Title">Beverage</string>
     <string name="Kids_Title">Kids and Stationery</string>
@@ -84,11 +84,11 @@
     <string name="Clothing_Title">Clothing</string>
     <string name="Other_Title">Other Categories</string>
 
-    <!-- Buttons Options -->
+    <!-- BUTTON OPTIONS -->
     <string name="OK">OK</string>
     <string name="CANCEL">CANCEL</string>
 
-    <!-- Activity Texts and the like -->
+    <!-- RELATIVE TO THE APP NAME AND TEXT -->
     <string name="Welcome">Welcome!</string>
     <string name="HappyGrocery">Happy Grocery</string>
 
@@ -96,7 +96,11 @@
     <string name="shop_url">SHOP_URL</string>
     <string name="shop_name">SHOP_NAME</string>
 
-
+    <!-- USED IN PAYMENT HISTORY ACTIVITY -->
     <string name="closed_grocery">Closed</string>
+
+    <!-- USED TO DISPLAY TEXT WHEN A WEARABLE CONNECTS TO THE APP -->
+    <string name="wearable_connected">Connected to your wearable device!</string>
+    <string name="wearable_disconnected">Connection lost with your wearable device.</string>
 
 </resources>
