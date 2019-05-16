@@ -4,16 +4,25 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
+
+import com.code.dima.happygrocery.wearable.CommunicationHandler;
+import com.code.dima.happygrocery.wearable.CommunicationService;
+import com.code.dima.happygrocery.wearable.ConnectionBroadcastReceiver;
+import com.code.dima.happygrocery.wearable.WearableUpdateTask;
 import com.google.android.material.navigation.NavigationView;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
+
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ImageView;
@@ -39,8 +48,6 @@ import com.google.zxing.integration.android.IntentIntegrator;
 import java.util.ArrayList;
 import java.util.List;
 
-import de.hdodenhof.circleimageview.CircleImageView;
-
 import static com.google.zxing.integration.android.IntentIntegrator.REQUEST_CODE;
 
 
@@ -51,6 +58,7 @@ public class DashboardActivity extends AppCompatActivity
     private List<String> labels;
     private List<Integer> colors;
     FirebaseUser user;
+    private ConnectionBroadcastReceiver broadcastReceiver;
 
     String url = "";
     String shopName = "";
@@ -101,6 +109,9 @@ public class DashboardActivity extends AppCompatActivity
 
         // initialize image retriever
         new InitializeImageRetrieverTask(DashboardActivity.this).execute();
+
+        // notify the wearable to start a new grocery
+        CommunicationHandler.getInstance().notifyNewGrocery(this);
     }
 
     private void updateChartData() {
@@ -162,12 +173,14 @@ public class DashboardActivity extends AppCompatActivity
             }
         } else if (requestCode == getResources().getInteger(R.integer.PRODUCT_REQUEST_CODE)) {
             if(resultCode == Activity.RESULT_OK) {
-                //updateChartData();
-                //updateLastProduct();
+                // a new product has been added -> update wearable's data & notify new product
+                new WearableUpdateTask(this, true).execute();
                 overridePendingTransition(R.transition.slide_in_left, R.transition.slide_out_right);
             }
         } else if (requestCode == getResources().getInteger(R.integer.CHECKOUT_CODE)) {
             if(resultCode == Activity.RESULT_OK) {
+                // the grocery has finished -> notify the wearable
+                CommunicationHandler.getInstance().notifyGroceryClosed(this);
                 finish();
                 overridePendingTransition(R.transition.slide_in_left,R.transition.slide_out_right);
             }
@@ -177,15 +190,18 @@ public class DashboardActivity extends AppCompatActivity
     @Override
     protected void onStart() {
         super.onStart();
-        NavigationView nav_header = findViewById(R.id.nav_view);
-        TextView profileName = nav_header.getHeaderView(0).findViewById(R.id.profileName);
-        TextView profileMail = nav_header.getHeaderView(0).findViewById(R.id.profileMail);
-        CircleImageView profilePicture = nav_header.getHeaderView(0).findViewById(R.id.profilePicture);
-
         user = FirebaseAuth.getInstance().getCurrentUser();
-        //Picasso.get().load(user.getPhotoUrl()).into(profilePicture);
-        // profileName.setText(user.getDisplayName());
-        // profileMail.setText(user.getEmail());
+
+        // register a receiver in order to be notified when a wearable connects or disconnects
+        broadcastReceiver = new ConnectionBroadcastReceiver(this, true);
+        LocalBroadcastManager.getInstance(this).registerReceiver(broadcastReceiver,
+                new IntentFilter(CommunicationService.CONNECTION_NOTIFICATION));
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        LocalBroadcastManager.getInstance(this).unregisterReceiver(broadcastReceiver);
     }
 
     @Override
@@ -245,7 +261,6 @@ public class DashboardActivity extends AppCompatActivity
     }
 
 
-    @SuppressWarnings("StatementWithEmptyBody")
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
         // Handle navigation view item clicks here.

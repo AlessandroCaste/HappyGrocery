@@ -2,18 +2,25 @@ package com.code.dima.happygrocery.core;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import androidx.annotation.NonNull;
+
+import com.code.dima.happygrocery.wearable.CommunicationService;
+import com.code.dima.happygrocery.wearable.ConnectionBroadcastReceiver;
 import com.google.android.material.navigation.NavigationView;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
+
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -56,6 +63,8 @@ public class LoginActivity extends AppCompatActivity
     private FirebaseAuth mAuth;
     private FirebaseAuth.AuthStateListener mAuthStateListener;
     private boolean authFlag = false;
+
+    private ConnectionBroadcastReceiver broadcastReceiver;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -176,30 +185,22 @@ public class LoginActivity extends AppCompatActivity
         }
     }
 
-    /*Override
-    protected void onDestroy() {
-        authFlag = false;
-        super.onDestroy();
-    }
-
-    @Override
-    protected void onStop(){
-        authFlag = false;
-        super.onStop();
-    }*/
 
     @Override
     protected void onStart() {
         super.onStart();
-        NavigationView nav_header = findViewById(R.id.nav_view);
-        TextView profileName = nav_header.getHeaderView(0).findViewById(R.id.profileName);
-        TextView profileMail = nav_header.getHeaderView(0).findViewById(R.id.profileMail);
-        CircleImageView profilePicture = nav_header.getHeaderView(0).findViewById(R.id.profilePicture);
-
         user = FirebaseAuth.getInstance().getCurrentUser();
-    //    Picasso.get().load(user.getPhotoUrl()).into(profilePicture);
-         //profileName.setText(user.getDisplayName());
-         //profileMail.setText(user.getEmail());
+
+        // register a receiver in order to be notified when a wearable connects or disconnects
+        broadcastReceiver = new ConnectionBroadcastReceiver(this, false);
+        LocalBroadcastManager.getInstance(this).registerReceiver(broadcastReceiver,
+                new IntentFilter(CommunicationService.CONNECTION_NOTIFICATION));
+    }
+
+    @Override
+    protected void onStop(){
+        super.onStop();
+        LocalBroadcastManager.getInstance(this).unregisterReceiver(broadcastReceiver);
     }
 
     private void parseAndLaunch(String url, final Intent i) {

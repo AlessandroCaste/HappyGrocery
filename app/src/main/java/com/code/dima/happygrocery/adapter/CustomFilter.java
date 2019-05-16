@@ -8,15 +8,15 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class CustomFilter extends Filter{
-        ProductAdapter adapter;
-        List<Product> filterList;
+        private ProductAdapter adapter;
+        private List<Product> filterList;
 
         public CustomFilter(List<Product> filterList, ProductAdapter adapter)
         {
             this.adapter=adapter;
             this.filterList=filterList;
         }
-        //FILTERING OCURS
+        //FILTERING OCCURS
         @Override
         protected FilterResults performFiltering(CharSequence constraint) {
             FilterResults results=new FilterResults();

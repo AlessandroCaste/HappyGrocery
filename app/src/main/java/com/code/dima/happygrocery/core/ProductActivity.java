@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 
+import com.code.dima.happygrocery.wearable.WearableUpdateTask;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
@@ -169,8 +170,10 @@ public class ProductActivity extends AppCompatActivity {
         ImageView imageView = findViewById(R.id.product_activity_image_view);
         CircleImageView categoryView = findViewById(R.id.product_cicle_image_view);
         nameView.setText(name);
-        priceView.setText(String.valueOf(price) + " $");
-        weightView.setText(Float.toString(weight) + "g");
+        String priceText = price + getResources().getString(R.string.currency);
+        String weightText = weight + "g";
+        priceView.setText(priceText);
+        weightView.setText(weightText);
         imageView.setImageResource(imageID);
         categoryView.setImageResource(categoryID);
     }
@@ -214,8 +217,9 @@ public class ProductActivity extends AppCompatActivity {
                 e.printStackTrace();
             }
             // update in database
-            UpdateProductQuantityInDBTask task = new UpdateProductQuantityInDBTask(getApplicationContext(), currentProduct, newQuantity);
-            task.execute();
+            new UpdateProductQuantityInDBTask(getApplicationContext(), currentProduct, newQuantity).execute();
+            // update the wearable's data
+            new WearableUpdateTask(this, false).execute();
             setResult(Activity.RESULT_OK,returnIntent);
             finish();
         }

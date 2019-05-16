@@ -8,6 +8,8 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+
+import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.widget.Filter;
@@ -19,6 +21,7 @@ import com.code.dima.happygrocery.database.UpdateProductQuantityInDBTask;
 import com.code.dima.happygrocery.exception.NoSuchProductException;
 import com.code.dima.happygrocery.model.Product;
 import com.code.dima.happygrocery.model.ShoppingCart;
+import com.code.dima.happygrocery.wearable.WearableUpdateTask;
 
 import java.lang.ref.WeakReference;
 import java.util.List;
@@ -35,9 +38,8 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductHolder> {
     }
 
     @Override
-    public ProductHolder onCreateViewHolder (ViewGroup parent, int viewType) {
+    public ProductHolder onCreateViewHolder (@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(context.get()).inflate(R.layout.product_card,parent,false);
-        Log.w("myApp","Opero nel magico mondo!") ;
         return new ProductHolder(view);
     }
 
@@ -45,7 +47,7 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductHolder> {
     public int getItemCount() { return products.size(); }
 
     @Override
-    public void onBindViewHolder(final ProductHolder holder, final int position) {
+    public void onBindViewHolder(@NonNull final ProductHolder holder, final int position) {
         final Product product = products.get(position);
         holder.setDetails(product);
 
@@ -63,8 +65,7 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductHolder> {
                                 e.printStackTrace();
                             }
                             holder.setDetails(product);
-                            UpdateProductQuantityInDBTask task = new UpdateProductQuantityInDBTask(context.get(), product, newQuantity);
-                            task.execute();
+                            new UpdateProductQuantityInDBTask(context.get(), product, newQuantity).execute();
                        } else {
                             try {
                                 ShoppingCart.getInstance().removeProduct(product);
@@ -74,9 +75,10 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductHolder> {
                             int removedPosition = holder.getAdapterPosition();
                             //products.remove(removedPosition);
                             notifyItemRemoved(removedPosition);
-                            DeleteProductFromDBTask task = new DeleteProductFromDBTask(context.get(), product);
-                            task.execute();
+                            new DeleteProductFromDBTask(context.get(), product).execute();
                         }
+                        // in both cases, I notify the wearable of the update/deletion
+                        new WearableUpdateTask(context.get(), false).execute();
                     }
                 });
             }
