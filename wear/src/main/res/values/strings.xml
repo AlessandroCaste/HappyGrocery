@@ -1,0 +1,29 @@
+<resources>
+    <!--
+    These strings are used for square devices and overridden in
+    values-round/strings.xml for round devices.
+    -->
+    <string name="app_name">HappyGrocery</string>
+    <string name="currency">$</string>
+    <string name="title_activity_home">HomeActivity</string>
+
+    <!-- These strings are used in the home activity -->
+    <string name="connecting">Connecting to your phone…</string>
+    <string name="connected">Connected!</string>
+    <string name="waiting">Start a new grocery!</string>
+    <string name="grocery_closed">OK! Your grocery has ended correctly!</string>
+    <string name="connection_lost">Connection lost! Trying to reconnect…</string>
+
+    <!-- These strings are used in the product details activity -->
+    <string name="product_details_title">New product added</string>
+    <string name="product_details_name">Product name</string>
+    <string name="product_details_quantity">quantity: 2</string>
+    <string name="product_details_price">price: 12$</string>
+
+    <!--
+    This string is used for square devices and overridden by hello_world in
+    values-round/strings.xml for round devices.
+    -->
+    <string name="hello_world">Hello Square World!</string>
+    <string name="title_activity_product_details">ProductDetailsActivity</string>
+</resources>
