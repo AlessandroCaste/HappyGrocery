@@ -3,13 +3,13 @@ package com.code.dima.happygrocery.activity;
 import android.app.Activity;
 import android.content.Intent;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.wear.ambient.AmbientModeSupport;
 import android.support.wearable.activity.WearableActivity;
 import android.util.Log;
 import android.widget.TextView;
+
+import androidx.annotation.NonNull;
+import androidx.wear.ambient.AmbientModeSupport;
 
 import com.code.dima.happygrocery.R;
 import com.code.dima.happygrocery.utils.DataPaths;
@@ -17,14 +17,11 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.gms.wearable.CapabilityClient;
 import com.google.android.gms.wearable.CapabilityInfo;
-import com.google.android.gms.wearable.DataClient;
 import com.google.android.gms.wearable.MessageClient;
 import com.google.android.gms.wearable.MessageEvent;
 import com.google.android.gms.wearable.Node;
 import com.google.android.gms.wearable.Wearable;
 
-import java.lang.ref.WeakReference;
-import java.util.List;
 import java.util.Set;
 
 public class HomeActivity extends WearableActivity
