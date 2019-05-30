@@ -51,6 +51,17 @@ public class HomeActivity extends WearableActivity
             }
         });
 
+        Task<CapabilityInfo> connectionTask = Wearable.getCapabilityClient(this)
+                .getCapability(DataPaths.WATCH_SERVER, CapabilityClient.FILTER_REACHABLE);
+        connectionTask.addOnSuccessListener(new OnSuccessListener<CapabilityInfo>() {
+            @Override
+            public void onSuccess(CapabilityInfo capabilityInfo) {
+                // I found the list of phones I can connect to
+                Set<Node> nodes = capabilityInfo.getNodes();
+                connectToBestNode(nodes);
+            }
+        });
+
         // Enables Always-on
         setAmbientEnabled();
     }

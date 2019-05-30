@@ -2,30 +2,27 @@ package com.code.dima.happygrocery.core;
 
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import androidx.annotation.NonNull;
 
-import com.code.dima.happygrocery.wearable.CommunicationService;
-import com.code.dima.happygrocery.wearable.ConnectionBroadcastReceiver;
+import com.code.dima.happygrocery.wearable.DataPaths;
+import com.code.dima.happygrocery.wearable.WearableListener;
+import com.google.android.gms.wearable.Wearable;
 import com.google.android.material.navigation.NavigationView;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
-import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.Request;
@@ -50,8 +47,6 @@ import org.json.JSONObject;
 
 import java.util.Arrays;
 
-import de.hdodenhof.circleimageview.CircleImageView;
-
 import static com.google.zxing.integration.android.IntentIntegrator.REQUEST_CODE;
 
 
@@ -64,7 +59,7 @@ public class LoginActivity extends AppCompatActivity
     private FirebaseAuth.AuthStateListener mAuthStateListener;
     private boolean authFlag = false;
 
-    private ConnectionBroadcastReceiver broadcastReceiver;
+    private WearableListener wearableListener;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -135,6 +130,7 @@ public class LoginActivity extends AppCompatActivity
                 }
             }
         };
+
         // at start, checks if there's an active grocery to be restored
         boolean restoreNeeded = checkActiveGrocery();
         if (restoreNeeded) {
@@ -148,6 +144,9 @@ public class LoginActivity extends AppCompatActivity
             callDashboard.putExtra("url",url);
             startActivity(callDashboard);
         }
+
+        // notify the watch that this node is able to support it
+        Wearable.getCapabilityClient(this).addLocalCapability(DataPaths.WATCH_SERVER);
     }
 
     /*
@@ -192,15 +191,13 @@ public class LoginActivity extends AppCompatActivity
         user = FirebaseAuth.getInstance().getCurrentUser();
 
         // register a receiver in order to be notified when a wearable connects or disconnects
-        broadcastReceiver = new ConnectionBroadcastReceiver(this, false);
-        LocalBroadcastManager.getInstance(this).registerReceiver(broadcastReceiver,
-                new IntentFilter(CommunicationService.CONNECTION_NOTIFICATION));
+        wearableListener = new WearableListener(this, false);
     }
 
     @Override
     protected void onStop(){
         super.onStop();
-        LocalBroadcastManager.getInstance(this).unregisterReceiver(broadcastReceiver);
+        wearableListener.disconnect();
     }
 
     private void parseAndLaunch(String url, final Intent i) {
