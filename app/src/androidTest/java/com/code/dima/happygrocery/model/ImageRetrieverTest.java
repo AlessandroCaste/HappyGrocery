@@ -25,7 +25,7 @@ public class ImageRetrieverTest {
         Context appContext = InstrumentationRegistry.getTargetContext();
         int images = ImageRetriever.getInstance(appContext).getNumberOfImages();
         System.out.println("Number of images: " + images);
-        assertEquals(8, images);
+        assertEquals(9, images);
     }
 
     @Test
@@ -34,7 +34,7 @@ public class ImageRetrieverTest {
         ImageRetriever.initialize(appContext);
         int images = ImageRetriever.getInstance(appContext).getNumberOfImages();
         System.out.println("Number of images: " + images);
-        assertEquals(8, images);
+        assertEquals(9, images);
     }
 
     @Test
