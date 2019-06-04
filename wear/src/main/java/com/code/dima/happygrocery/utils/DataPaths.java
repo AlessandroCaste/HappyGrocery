@@ -18,4 +18,10 @@ public class DataPaths {
     // capabilities
     public static final String WATCH_SERVER = "watch_server";
     public static final String WATCH_CLIENT = "watch_client";
+
+    // action for broadcast intents sent by communication service
+    public static final String ACTION_CONNECTED = "connected";
+    public static final String ACTION_DISCONNECTED = "disconnected";
+    public static final String ACTION_UPDATE_AMOUNT = "update_amount";
+    public static final String ACTION_UPDATE_QUANTITIES = "update_quantities";
 }

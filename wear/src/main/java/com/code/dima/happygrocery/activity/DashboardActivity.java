@@ -1,17 +1,14 @@
 package com.code.dima.happygrocery.activity;
 
-import android.app.Activity;
-import android.content.Intent;
-import android.net.Uri;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.wearable.activity.WearableActivity;
-import android.util.Log;
-
-import androidx.annotation.NonNull;
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import androidx.wear.ambient.AmbientModeSupport;
 
 import com.code.dima.happygrocery.R;
 import com.code.dima.happygrocery.utils.Category;
+import com.code.dima.happygrocery.utils.DashboardNotificationReceiver;
 import com.code.dima.happygrocery.utils.DataPaths;
 import com.code.dima.happygrocery.utils.InitializeImageRetrieverTask;
 import com.github.mikephil.charting.charts.PieChart;
@@ -20,42 +17,24 @@ import com.github.mikephil.charting.components.Legend;
 import com.github.mikephil.charting.data.PieData;
 import com.github.mikephil.charting.data.PieDataSet;
 import com.github.mikephil.charting.data.PieEntry;
-import com.google.android.gms.wearable.CapabilityClient;
-import com.google.android.gms.wearable.CapabilityInfo;
-import com.google.android.gms.wearable.DataClient;
-import com.google.android.gms.wearable.DataEvent;
-import com.google.android.gms.wearable.DataEventBuffer;
-import com.google.android.gms.wearable.DataItem;
-import com.google.android.gms.wearable.DataMap;
-import com.google.android.gms.wearable.DataMapItem;
-import com.google.android.gms.wearable.MessageClient;
-import com.google.android.gms.wearable.MessageEvent;
-import com.google.android.gms.wearable.Node;
-import com.google.android.gms.wearable.Wearable;
 
-import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 
 public class DashboardActivity extends WearableActivity
-        implements AmbientModeSupport.AmbientCallbackProvider,
-        DataClient.OnDataChangedListener,
-        MessageClient.OnMessageReceivedListener,
-        CapabilityClient.OnCapabilityChangedListener{
+        implements AmbientModeSupport.AmbientCallbackProvider {
 
     private PieChart chart;
     private List<String> labels;
     private List<Integer> colors;
 
-    private String phoneNodeId;
+    private DashboardNotificationReceiver receiver;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_dashboard);
-
-        phoneNodeId = getIntent().getStringExtra("phoneId");
 
         initializeChart();
 
@@ -66,26 +45,23 @@ public class DashboardActivity extends WearableActivity
         setAmbientEnabled();
     }
 
-
     @Override
-    protected void onResume() {
-        super.onResume();
+    protected void onStart() {
+        super.onStart();
 
-        // Instantiates clients without member variables, as clients are inexpensive to create and
-        // won't lose their listeners. (They are cached and shared between GoogleApi instances.)
-        Wearable.getDataClient(this).addListener(this);
-        Wearable.getMessageClient(this).addListener(this);
-        Wearable.getCapabilityClient(this).addListener(this, Uri.parse("wear://"), CapabilityClient.FILTER_REACHABLE);
+        receiver = new DashboardNotificationReceiver(this);
+        IntentFilter filter = new IntentFilter();
+        filter.addAction(DataPaths.ACTION_UPDATE_AMOUNT);
+        filter.addAction(DataPaths.ACTION_UPDATE_QUANTITIES);
+        LocalBroadcastManager.getInstance(this).registerReceiver(receiver, filter);
     }
 
-
     @Override
-    protected void onPause() {
-        super.onPause();
+    protected void onStop() {
+        super.onStop();
 
-        Wearable.getDataClient(this).removeListener(this);
-        Wearable.getMessageClient(this).removeListener(this);
-        Wearable.getCapabilityClient(this).removeListener(this);
+        LocalBroadcastManager.getInstance(this).unregisterReceiver(receiver);
+        receiver = null;
     }
 
 
@@ -122,14 +98,14 @@ public class DashboardActivity extends WearableActivity
     }
 
 
-    private void updateAmount(float amount) {
+    public void updateAmount(float amount) {
         String amountString = getResources().getString(R.string.currency) + String.format("%.2f", amount);
         chart.setCenterText(amountString);
         chart.invalidate();
     }
 
 
-    private void updateChartEntries(List<Integer> valueList) {
+    public void updateChartEntries(List<Integer> valueList) {
         // sets values and colors for the entries in the PieChart
         ArrayList<PieEntry> yValues = new ArrayList<>();
         PieEntry newEntry;
@@ -145,88 +121,6 @@ public class DashboardActivity extends WearableActivity
         dataset.setDrawValues(false);
         chart.setData(new PieData(dataset));
         chart.invalidate();
-    }
-
-
-    @Override
-    public void onCapabilityChanged(@NonNull CapabilityInfo capabilityInfo) {
-        // Note: here my "local node" is always set, it can only disconnect
-        String capabilityName = capabilityInfo.getName();
-        if (capabilityName.equals("watch_server")) {
-            ArrayList<String> ids = new ArrayList<>();
-            for (Node node : capabilityInfo.getNodes()) {
-                ids.add(node.getId());
-            }
-            if(!(ids.contains(phoneNodeId))) {
-                // I was connected to a phone which is no longer reachable
-                Intent resultIntent = new Intent();
-                setResult(Activity.RESULT_CANCELED, resultIntent);
-                finish();
-            }
-        }
-    }
-
-
-    @Override
-    public void onDataChanged(@NonNull DataEventBuffer dataEventBuffer) {
-        Log.d("Wearable", "Data changed: " + dataEventBuffer);
-
-        for(DataEvent event: dataEventBuffer) {
-            if(event.getType() == DataEvent.TYPE_CHANGED) {
-                DataItem item = event.getDataItem();
-                String path = item.getUri().getPath();
-                if(DataPaths.AMOUNT_PATH.equals(path)) {
-                    DataMap map = DataMapItem.fromDataItem(item).getDataMap();
-                    float amount = map.getFloat(DataPaths.AMOUNT_KEY);
-                    updateAmount(amount);
-                } else if (DataPaths.QUANTITIES_PATH.equals(path)) {
-                    DataMap map = DataMapItem.fromDataItem(item).getDataMap();
-                    String quantities = map.getString(DataPaths.QUANTITIES_KEY);
-                    // quantities is the form: "1,2,3,4,5,6"
-                    ArrayList<Integer> quantityPerCategory = new ArrayList<>();
-                    for (String toc: quantities.split(",")) {
-                        quantityPerCategory.add(Integer.parseInt(toc));
-                    }
-                    updateChartEntries(quantityPerCategory);
-                }
-            }
-            else {
-                Log.d("Wearable", "Perceived unknown event");
-            }
-        }
-    }
-
-
-    @Override
-    public void onMessageReceived(@NonNull MessageEvent messageEvent) {
-        /* useful to be able to:
-            1) receive message for the addition of a new product
-            2) send request to view the grocery to the phone
-         */
-        if(messageEvent.getSourceNodeId().equals(phoneNodeId)) {
-            String path = messageEvent.getPath();
-            if (path.equals(DataPaths.NOTIFY_NEW_PRODUCT)) {
-                // a new product has been added to the cart
-                // details encoded as a string "name;category;quantity;price"
-                String details = new String(messageEvent.getData(), StandardCharsets.UTF_8);
-                String[] splits = details.split(";");
-                try {
-                    Intent displayDetailsIntent = new Intent(this, ProductDetailsActivity.class);
-                    displayDetailsIntent.putExtra("name", splits[0]);
-                    displayDetailsIntent.putExtra("category", splits[1]);
-                    displayDetailsIntent.putExtra("quantity", splits[2]);
-                    displayDetailsIntent.putExtra("price", splits[3]);
-                    startActivity(displayDetailsIntent);
-                } catch (Exception e) {
-                    Log.e("Wearable", "Received bad formatted details for new added product");
-                }
-            } else if (path.equals(DataPaths.NOTIFY_GROCERY_CLOSED)) {
-                // the grocery has been closed correctly
-                Intent resultIntent = new Intent();
-                setResult(Activity.RESULT_OK, resultIntent);
-                finish();
-            }
-        }
     }
 
 

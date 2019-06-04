@@ -5,11 +5,13 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import androidx.annotation.NonNull;
 
 import com.code.dima.happygrocery.wearable.DataPaths;
+import com.code.dima.happygrocery.wearable.NotificationReceiver;
 import com.code.dima.happygrocery.wearable.WearableListener;
 import com.google.android.gms.wearable.Wearable;
 import com.google.android.material.navigation.NavigationView;
@@ -18,6 +20,7 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
 import android.util.Log;
 import android.view.Menu;
@@ -59,33 +62,12 @@ public class LoginActivity extends AppCompatActivity
     private FirebaseAuth.AuthStateListener mAuthStateListener;
     private boolean authFlag = false;
 
-    private WearableListener wearableListener;
+    private NotificationReceiver receiver;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        /*
-        Enable for debugging purpose
-
-        if(BuildConfig.DEBUG) {
-            Intent i = new Intent(this, DashboardActivity.class);
-            String name = "Esselunga";
-            String url =  ("https://my-json-server.typicode.com/AlessandroCaste/HappyGroceryShopsDB/stores?id=1");
-            SharedPreferences sharedPref = getPreferences(Context.MODE_PRIVATE);
-            SharedPreferences.Editor editor = sharedPref.edit();
-            editor.putString(getString(R.string.shop_url), url);
-            editor.putString(getString(R.string.shop_name), name);
-            editor.apply();
-            i.putExtra("name",name);
-            i.putExtra("url",url);
-            // insert a new entry in the db for the grocery
-            AddGroceryInDBTask task = new AddGroceryInDBTask(LoginActivity.this, name);
-            task.execute();
-            startActivity(i);
-            overridePendingTransition(R.transition.slide_in_right, R.transition.slide_out_left);
-        }
-        */
         setContentView(R.layout.login_activity_main);
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -191,13 +173,16 @@ public class LoginActivity extends AppCompatActivity
         user = FirebaseAuth.getInstance().getCurrentUser();
 
         // register a receiver in order to be notified when a wearable connects or disconnects
-        wearableListener = new WearableListener(this, false);
+        IntentFilter receiverFilter = new IntentFilter(DataPaths.ACTION_NOTIFICATION);
+        receiver = new NotificationReceiver(this, false);
+        LocalBroadcastManager.getInstance(this).registerReceiver(receiver, receiverFilter);
     }
 
     @Override
     protected void onStop(){
         super.onStop();
-        wearableListener.disconnect();
+        LocalBroadcastManager.getInstance(this).unregisterReceiver(receiver);
+        receiver = null;
     }
 
     private void parseAndLaunch(String url, final Intent i) {
