@@ -113,6 +113,22 @@ public class CommunicationHandler {
         }
     }
 
+    public void notifyGroceryCleared(Context context) {
+        if(connectedNodeID == null) {
+            initializeNodeID(context);
+        }
+        if (connectedNodeID != null) {
+            Task<Integer> sendTask = Wearable.getMessageClient(context).sendMessage(
+                    connectedNodeID, DataPaths.NOTIFY_GROCERY_CLOSED, null);
+            sendTask.addOnSuccessListener(new OnSuccessListener<Integer>() {
+                @Override
+                public void onSuccess(Integer id) {
+                    Log.d("Connection service", "Notified watch of the closing of the grocery");
+                }
+            });
+        }
+    }
+
     public void updateWearableAmount(Context context, float amount) {
         if(connectedNodeID == null) {
             initializeNodeID(context);
