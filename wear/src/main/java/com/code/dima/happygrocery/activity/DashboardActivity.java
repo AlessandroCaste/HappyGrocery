@@ -3,6 +3,8 @@ package com.code.dima.happygrocery.activity;
 import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.wearable.activity.WearableActivity;
+import android.widget.Toast;
+
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import androidx.wear.ambient.AmbientModeSupport;
 
@@ -121,6 +123,10 @@ public class DashboardActivity extends WearableActivity
         dataset.setDrawValues(false);
         chart.setData(new PieData(dataset));
         chart.invalidate();
+    }
+
+    public void displayToast(String message) {
+        Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
     }
 
 

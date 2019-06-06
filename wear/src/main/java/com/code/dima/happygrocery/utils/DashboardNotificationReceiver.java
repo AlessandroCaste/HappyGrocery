@@ -35,6 +35,8 @@ public class DashboardNotificationReceiver extends BroadcastReceiver {
                     quantityPerCategory.add(Integer.parseInt(toc));
                 }
                 dashboard.get().updateChartEntries(quantityPerCategory);
+            } else if(action.equals(DataPaths.ACTION_NOTIFICATION)) {
+                dashboard.get().displayToast(intent.getStringExtra("message"));
             }
         }
     }

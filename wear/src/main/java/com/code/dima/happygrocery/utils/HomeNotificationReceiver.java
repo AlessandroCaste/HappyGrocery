@@ -25,6 +25,8 @@ public class HomeNotificationReceiver extends BroadcastReceiver {
                 activity.get().displayText(R.string.connected);
             } else if (action.equals(DataPaths.ACTION_DISCONNECTED)) {
                 activity.get().displayText(R.string.connection_lost);
+            } else if(action.equals(DataPaths.ACTION_NOTIFICATION)) {
+                activity.get().displayToast(intent.getStringExtra("message"));
             }
         }
     }

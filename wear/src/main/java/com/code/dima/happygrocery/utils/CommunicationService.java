@@ -31,6 +31,10 @@ public class CommunicationService extends WearableListenerService {
 
     @Override
     public void onCapabilityChanged(@NonNull CapabilityInfo capabilityInfo) {
+        String message = "Received capability changed event";
+        Intent notificationIntent = new Intent(DataPaths.ACTION_NOTIFICATION);
+        notificationIntent.putExtra("message", message);
+        LocalBroadcastManager.getInstance(this).sendBroadcast(notificationIntent);
         String capabilityName = capabilityInfo.getName();
         if (capabilityName.equals(DataPaths.WATCH_SERVER)) {
             // I found the list of phones I can connect to
@@ -55,16 +59,16 @@ public class CommunicationService extends WearableListenerService {
                 }
                 if (connectedNodeID != null) {
                     // notify the home activity that I connected to a node
-                    Intent notificationIntent = new Intent(DataPaths.ACTION_CONNECTED);
-                    LocalBroadcastManager.getInstance(this).sendBroadcastSync(notificationIntent);
+                    Intent capabilityIntent = new Intent(DataPaths.ACTION_CONNECTED);
+                    LocalBroadcastManager.getInstance(this).sendBroadcastSync(capabilityIntent);
 
                     // send a message to the phone to connect to
                     Wearable.getMessageClient(getApplicationContext()).sendMessage(
                             connectedNodeID, DataPaths.NOTIFY_CONNECTED, null);
                 } else {
                     // there's no node to connect to
-                    Intent notificationIntent = new Intent(DataPaths.ACTION_DISCONNECTED);
-                    LocalBroadcastManager.getInstance(this).sendBroadcastSync(notificationIntent);
+                    Intent capabilityIntent = new Intent(DataPaths.ACTION_DISCONNECTED);
+                    LocalBroadcastManager.getInstance(this).sendBroadcastSync(capabilityIntent);
                 }
             }
         }
@@ -72,6 +76,11 @@ public class CommunicationService extends WearableListenerService {
 
     @Override
     public void onMessageReceived(@NonNull MessageEvent messageEvent) {
+        String message = "Received message event";
+        System.out.println(message);
+        Intent notificationIntent = new Intent(DataPaths.ACTION_NOTIFICATION);
+        notificationIntent.putExtra("message", message);
+        LocalBroadcastManager.getInstance(this).sendBroadcast(notificationIntent);
         if(messageEvent.getSourceNodeId().equals(connectedNodeID)) {
             String path = messageEvent.getPath();
             if(path.equals(DataPaths.NOTIFY_NEW_GROCERY)) {
@@ -105,7 +114,11 @@ public class CommunicationService extends WearableListenerService {
 
     @Override
     public void onDataChanged(@NonNull DataEventBuffer dataEventBuffer) {
-        Log.d("Wearable", "Data changed: " + dataEventBuffer);
+        String message = "Received data changed event";
+        System.out.println(message);
+        Intent notificationIntent = new Intent(DataPaths.ACTION_NOTIFICATION);
+        notificationIntent.putExtra("message", message);
+        LocalBroadcastManager.getInstance(this).sendBroadcast(notificationIntent);
 
         for(DataEvent event: dataEventBuffer) {
             if(event.getType() == DataEvent.TYPE_CHANGED) {

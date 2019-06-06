@@ -4,6 +4,7 @@ import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.wearable.activity.WearableActivity;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import androidx.wear.ambient.AmbientModeSupport;
@@ -30,9 +31,8 @@ public class HomeActivity extends WearableActivity
         if (result != null) {
             text.setText(result);
         } else {
-            text.setText(R.string.waiting);
+            text.setText(R.string.connecting);
         }
-
 
         // Enables Always-on
         setAmbientEnabled();
@@ -65,6 +65,9 @@ public class HomeActivity extends WearableActivity
         text.setText(stringID);
     }
 
+    public void displayToast(String message) {
+        Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
+    }
 
     @Override
     public AmbientModeSupport.AmbientCallback getAmbientCallback() {
