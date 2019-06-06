@@ -71,6 +71,8 @@
     <string name="error_barcode_message">Barcode not found!\nAsk shopping assistants!</string>
     <string name="error_connecting_title">Unavailable Service</string>
     <string name="error_connecting_message">HappyGrocery can\'t reach the required service!</string>
+    <string name="clear_firebase_title">Deleting payment history</string>
+    <string name="clear_firebase_message">Are you sure? You won\'t be able to revert this operation</string>
 
 
     <!-- Buttons Options -->
