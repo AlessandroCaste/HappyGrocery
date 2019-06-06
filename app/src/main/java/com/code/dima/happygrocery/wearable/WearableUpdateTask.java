@@ -22,7 +22,7 @@ public class WearableUpdateTask extends AsyncTask<Void, Void, Void> {
 
     @Override
     protected Void doInBackground(Void... voids) {
-        CommunicationHandler handler = CommunicationHandler.getInstance();
+        CommunicationHandler handler = CommunicationHandler.getInstance(context.get());
         ShoppingCart cart = ShoppingCart.getInstance();
         if (lastProductNotification) {
             try {

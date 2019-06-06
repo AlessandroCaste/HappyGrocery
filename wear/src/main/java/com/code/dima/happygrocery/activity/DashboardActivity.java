@@ -1,16 +1,14 @@
 package com.code.dima.happygrocery.activity;
 
-import android.content.IntentFilter;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.wearable.activity.WearableActivity;
-import android.widget.Toast;
 
-import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import androidx.wear.ambient.AmbientModeSupport;
 
 import com.code.dima.happygrocery.R;
 import com.code.dima.happygrocery.utils.Category;
-import com.code.dima.happygrocery.utils.DashboardNotificationReceiver;
+import com.code.dima.happygrocery.utils.DashboardReceiver;
 import com.code.dima.happygrocery.utils.DataPaths;
 import com.code.dima.happygrocery.utils.InitializeImageRetrieverTask;
 import com.github.mikephil.charting.charts.PieChart;
@@ -19,6 +17,7 @@ import com.github.mikephil.charting.components.Legend;
 import com.github.mikephil.charting.data.PieData;
 import com.github.mikephil.charting.data.PieDataSet;
 import com.github.mikephil.charting.data.PieEntry;
+import com.google.android.gms.wearable.Wearable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -30,13 +29,16 @@ public class DashboardActivity extends WearableActivity
     private List<String> labels;
     private List<Integer> colors;
 
-    private DashboardNotificationReceiver receiver;
+    private DashboardReceiver receiver;
+    private String connectedNodeID;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_dashboard);
+
+        connectedNodeID = getIntent().getStringExtra("phoneID");
 
         initializeChart();
 
@@ -51,18 +53,19 @@ public class DashboardActivity extends WearableActivity
     protected void onStart() {
         super.onStart();
 
-        receiver = new DashboardNotificationReceiver(this);
-        IntentFilter filter = new IntentFilter();
-        filter.addAction(DataPaths.ACTION_UPDATE_AMOUNT);
-        filter.addAction(DataPaths.ACTION_UPDATE_QUANTITIES);
-        LocalBroadcastManager.getInstance(this).registerReceiver(receiver, filter);
+        receiver = new DashboardReceiver(this, connectedNodeID);
+        Wearable.getMessageClient(this).addListener(receiver);
+        Wearable.getCapabilityClient(this).addListener(receiver, DataPaths.WATCH_SERVER);
+        Wearable.getDataClient(this).addListener(receiver);
     }
 
     @Override
     protected void onStop() {
         super.onStop();
 
-        LocalBroadcastManager.getInstance(this).unregisterReceiver(receiver);
+        Wearable.getMessageClient(this).removeListener(receiver);
+        Wearable.getCapabilityClient(this).removeListener(receiver);
+        Wearable.getDataClient(this).removeListener(receiver);
         receiver = null;
     }
 
@@ -72,11 +75,11 @@ public class DashboardActivity extends WearableActivity
         chart.setDrawHoleEnabled(true);
         chart.setHoleColor(R.color.dark_grey);
         chart.setHoleRadius(75);
-        //chart.setCenterTextColor(R.color.white);
+        chart.setDrawCenterText(true);
         chart.setCenterTextColor(R.color.light_grey);
         chart.setCenterTextSize(36);
         Description desc = new Description();
-        desc.setText("10.0$");
+        desc.setText("Dashboard");
         chart.setDescription(desc);
         chart.setDrawEntryLabels(false);
         Legend legend = chart.getLegend();
@@ -125,8 +128,27 @@ public class DashboardActivity extends WearableActivity
         chart.invalidate();
     }
 
-    public void displayToast(String message) {
-        Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
+    public void showNewProduct(List<String> details) {
+        if(details.size() == 4) {
+            Intent displayDetailsIntent = new Intent(this, ProductDetailsActivity.class);
+            displayDetailsIntent.putExtra("name", details.get(0));
+            displayDetailsIntent.putExtra("category", details.get(1));
+            displayDetailsIntent.putExtra("quantity", details.get(2));
+            displayDetailsIntent.putExtra("price", details.get(3));
+            startActivity(displayDetailsIntent);
+        } else {
+            System.out.println("Dashboard Activity - Received a bad formatted product details");
+        }
+    }
+
+    public void closeGrocery() {
+        setResult(RESULT_OK);
+        finish();
+    }
+
+    public void returnHome() {
+        setResult(RESULT_CANCELED);
+        finish();
     }
 
 

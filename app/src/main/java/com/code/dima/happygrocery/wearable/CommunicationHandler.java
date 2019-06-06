@@ -6,7 +6,10 @@ import android.util.Log;
 import com.code.dima.happygrocery.model.Product;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.gms.wearable.CapabilityClient;
+import com.google.android.gms.wearable.CapabilityInfo;
 import com.google.android.gms.wearable.DataItem;
+import com.google.android.gms.wearable.Node;
 import com.google.android.gms.wearable.PutDataMapRequest;
 import com.google.android.gms.wearable.PutDataRequest;
 import com.google.android.gms.wearable.Wearable;
@@ -19,15 +22,15 @@ public class CommunicationHandler {
     private String connectedNodeID;
     private static CommunicationHandler instance;
 
-    private CommunicationHandler() {
+    private CommunicationHandler(Context context) {
         super();
-        this.connectedNodeID = null;
         instance = null;
+        initializeNodeID(context);
     }
 
-    public static CommunicationHandler getInstance() {
+    public static CommunicationHandler getInstance(Context context) {
         if(instance == null) {
-            instance = new CommunicationHandler();
+            instance = new CommunicationHandler(context);
         }
         return instance;
     }
@@ -40,8 +43,25 @@ public class CommunicationHandler {
         this.connectedNodeID = nodeID;
     }
 
+    private void initializeNodeID(Context context) {
+        if (connectedNodeID == null) {
+            Task<CapabilityInfo> getWatch = Wearable.getCapabilityClient(context).getCapability(DataPaths.WATCH_CLIENT, CapabilityClient.FILTER_REACHABLE);
+            getWatch.addOnSuccessListener(new OnSuccessListener<CapabilityInfo>() {
+                @Override
+                public void onSuccess(CapabilityInfo capabilityInfo) {
+                    for (Node node: capabilityInfo.getNodes()) {
+                        connectedNodeID = node.getId();
+                    }
+                    System.out.println("HAPPY GROCERY - connected to " + connectedNodeID);
+                }
+            });
+        }
+    }
 
     public void notifyNewGrocery(Context context) {
+        if(connectedNodeID == null) {
+            initializeNodeID(context);
+        }
         if (connectedNodeID != null) {
             Task<Integer> sendTask = Wearable.getMessageClient(context).sendMessage(
                     connectedNodeID, DataPaths.NOTIFY_NEW_GROCERY, null);
@@ -55,6 +75,9 @@ public class CommunicationHandler {
     }
 
     public void notifyNewProductAdded(Context context, Product product) {
+        if(connectedNodeID == null) {
+            initializeNodeID(context);
+        }
         if (connectedNodeID != null) {
             // details encoded as a string "name;category;quantity;price"
             String dataString = product.getName() + ';' +
@@ -75,6 +98,9 @@ public class CommunicationHandler {
     }
 
     public void notifyGroceryClosed(Context context) {
+        if(connectedNodeID == null) {
+            initializeNodeID(context);
+        }
         if (connectedNodeID != null) {
             Task<Integer> sendTask = Wearable.getMessageClient(context).sendMessage(
                     connectedNodeID, DataPaths.NOTIFY_GROCERY_CLOSED, null);
@@ -88,6 +114,9 @@ public class CommunicationHandler {
     }
 
     public void updateWearableAmount(Context context, float amount) {
+        if(connectedNodeID == null) {
+            initializeNodeID(context);
+        }
         if (connectedNodeID != null) {
             // sends the wearable the actual amount of the actual grocery
             PutDataMapRequest dataRequest = PutDataMapRequest.create(DataPaths.AMOUNT_PATH);
@@ -105,6 +134,9 @@ public class CommunicationHandler {
     }
 
     public void updateWearableQuantities(Context context, List<Integer> quantities) {
+        if(connectedNodeID == null) {
+            initializeNodeID(context);
+        }
         if(connectedNodeID != null) {
             StringBuilder data = new StringBuilder();
             if (quantities.size() > 0) {

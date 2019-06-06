@@ -1,27 +1,24 @@
 package com.code.dima.happygrocery.activity;
 
-import android.content.IntentFilter;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.wearable.activity.WearableActivity;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import androidx.wear.ambient.AmbientModeSupport;
 
 import com.code.dima.happygrocery.R;
-import com.code.dima.happygrocery.utils.CommunicationService;
-import com.code.dima.happygrocery.utils.DataPaths;
-import com.code.dima.happygrocery.utils.HomeNotificationReceiver;
-import com.google.android.gms.wearable.CapabilityClient;
+import com.code.dima.happygrocery.utils.HomeMessageReceiver;
 import com.google.android.gms.wearable.Wearable;
 
 
 public class HomeActivity extends WearableActivity
         implements AmbientModeSupport.AmbientCallbackProvider {
 
-    private HomeNotificationReceiver receiver;
+    private HomeMessageReceiver receiver;
     private TextView text;
+
+    private final int REQUEST_CODE = 1000;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,14 +27,7 @@ public class HomeActivity extends WearableActivity
 
         text = findViewById(R.id.home_activity_text);
 
-        String result = getIntent().getStringExtra("result");
-        if (result != null) {
-            text.setText(result);
-        } else {
-            text.setText(R.string.connecting);
-        }
-
-        CommunicationService.getNodeAtStart(this);
+        text.setText(R.string.waiting);
 
         // Enables Always-on
         setAmbientEnabled();
@@ -47,35 +37,39 @@ public class HomeActivity extends WearableActivity
     protected void onStart() {
         super.onStart();
 
-        receiver = new HomeNotificationReceiver(this);
-        IntentFilter filter = new IntentFilter();
-        filter.addAction(DataPaths.ACTION_CONNECTED);
-        filter.addAction(DataPaths.ACTION_DISCONNECTED);
-        LocalBroadcastManager.getInstance(this).registerReceiver(receiver, filter);
+        receiver = new HomeMessageReceiver(this);
+        Wearable.getMessageClient(this).addListener(receiver);
     }
 
     @Override
     protected void onStop() {
         super.onStop();
 
-        LocalBroadcastManager.getInstance(this).unregisterReceiver(receiver);
+        Wearable.getMessageClient(this).removeListener(receiver);
         receiver = null;
     }
 
-    public void displayText(String string) {
-        text.setText(string);
+    public void startDashboard(String nodeID) {
+        Intent startDashboard = new Intent(this, DashboardActivity.class);
+        startDashboard.putExtra("phoneID", nodeID);
+        startActivity(startDashboard);
+        startActivityForResult(startDashboard, REQUEST_CODE);
     }
 
-    public void displayText(int stringID) {
-        text.setText(stringID);
-    }
-
-    public void displayToast(String message) {
-        Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if(requestCode == REQUEST_CODE) {
+            if(resultCode == RESULT_OK) {
+                text.setText(R.string.grocery_closed);
+            } else if (resultCode == RESULT_CANCELED) {
+                text.setText(R.string.connection_lost);
+            }
+        }
     }
 
     @Override
     public AmbientModeSupport.AmbientCallback getAmbientCallback() {
         return null;
     }
+
 }

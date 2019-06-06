@@ -38,29 +38,17 @@ public class CommunicationService extends WearableListenerService {
         getPhone.addOnSuccessListener(new OnSuccessListener<CapabilityInfo>() {
             @Override
             public void onSuccess(CapabilityInfo capabilityInfo) {
-                String capabilityName = capabilityInfo.getName();
-                if (capabilityName.equals(DataPaths.WATCH_SERVER)) {
-                    // I found the list of phones I can connect to
-                    Set<Node> nodes = capabilityInfo.getNodes();
-                    ArrayList<String> nodeIDs = new ArrayList<>();
-                    for (Node node: nodes) {
-                        nodeIDs.add(node.getId());
-                    }
-                    for (String id : nodeIDs) {
-                        connectedNode.setConnectedNodeID(id);
-                    }
-                    if (connectedNode.getConnectedNodeID() != null) {
-                        // notify the home activity that I connected to a node
-                        Intent capabilityIntent = new Intent(DataPaths.ACTION_CONNECTED);
-                        LocalBroadcastManager.getInstance(context).sendBroadcast(capabilityIntent);
-                        // send a message to the phone to connect to
-                        Wearable.getMessageClient(context).sendMessage(
-                                connectedNode.getConnectedNodeID(), DataPaths.NOTIFY_CONNECTED, null);
-                    } else {
-                        // there's no node to connect to
-                        Intent capabilityIntent = new Intent(DataPaths.ACTION_DISCONNECTED);
-                        LocalBroadcastManager.getInstance(context).sendBroadcast(capabilityIntent);
-                    }
+                for (Node node: capabilityInfo.getNodes()) {
+                    connectedNode.setConnectedNodeID(node.getId());
+                }
+                if (connectedNode.getConnectedNodeID() != null) {
+                    // notify the home activity that I connected to a node
+                    Intent capabilityIntent = new Intent(DataPaths.ACTION_CONNECTED);
+                    LocalBroadcastManager.getInstance(context).sendBroadcast(capabilityIntent);
+                } else {
+                    // there's no node to connect to
+                    Intent capabilityIntent = new Intent(DataPaths.ACTION_DISCONNECTED);
+                    LocalBroadcastManager.getInstance(context).sendBroadcast(capabilityIntent);
                 }
             }
         });
@@ -99,54 +87,11 @@ public class CommunicationService extends WearableListenerService {
                     // notify the home activity that I connected to a node
                     Intent capabilityIntent = new Intent(DataPaths.ACTION_CONNECTED);
                     LocalBroadcastManager.getInstance(this).sendBroadcastSync(capabilityIntent);
-
-                    // send a message to the phone to connect to
-                    Wearable.getMessageClient(getApplicationContext()).sendMessage(
-                            connectedNode.getConnectedNodeID(), DataPaths.NOTIFY_CONNECTED, null);
                 } else {
                     // there's no node to connect to
                     Intent capabilityIntent = new Intent(DataPaths.ACTION_DISCONNECTED);
                     LocalBroadcastManager.getInstance(this).sendBroadcastSync(capabilityIntent);
                 }
-            }
-        }
-    }
-
-    @Override
-    public void onMessageReceived(@NonNull MessageEvent messageEvent) {
-        String message = "Received message event";
-        System.out.println(message);
-        Intent notificationIntent = new Intent(DataPaths.ACTION_NOTIFICATION);
-        notificationIntent.putExtra("message", message);
-        LocalBroadcastManager.getInstance(this).sendBroadcast(notificationIntent);
-        ConnectedNode connectedNode = ConnectedNode.getInstance();
-        if(messageEvent.getSourceNodeId().equals(connectedNode.getConnectedNodeID())) {
-            String path = messageEvent.getPath();
-            if(path.equals(DataPaths.NOTIFY_NEW_GROCERY)) {
-                Intent startDashboard = new Intent(this, DashboardActivity.class);
-                startDashboard.putExtra("phoneID", connectedNode.getConnectedNodeID());
-                startActivity(startDashboard);
-            } else if (path.equals(DataPaths.NOTIFY_NEW_PRODUCT)) {
-                // a new product has been added to the cart
-                // details encoded as a string "name;category;quantity;price"
-                String details = new String(messageEvent.getData(), StandardCharsets.UTF_8);
-                String[] splits = details.split(";");
-                try {
-                    Intent displayDetailsIntent = new Intent(this, ProductDetailsActivity.class);
-                    displayDetailsIntent.putExtra("name", splits[0]);
-                    displayDetailsIntent.putExtra("category", splits[1]);
-                    displayDetailsIntent.putExtra("quantity", splits[2]);
-                    displayDetailsIntent.putExtra("price", splits[3]);
-                    startActivity(displayDetailsIntent);
-                } catch (Exception e) {
-                    Log.e("Wearable", "Received bad formatted details for new added product");
-                }
-            } else if (path.equals(DataPaths.NOTIFY_GROCERY_CLOSED)) {
-                // the grocery has been closed correctly
-                Intent startHome = new Intent(this, HomeActivity.class);
-                String resultOk = getString(R.string.grocery_closed);
-                startHome.putExtra("result", resultOk);
-                startActivity(startHome);
             }
         }
     }

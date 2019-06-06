@@ -33,7 +33,7 @@ public class WearableListener implements MessageClient.OnMessageReceivedListener
 
     @Override
     public void onCapabilityChanged(@NonNull CapabilityInfo capabilityInfo) {
-        CommunicationHandler handler = CommunicationHandler.getInstance();
+        CommunicationHandler handler = CommunicationHandler.getInstance(context.get());
         String capabilityName = capabilityInfo.getName();
         String connectedNodeID = handler.getConnectedNodeID();
         if (connectedNodeID != null &&
@@ -54,7 +54,7 @@ public class WearableListener implements MessageClient.OnMessageReceivedListener
 
     @Override
     public void onMessageReceived(@NonNull MessageEvent messageEvent) {
-        CommunicationHandler handler = CommunicationHandler.getInstance();
+        CommunicationHandler handler = CommunicationHandler.getInstance(context.get());
         String connectedNodeID = handler.getConnectedNodeID();
         if(connectedNodeID == null) {
             if (messageEvent.getPath().equals(DataPaths.NOTIFY_CONNECTED)) {
@@ -65,7 +65,7 @@ public class WearableListener implements MessageClient.OnMessageReceivedListener
                 Toast.makeText(context.get(), message, Toast.LENGTH_SHORT).show();
                 if (fromDashboard) {
                     // notify the wearable to start a new grocery
-                    CommunicationHandler.getInstance().notifyNewGrocery(context.get());
+                    CommunicationHandler.getInstance(context.get()).notifyNewGrocery(context.get());
                 }
             }
         }

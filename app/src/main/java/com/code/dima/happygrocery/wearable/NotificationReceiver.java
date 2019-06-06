@@ -29,7 +29,7 @@ public class NotificationReceiver extends BroadcastReceiver {
         String connectedMessage = appContext.get().getString(R.string.wearable_connected);
         if (fromDashboard && message.equals(connectedMessage)) {
             // notify the wearable to start a new grocery
-            CommunicationHandler.getInstance().notifyNewGrocery(appContext.get());
+            CommunicationHandler.getInstance(appContext.get()).notifyNewGrocery(appContext.get());
         }
     }
 }

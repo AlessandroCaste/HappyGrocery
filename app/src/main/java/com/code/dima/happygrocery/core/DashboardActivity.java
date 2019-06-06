@@ -111,7 +111,7 @@ public class DashboardActivity extends AppCompatActivity
         new InitializeImageRetrieverTask(DashboardActivity.this).execute();
 
         // notify the wearable to start a new grocery
-        CommunicationHandler.getInstance().notifyNewGrocery(this);
+        CommunicationHandler.getInstance(this).notifyNewGrocery(this);
     }
 
     private void updateChartData() {
@@ -180,7 +180,7 @@ public class DashboardActivity extends AppCompatActivity
         } else if (requestCode == getResources().getInteger(R.integer.CHECKOUT_CODE)) {
             if(resultCode == Activity.RESULT_OK) {
                 // the grocery has finished -> notify the wearable
-                CommunicationHandler.getInstance().notifyGroceryClosed(this);
+                CommunicationHandler.getInstance(this).notifyGroceryClosed(this);
                 finish();
                 overridePendingTransition(R.transition.slide_in_left,R.transition.slide_out_right);
             }
