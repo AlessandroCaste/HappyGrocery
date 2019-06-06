@@ -41,7 +41,6 @@
             android:label="@string/title_activity_dashboard">
         </activity>
         <service android:name=".utils.CommunicationService"
-            android:enabled="true"
             android:exported="false" >
             <intent-filter>
                 <action android:name="com.google.android.gms.wearable.DATA_CHANGED" />

@@ -10,6 +10,9 @@ import com.code.dima.happygrocery.R;
 import com.code.dima.happygrocery.activity.DashboardActivity;
 import com.code.dima.happygrocery.activity.HomeActivity;
 import com.code.dima.happygrocery.activity.ProductDetailsActivity;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
+import com.google.android.gms.wearable.CapabilityClient;
 import com.google.android.gms.wearable.CapabilityInfo;
 import com.google.android.gms.wearable.DataEvent;
 import com.google.android.gms.wearable.DataEventBuffer;
@@ -28,6 +31,42 @@ import java.util.Set;
 public class CommunicationService extends WearableListenerService {
 
     private String connectedNodeID;
+
+    @Override
+    public void onCreate() {
+        super.onCreate();
+        Task<CapabilityInfo> getPhone = Wearable.getCapabilityClient(this).getCapability(DataPaths.WATCH_SERVER, CapabilityClient.FILTER_REACHABLE);
+        getPhone.addOnSuccessListener(new OnSuccessListener<CapabilityInfo>() {
+            @Override
+            public void onSuccess(CapabilityInfo capabilityInfo) {
+                String capabilityName = capabilityInfo.getName();
+                if (capabilityName.equals(DataPaths.WATCH_SERVER)) {
+                    // I found the list of phones I can connect to
+                    Set<Node> nodes = capabilityInfo.getNodes();
+                    ArrayList<String> nodeIDs = new ArrayList<>();
+                    for (Node node: nodes) {
+                        nodeIDs.add(node.getId());
+                    }
+                    for (String id : nodeIDs) {
+                        connectedNodeID = id;
+                    }
+                    if (connectedNodeID != null) {
+                        // notify the home activity that I connected to a node
+                        Intent capabilityIntent = new Intent(DataPaths.ACTION_CONNECTED);
+                        LocalBroadcastManager.getInstance(CommunicationService.this).sendBroadcast(capabilityIntent);
+
+                        // send a message to the phone to connect to
+                        Wearable.getMessageClient(getApplicationContext()).sendMessage(
+                                connectedNodeID, DataPaths.NOTIFY_CONNECTED, null);
+                    } else {
+                        // there's no node to connect to
+                        Intent capabilityIntent = new Intent(DataPaths.ACTION_DISCONNECTED);
+                        LocalBroadcastManager.getInstance(CommunicationService.this).sendBroadcast(capabilityIntent);
+                    }
+                }
+            }
+        });
+    }
 
     @Override
     public void onCapabilityChanged(@NonNull CapabilityInfo capabilityInfo) {

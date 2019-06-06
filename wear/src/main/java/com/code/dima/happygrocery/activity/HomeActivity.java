@@ -12,6 +12,8 @@ import androidx.wear.ambient.AmbientModeSupport;
 import com.code.dima.happygrocery.R;
 import com.code.dima.happygrocery.utils.DataPaths;
 import com.code.dima.happygrocery.utils.HomeNotificationReceiver;
+import com.google.android.gms.wearable.CapabilityClient;
+import com.google.android.gms.wearable.Wearable;
 
 
 public class HomeActivity extends WearableActivity
@@ -33,6 +35,8 @@ public class HomeActivity extends WearableActivity
         } else {
             text.setText(R.string.connecting);
         }
+
+
 
         // Enables Always-on
         setAmbientEnabled();
