@@ -69,6 +69,9 @@ dependencies {
 
     // libraries for handling wearable communication
     implementation 'com.google.android.gms:play-services-wearable:16.0.1'
+    implementation 'com.google.firebase:firebase-database:17.0.0'
+    implementation 'com.google.firebase:firebase-auth:17.0.0'
+
 
 }
 
