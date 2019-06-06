@@ -13,6 +13,7 @@
     <string name="nav_header_desc">Navigation header</string>
     <string name="action_settings">Settings</string>
     <string name="prompt">Frame your barcode!</string>
+    <string name="qr_prompt">Frame the store QR!</string>
     <string name="long_search">Try a shorter search!</string>
 
     <!-- RELATIVE TO DASHBOARD ACTIVITY -->
@@ -48,6 +49,7 @@
 
     <!-- DRAWER MENU ENTRIES -->
     <string name="menu_clear_grocery">Clear grocery</string>
+    <string name="end_grocery">Checkout</string>
     <string name="menu_payment_history">Payment history</string>
     <string name="menu_payment_methods">Payment methods</string>
     <string name="menu_log_out">Log out</string>
@@ -57,9 +59,6 @@
 
     <!-- ALERT NOTIFICATIONS -->
     <string name="log_out_title">Logging out!</string>
-    <string name="log_out_message">Are you sure to log out?</string>
-    <string name="error_qr_store_title">QR not recognized</string>
-    <string name="error_qr_store_message">The scanned QR is wrong! Ask the shopping assistants</string>
     <string name="log_out_message">Are you sure to log out? Shopping cart will be emptied!</string>
     <string name="clear_grocery_title">Clearing the shopping cart!</string>
     <string name="clear_grocery_message">Are you sure to clear the shopping cart? This cannot be undone</string>
@@ -73,7 +72,6 @@
     <string name="error_connecting_message">HappyGrocery can\'t reach the required service!</string>
     <string name="clear_firebase_title">Deleting payment history</string>
     <string name="clear_firebase_message">Are you sure? You won\'t be able to revert this operation</string>
-
 
     <!-- Buttons Options -->
     <string name="about_us_title">HAPPY GROCERY EVERYONE!</string>
@@ -97,6 +95,17 @@
     <!-- Activity Texts and the like -->
     <string name="Welcome">Welcome!</string>
     <string name="HappyGrocery">Happy Grocery</string>
+
+    <!-- SHARED PREFERENCES FOR SHOP NAME AND URL -->
+    <string name="shop_url">SHOP_URL</string>
+    <string name="shop_name">SHOP_NAME</string>
+
+    <!-- USED IN PAYMENT HISTORY ACTIVITY -->
+    <string name="closed_grocery">Closed</string>
+
+    <!-- USED TO DISPLAY TEXT WHEN A WEARABLE CONNECTS TO THE APP -->
+    <string name="wearable_connected">Connected to your wearable device!</string>
+    <string name="wearable_disconnected">Connection lost with your wearable device.</string>
 
 
 </resources>
