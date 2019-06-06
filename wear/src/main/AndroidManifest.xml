@@ -40,22 +40,6 @@
             android:name=".activity.DashboardActivity"
             android:label="@string/title_activity_dashboard">
         </activity>
-        <service android:name=".utils.CommunicationService"
-            android:exported="false" >
-            <intent-filter>
-                <action android:name="com.google.android.gms.wearable.DATA_CHANGED" />
-                <data android:scheme="wear" />
-            </intent-filter>
-            <intent-filter>
-                <action android:name="com.google.android.gms.wearable.MESSAGE_RECEIVED" />
-                <data android:scheme="wear" />
-            </intent-filter>
-            <intent-filter>
-                <action android:name="com.google.android.gms.wearable.CAPABILITY_CHANGED" />
-                <data android:scheme="wear" />
-            </intent-filter>
-        </service>
-
     </application>
 
 </manifest>
