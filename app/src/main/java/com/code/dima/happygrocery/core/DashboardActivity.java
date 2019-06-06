@@ -4,16 +4,12 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.View;
 
 import com.code.dima.happygrocery.wearable.CommunicationHandler;
-import com.code.dima.happygrocery.wearable.DataPaths;
-import com.code.dima.happygrocery.wearable.NotificationReceiver;
-import com.code.dima.happygrocery.wearable.WearableListener;
 import com.code.dima.happygrocery.wearable.WearableUpdateTask;
 import com.google.android.material.navigation.NavigationView;
 import androidx.core.view.GravityCompat;
@@ -21,7 +17,6 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
-import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
 import android.view.Menu;
 import android.view.MenuItem;
@@ -58,7 +53,6 @@ public class DashboardActivity extends AppCompatActivity
     private List<String> labels;
     private List<Integer> colors;
     FirebaseUser user;
-    private NotificationReceiver receiver;
 
     String url = "";
     String shopName = "";
@@ -185,24 +179,6 @@ public class DashboardActivity extends AppCompatActivity
                 overridePendingTransition(R.transition.slide_in_left,R.transition.slide_out_right);
             }
         }
-    }
-
-    @Override
-    protected void onStart() {
-        super.onStart();
-        user = FirebaseAuth.getInstance().getCurrentUser();
-
-        // register a receiver in order to be notified when a wearable connects or disconnects
-        IntentFilter receiverFilter = new IntentFilter(DataPaths.ACTION_NOTIFICATION);
-        receiver = new NotificationReceiver(this, true);
-        LocalBroadcastManager.getInstance(this).registerReceiver(receiver, receiverFilter);
-    }
-
-    @Override
-    protected void onStop() {
-        super.onStop();
-        LocalBroadcastManager.getInstance(this).unregisterReceiver(receiver);
-        receiver = null;
     }
 
     @Override

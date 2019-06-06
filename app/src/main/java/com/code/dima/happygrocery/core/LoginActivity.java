@@ -5,14 +5,11 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import androidx.annotation.NonNull;
 
 import com.code.dima.happygrocery.wearable.DataPaths;
-import com.code.dima.happygrocery.wearable.NotificationReceiver;
-import com.code.dima.happygrocery.wearable.WearableListener;
 import com.google.android.gms.wearable.Wearable;
 import com.google.android.material.navigation.NavigationView;
 import androidx.core.view.GravityCompat;
@@ -20,7 +17,6 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
-import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
 import android.util.Log;
 import android.view.Menu;
@@ -61,8 +57,6 @@ public class LoginActivity extends AppCompatActivity
     private FirebaseAuth mAuth;
     private FirebaseAuth.AuthStateListener mAuthStateListener;
     private boolean authFlag = false;
-
-    private NotificationReceiver receiver;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -171,18 +165,6 @@ public class LoginActivity extends AppCompatActivity
     protected void onStart() {
         super.onStart();
         user = FirebaseAuth.getInstance().getCurrentUser();
-
-        // register a receiver in order to be notified when a wearable connects or disconnects
-        IntentFilter receiverFilter = new IntentFilter(DataPaths.ACTION_NOTIFICATION);
-        receiver = new NotificationReceiver(this, false);
-        LocalBroadcastManager.getInstance(this).registerReceiver(receiver, receiverFilter);
-    }
-
-    @Override
-    protected void onStop(){
-        super.onStop();
-        LocalBroadcastManager.getInstance(this).unregisterReceiver(receiver);
-        receiver = null;
     }
 
     private void parseAndLaunch(String url, final Intent i) {
