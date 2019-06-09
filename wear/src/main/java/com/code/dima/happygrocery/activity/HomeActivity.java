@@ -34,17 +34,15 @@ public class HomeActivity extends WearableActivity
     }
 
     @Override
-    protected void onStart() {
-        super.onStart();
-
+    protected void onResume() {
+        super.onResume();
         receiver = new HomeMessageReceiver(this);
         Wearable.getMessageClient(this).addListener(receiver);
     }
 
     @Override
-    protected void onStop() {
-        super.onStop();
-
+    protected void onPause() {
+        super.onPause();
         Wearable.getMessageClient(this).removeListener(receiver);
         receiver = null;
     }
@@ -52,7 +50,6 @@ public class HomeActivity extends WearableActivity
     public void startDashboard(String nodeID) {
         Intent startDashboard = new Intent(this, DashboardActivity.class);
         startDashboard.putExtra("phoneID", nodeID);
-        startActivity(startDashboard);
         startActivityForResult(startDashboard, REQUEST_CODE);
     }
 

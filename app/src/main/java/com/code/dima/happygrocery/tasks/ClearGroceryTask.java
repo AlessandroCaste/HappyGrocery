@@ -19,10 +19,10 @@ public class ClearGroceryTask extends AsyncTask<Void, Void, Void> {
 
     @Override
     protected Void doInBackground(Void... voids) {
+        CommunicationHandler.getInstance(context.get()).notifyGroceryCleared(context.get());
         DatabaseAdapter adapter = DatabaseAdapter.openInWriteMode(context.get());
         adapter.clearGrocery();
         adapter.close();
-        CommunicationHandler.getInstance(context.get()).notifyGroceryCleared(context.get());
         return null;
     }
 }

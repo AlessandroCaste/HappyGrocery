@@ -13,7 +13,6 @@ import com.code.dima.happygrocery.utils.DataPaths;
 import com.code.dima.happygrocery.utils.InitializeImageRetrieverTask;
 import com.github.mikephil.charting.charts.PieChart;
 import com.github.mikephil.charting.components.Description;
-import com.github.mikephil.charting.components.Legend;
 import com.github.mikephil.charting.data.PieData;
 import com.github.mikephil.charting.data.PieDataSet;
 import com.github.mikephil.charting.data.PieEntry;
@@ -73,18 +72,18 @@ public class DashboardActivity extends WearableActivity
     private void initializeChart() {
         chart = findViewById(R.id.wear_pie_chart);
         chart.setDrawHoleEnabled(true);
-        chart.setHoleColor(R.color.dark_grey);
+        chart.setHoleColor(getColor(R.color.black));
         chart.setHoleRadius(75);
         chart.setDrawCenterText(true);
-        chart.setCenterTextColor(R.color.light_grey);
+        chart.setCenterTextColor(getColor(R.color.light_grey));
         chart.setCenterTextSize(36);
         Description desc = new Description();
-        desc.setText("Dashboard");
+        desc.setText("");
         chart.setDescription(desc);
         chart.setDrawEntryLabels(false);
-        Legend legend = chart.getLegend();
-        legend.setEnabled(false);
+        chart.getLegend().setEnabled(false);
         chart.setTouchEnabled(true);
+        chart.invalidate();
 
         colors = new ArrayList<>();
         labels = new ArrayList<>();

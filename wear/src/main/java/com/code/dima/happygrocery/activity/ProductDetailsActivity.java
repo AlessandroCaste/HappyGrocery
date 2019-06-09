@@ -15,8 +15,6 @@ import com.code.dima.happygrocery.utils.ImageRetriever;
 
 public class ProductDetailsActivity extends WearableActivity {
 
-    private CircularProgressLayout progressLayout;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -41,22 +39,10 @@ public class ProductDetailsActivity extends WearableActivity {
         int imageID = retriever.retrieveImageID(nameString, category);
         image.setImageResource(imageID);
 
-        progressLayout = findViewById(R.id.product_details_progress_layout);
-        progressLayout.setTotalTime(5000);
-
-        progressLayout.setOnTimerFinishedListener(new CircularProgressLayout.OnTimerFinishedListener() {
-            @Override
-            public void onTimerFinished(CircularProgressLayout layout) {
-                // returns to Dashboard
-                finish();
-            }
-        });
-
         setAmbientEnabled();
     }
 
     public void onClick(View view) {
-        progressLayout.stopTimer();
         finish();
     }
 }
