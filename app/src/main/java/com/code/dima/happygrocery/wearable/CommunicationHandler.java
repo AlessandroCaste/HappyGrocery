@@ -35,14 +35,6 @@ public class CommunicationHandler {
         return instance;
     }
 
-    String getConnectedNodeID() {
-        return connectedNodeID;
-    }
-
-    void setConnectedNodeID(String nodeID) {
-        this.connectedNodeID = nodeID;
-    }
-
     private void initializeNodeID(Context context) {
         if (connectedNodeID == null) {
             Task<CapabilityInfo> getWatch = Wearable.getCapabilityClient(context).getCapability(DataPaths.WATCH_CLIENT, CapabilityClient.FILTER_REACHABLE);
@@ -71,6 +63,7 @@ public class CommunicationHandler {
                     Log.d("Connection handler", "Notified watch of the start of a new grocery");
                 }
             });
+            updateInDashboard(context, true);
         }
     }
 
@@ -110,6 +103,7 @@ public class CommunicationHandler {
                     Log.d("Connection service", "Notified watch of the closing of the grocery");
                 }
             });
+            updateInDashboard(context, false);
         }
     }
 
@@ -119,13 +113,14 @@ public class CommunicationHandler {
         }
         if (connectedNodeID != null) {
             Task<Integer> sendTask = Wearable.getMessageClient(context).sendMessage(
-                    connectedNodeID, DataPaths.NOTIFY_GROCERY_CLOSED, null);
+                    connectedNodeID, DataPaths.NOTIFY_GROCERY_CLEARED, null);
             sendTask.addOnSuccessListener(new OnSuccessListener<Integer>() {
                 @Override
                 public void onSuccess(Integer id) {
                     Log.d("Connection service", "Notified watch of the closing of the grocery");
                 }
             });
+            updateInDashboard(context, false);
         }
     }
 
@@ -175,5 +170,19 @@ public class CommunicationHandler {
                 }
             });
         }
+    }
+
+    private void updateInDashboard(Context context, boolean value) {
+        PutDataMapRequest dataRequest = PutDataMapRequest.create(DataPaths.IN_DASHBOARD_PATH);
+        dataRequest.getDataMap().putBoolean(DataPaths.IN_DASHBOARD_KEY, value);
+        PutDataRequest request = dataRequest.asPutDataRequest();
+        request.setUrgent();
+        Task<DataItem> updateTask = Wearable.getDataClient(context).putDataItem(request);
+        updateTask.addOnSuccessListener(new OnSuccessListener<DataItem>() {
+            @Override
+            public void onSuccess(DataItem dataItem) {
+                Log.d("Communication service", "Sent new In Dashboard value to wearable");
+            }
+        });
     }
 }

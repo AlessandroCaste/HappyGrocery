@@ -30,6 +30,7 @@ public class DashboardActivity extends WearableActivity
 
     private DashboardReceiver receiver;
     private String connectedNodeID;
+    private boolean resumeNeeded;
 
 
     @Override
@@ -38,6 +39,7 @@ public class DashboardActivity extends WearableActivity
         setContentView(R.layout.activity_dashboard);
 
         connectedNodeID = getIntent().getStringExtra("phoneID");
+        resumeNeeded = getIntent().getBooleanExtra("resume", false);
 
         initializeChart();
 
@@ -56,6 +58,11 @@ public class DashboardActivity extends WearableActivity
         Wearable.getMessageClient(this).addListener(receiver);
         Wearable.getCapabilityClient(this).addListener(receiver, DataPaths.WATCH_SERVER);
         Wearable.getDataClient(this).addListener(receiver);
+
+        if(resumeNeeded) {
+            receiver.resumeGrocery();
+            resumeNeeded = false;
+        }
     }
 
     @Override

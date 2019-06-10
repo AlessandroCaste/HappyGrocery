@@ -38,6 +38,9 @@ public class HomeActivity extends WearableActivity
         super.onResume();
         receiver = new HomeMessageReceiver(this);
         Wearable.getMessageClient(this).addListener(receiver);
+
+        // if the handheld is already running a grocery, goes to dashboard
+        receiver.checkHandheldState();
     }
 
     @Override
@@ -47,9 +50,10 @@ public class HomeActivity extends WearableActivity
         receiver = null;
     }
 
-    public void startDashboard(String nodeID) {
+    public void startDashboard(String nodeID, boolean resume) {
         Intent startDashboard = new Intent(this, DashboardActivity.class);
         startDashboard.putExtra("phoneID", nodeID);
+        startDashboard.putExtra("resume", resume);
         startActivityForResult(startDashboard, REQUEST_CODE);
     }
 

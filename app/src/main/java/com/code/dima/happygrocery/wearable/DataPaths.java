@@ -4,10 +4,12 @@ public class DataPaths {
     // paths used in DataMaps
     public static final String AMOUNT_PATH = "/amount";
     public static final String QUANTITIES_PATH = "/quantities";
+    public static final String IN_DASHBOARD_PATH = "/in_dashboard";
 
     //keys of the items in the DataMaps
     public static final String AMOUNT_KEY = "com.code.dima.happygrocery.amount";
     public static final String QUANTITIES_KEY = "com.code.dima.happygrocery.quantities";
+    public static final String IN_DASHBOARD_KEY = "com.code.dima.happygrocery.in_dashboard";
 
     // message keys
     public static final String NOTIFY_NEW_GROCERY = "/notify_new_grocery_from_phone";
