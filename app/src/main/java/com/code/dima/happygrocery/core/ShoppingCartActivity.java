@@ -5,14 +5,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Vibrator;
-import androidx.annotation.NonNull;
-import androidx.recyclerview.widget.DividerItemDecoration;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-import androidx.appcompat.widget.SearchView;
-import androidx.appcompat.widget.Toolbar;
-import com.google.android.material.navigation.NavigationView;
-import androidx.appcompat.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -20,11 +12,19 @@ import android.view.animation.AnimationUtils;
 import android.view.animation.LayoutAnimationController;
 import android.widget.Toast;
 
-import com.code.dima.happygrocery.R;
-import com.code.dima.happygrocery.exception.NoLastProductException;
-import com.code.dima.happygrocery.adapter.ProductAdapter;
-import com.code.dima.happygrocery.model.ShoppingCart;
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.SearchView;
+import androidx.appcompat.widget.Toolbar;
+import androidx.recyclerview.widget.DividerItemDecoration;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
+import com.code.dima.happygrocery.R;
+import com.code.dima.happygrocery.adapter.ProductAdapter;
+import com.code.dima.happygrocery.exception.NoLastProductException;
+import com.code.dima.happygrocery.model.ShoppingCart;
+import com.google.android.material.navigation.NavigationView;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
@@ -34,6 +34,7 @@ public class ShoppingCartActivity extends AppCompatActivity
 
     private RecyclerView recyclerView;
     private ProductAdapter adapter;
+    private Menu menu;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -92,9 +93,11 @@ public class ShoppingCartActivity extends AppCompatActivity
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
+        this.menu = menu;
         getMenuInflater().inflate(R.menu.main_menu, menu);
         final MenuItem item = menu.findItem(R.id.action_search);
         final SearchView searchView = (SearchView) item.getActionView();
+        searchView.setQueryHint("Search");
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
@@ -135,40 +138,46 @@ public class ShoppingCartActivity extends AppCompatActivity
 
     @Override
     public void onClick(View v) {
+        String section = "";
         Vibrator myVib = (Vibrator) this.getSystemService(VIBRATOR_SERVICE);
         myVib.vibrate(50);
         switch (v.getId()) {
             case (R.id.food):
-                setTitle(getString(R.string.Food_Title));
+                section = getString(R.string.Food_Title);
                 adapter.set(ShoppingCart.getInstance().getProductsInCategory("FOOD"));
                 updateAnimation(recyclerView);
                 break;
             case (R.id.beverage):
-                setTitle(getString(R.string.Beverage_Title));
+                section = getString(R.string.Beverage_Title);
                 adapter.set(ShoppingCart.getInstance().getProductsInCategory("BEVERAGE"));
                 updateAnimation(recyclerView);
                 break;
             case (R.id.kids):
-                setTitle(getString(R.string.Kids_Title));
+                section = getString(R.string.Kids_Title);
                 adapter.set(ShoppingCart.getInstance().getProductsInCategory("KIDS"));
                 updateAnimation(recyclerView);
                 break;
             case (R.id.home):
-                setTitle(getString(R.string.Home_Title));
+                section = getString(R.string.Home_Title);
                 adapter.set(ShoppingCart.getInstance().getProductsInCategory("HOME"));
                 updateAnimation(recyclerView);
                 break;
             case (R.id.clothing):
-                setTitle(getString(R.string.Clothing_Title));
+                section = getString(R.string.Clothing_Title);
                 adapter.set(ShoppingCart.getInstance().getProductsInCategory("CLOTHING"));
                 updateAnimation(recyclerView);
                 break;
             case (R.id.others):
-                setTitle(getString(R.string.Other_Title));
+                section = getString(R.string.Other_Title);
                 adapter.set(ShoppingCart.getInstance().getProductsInCategory("OTHER"));
                 updateAnimation(recyclerView);
                 break;
         }
+        final MenuItem item = menu.findItem(R.id.action_search);
+        final SearchView searchView = (SearchView) item.getActionView();
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        toolbar.collapseActionView();
+        setTitle(section);
     }
 
     @Override
