@@ -19,8 +19,8 @@
     <!-- These strings are used in the product details activity -->
     <string name="product_details_title">New product added</string>
     <string name="product_details_name">Product name</string>
-    <string name="product_details_quantity">quantity: 2</string>
-    <string name="product_details_price">price: 12$</string>
+    <string name="product_details_quantity">x2</string>
+    <string name="product_details_price">12$</string>
 
     <!--
     This string is used for square devices and overridden by hello_world in

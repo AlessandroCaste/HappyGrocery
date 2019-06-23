@@ -83,7 +83,7 @@ public class DashboardActivity extends WearableActivity
         chart.setHoleRadius(75);
         chart.setDrawCenterText(true);
         chart.setCenterTextColor(getColor(R.color.light_grey));
-        chart.setCenterTextSize(36);
+        chart.setCenterTextSize(24);
         Description desc = new Description();
         desc.setText("");
         chart.setDescription(desc);

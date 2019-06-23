@@ -25,7 +25,7 @@
         <token value="pen"/>
         <token value="penna"/>
     </image>
-    <image name="phone_cover">
+    <image name="cover">
         <token value="phone"/>
         <token value="telefono"/>
         <token value="mobile"/>

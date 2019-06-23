@@ -1,15 +1,15 @@
 package com.code.dima.happygrocery.core;
 
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.DividerItemDecoration;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Toast;
+
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.DividerItemDecoration;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.code.dima.happygrocery.R;
 import com.code.dima.happygrocery.adapter.ProductCheckoutAdapter;
@@ -60,7 +60,7 @@ public class CheckoutActivity extends AppCompatActivity {
             //Updating Firebase database
             DatabaseAdapter db = DatabaseAdapter.openInWriteMode(getApplicationContext());
             GroceryDetails gd = db.getLastGrocery();
-            if(gd != null) {
+            if(gd != null && gd.getAmount() != 0) {
                 FirebaseDatabase database = FirebaseDatabase.getInstance();
                 FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
                 String uId = currentUser.getUid();

@@ -3,11 +3,8 @@ package com.code.dima.happygrocery.activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.wearable.activity.WearableActivity;
-import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
-
-import androidx.wear.widget.CircularProgressLayout;
 
 import com.code.dima.happygrocery.R;
 import com.code.dima.happygrocery.utils.Category;
@@ -28,9 +25,9 @@ public class ProductDetailsActivity extends WearableActivity {
         Intent intent = getIntent();
         String nameString = intent.getStringExtra("name");
         name.setText(nameString);
-        String quantityString = "quantity: " + intent.getStringExtra("quantity");
+        String quantityString = "x" + intent.getStringExtra("quantity");
         quantity.setText(quantityString);
-        String priceString = "price: " + intent.getStringExtra("price");
+        String priceString = intent.getStringExtra("price");
         priceString += getString(R.string.currency);
         price.setText(priceString);
         Category category = Category.valueOf(intent.getStringExtra("category"));
@@ -40,9 +37,5 @@ public class ProductDetailsActivity extends WearableActivity {
         image.setImageResource(imageID);
 
         setAmbientEnabled();
-    }
-
-    public void onClick(View view) {
-        finish();
     }
 }
