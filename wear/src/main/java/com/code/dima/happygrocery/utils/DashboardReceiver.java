@@ -122,7 +122,7 @@ public class DashboardReceiver
                 // the grocery has been closed correctly
                 dashboard.get().closeGrocery();
             } else if (path.equals(DataPaths.NOTIFY_GROCERY_CLEARED)) {
-                dashboard.get().returnHome();
+                dashboard.get().clearGrocery();
             }
         }
     }

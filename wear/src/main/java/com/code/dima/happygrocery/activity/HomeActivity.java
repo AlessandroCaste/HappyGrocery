@@ -70,6 +70,8 @@ public class HomeActivity extends WearableActivity
                 text.setText(R.string.grocery_closed);
             } else if (resultCode == RESULT_CANCELED) {
                 text.setText(R.string.grocery_cleared);
+            } else {
+                text.setText(R.string.connection_lost);
             }
         }
     }

@@ -152,8 +152,13 @@ public class DashboardActivity extends WearableActivity
         finish();
     }
 
-    public void returnHome() {
+    public void clearGrocery() {
         setResult(RESULT_CANCELED);
+        finish();
+    }
+
+    public void returnHome() {
+        setResult(RESULT_FIRST_USER);
         finish();
     }
 
