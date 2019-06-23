@@ -7,12 +7,14 @@ import androidx.annotation.NonNull;
 import com.code.dima.happygrocery.activity.HomeActivity;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
-import com.google.android.gms.wearable.DataClient;
+import com.google.android.gms.wearable.CapabilityClient;
+import com.google.android.gms.wearable.CapabilityInfo;
 import com.google.android.gms.wearable.DataItem;
 import com.google.android.gms.wearable.DataMap;
 import com.google.android.gms.wearable.DataMapItem;
 import com.google.android.gms.wearable.MessageClient;
 import com.google.android.gms.wearable.MessageEvent;
+import com.google.android.gms.wearable.Node;
 import com.google.android.gms.wearable.Wearable;
 
 import java.lang.ref.WeakReference;
@@ -35,10 +37,28 @@ public class HomeMessageReceiver implements MessageClient.OnMessageReceivedListe
     }
 
     public void checkHandheldState() {
+        Task<CapabilityInfo> capabilityTask = Wearable.getCapabilityClient(home.get()).getCapability(
+                DataPaths.WATCH_SERVER, CapabilityClient.FILTER_REACHABLE);
+        capabilityTask.addOnSuccessListener(new OnSuccessListener<CapabilityInfo>() {
+            @Override
+            public void onSuccess(CapabilityInfo capabilityInfo) {
+                String nodeId = null;
+                for (Node node : capabilityInfo.getNodes()) {
+                    nodeId = node.getId();
+                }
+                checkResume(nodeId);
+            }
+        });
+    }
+
+    private void checkResume(String nodeID) {
         // get data map -> check inDashboard -> if true, launch dashboard
-        Task<DataItem> task = Wearable.getDataClient(home.get()).getDataItem(
-                Uri.fromParts("wear", "*", DataPaths.IN_DASHBOARD_PATH)
-        );
+        Uri.Builder builder = new Uri.Builder();
+        builder.scheme("wear");
+        builder.authority(nodeID);
+        builder.path(DataPaths.IN_DASHBOARD_PATH);
+        Uri uri = builder.build();
+        Task<DataItem> task = Wearable.getDataClient(home.get()).getDataItem(uri);
         task.addOnSuccessListener(new OnSuccessListener<DataItem>() {
             @Override
             public void onSuccess(DataItem dataItem) {

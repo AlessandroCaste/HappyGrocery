@@ -3,6 +3,8 @@ package com.code.dima.happygrocery.activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.wearable.activity.WearableActivity;
+import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.wear.ambient.AmbientModeSupport;
@@ -26,8 +28,15 @@ public class HomeActivity extends WearableActivity
         setContentView(R.layout.activity_home);
 
         text = findViewById(R.id.home_activity_text);
-
         text.setText(R.string.waiting);
+
+        ImageView image = findViewById(R.id.home_activity_image);
+        image.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                receiver.checkHandheldState();
+            }
+        });
 
         // Enables Always-on
         setAmbientEnabled();
@@ -38,9 +47,6 @@ public class HomeActivity extends WearableActivity
         super.onResume();
         receiver = new HomeMessageReceiver(this);
         Wearable.getMessageClient(this).addListener(receiver);
-
-        // if the handheld is already running a grocery, goes to dashboard
-        receiver.checkHandheldState();
     }
 
     @Override
@@ -63,7 +69,7 @@ public class HomeActivity extends WearableActivity
             if(resultCode == RESULT_OK) {
                 text.setText(R.string.grocery_closed);
             } else if (resultCode == RESULT_CANCELED) {
-                text.setText(R.string.connection_lost);
+                text.setText(R.string.grocery_cleared);
             }
         }
     }

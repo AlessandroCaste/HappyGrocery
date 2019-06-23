@@ -3,6 +3,7 @@ package com.code.dima.happygrocery.activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.wearable.activity.WearableActivity;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -35,6 +36,12 @@ public class ProductDetailsActivity extends WearableActivity {
         ImageRetriever retriever = ImageRetriever.getInstance(this);
         int imageID = retriever.retrieveImageID(nameString, category);
         image.setImageResource(imageID);
+        image.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
 
         setAmbientEnabled();
     }
